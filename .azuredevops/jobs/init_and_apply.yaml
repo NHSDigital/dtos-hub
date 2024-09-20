@@ -1,0 +1,7 @@
+steps:
+
+  - template: ../steps/common/checkout.yaml
+
+  - template: ../steps/common/init_and_validate.yaml
+
+  - template: ../steps/apply.yaml

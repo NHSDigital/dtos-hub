@@ -15,6 +15,23 @@ variable "environment" {
   default     = "DEV"
 }
 
+variable "network_security_group_rules" {
+  description = "The network security group rules."
+  default     = {}
+  type = map(list(object({
+    name                      = string
+    priority                  = number
+    direction                 = string
+    access                    = string
+    protocol                  = string
+    source_port_range         = string
+    destination_port_range    = string
+    source_address_prefix     = string
+    destination_address_prefix = string
+  })))
+}
+
+
 variable "regions" {
   type = map(object({
     address_space = string

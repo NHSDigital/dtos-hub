@@ -5,7 +5,7 @@ resource "azurerm_resource_group" "hub_rg" {
   location = each.key
 }
 
-module "hub_networking" {
+module "vnets_hub" {
   for_each = var.regions
 
   # Source location updated to use the git:: prefix to avoid URL encoding issues - note // between the URL and the path is required
@@ -19,22 +19,33 @@ module "hub_networking" {
   tags = var.tags
 }
 
-# resource "azurerm_subnet" "subnets" {
-#   for_each             = local.subnets
+module "hub-subnets" {
+  for_each = local.subnets
 
-#   name                 = each.value.subnet_name
-#   resource_group_name  = module.hub_networking[each.value.vnet_key].vnet.resource_group_name
-#   virtual_network_name = module.hub_networking[each.value.vnet_key].name
-#   address_prefixes     = [cidrsubnet(module.hub_networking[each.value.vnet_key].vnet.address_space, each.value.cidr_newbits, each.value.cidr_offset)]
-# }
+  source = "git::https://github.com/NHSDigital/dtos-devops-templates.git//infrastructure/modules/subnet?ref=feat/DTOSS-4393-Terraform-Modules"
 
-# Create flattened map of VNets and their subnets
+  name                              = each.value.subnet_name
+  location                          = module.vnets_hub[each.value.vnet_key].vnet.location
+  network_security_group_name       = each.value.nsg_name
+  network_security_group_nsg_rules  = each.value.nsg_rules
+  resource_group_name               = module.vnets_hub[each.value.vnet_key].vnet.resource_group_name
+  vnet_name                         = module.vnets_hub[each.value.vnet_key].name
+  address_prefixes                  = [each.value.address_prefixes]
+  default_outbound_access_enabled   = true
+  private_endpoint_network_policies = "Disabled" # Default as per compliance requirements
+
+  tags = var.tags
+}
+
+# Create flattened map of VNets and their subnets to use in the Subnets module above
 locals {
   subnets_flatlist = flatten([for key, val in var.regions : [
     for subnet_key, subnet in val.subnets : {
-      vnet_key    = key
-      subnet_name = "${module.config[key].names.subnet}-${subnet_key}"
-      address_prefixes = [cidrsubnet(module.hub_networking[key].vnet.address_space, subnet.cidr_newbits, subnet.cidr_offset)]
+      vnet_key         = key
+      subnet_name      = "${module.config[key].names.subnet}-${subnet_key}"
+      nsg_name         = "${module.config[key].names.network-security-group}-${subnet_key}"
+      nsg_rules        = var.network_security_group_rules[subnet_key]
+      address_prefixes = cidrsubnet(val.address_space, subnet.cidr_newbits, subnet.cidr_offset)
     }
     ]
   ])

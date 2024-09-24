@@ -1,9 +1,0 @@
-jobs:
-  - job: init_and_plan
-    displayName: Terraform Init and Plan
-    steps:
-      # Init
-      - template: ../steps/common/init_and_validate.yaml
-
-      # Plan
-      - template: ../steps/plan.yaml

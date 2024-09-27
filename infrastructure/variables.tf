@@ -1,8 +1,3 @@
-variable "TARGET_SUBSCRIPTION_ID" {
-  description = "ID of a subscription to deploy infrastructure"
-  type        = string
-}
-
 variable "application" {
   description = "Project/Application code for deployment"
   type        = string
@@ -11,6 +6,12 @@ variable "application" {
 
 variable "environment" {
   description = "Environment code for deployments"
+  type        = string
+  default     = "DEV"
+}
+
+variable "GITHUB_ORG_DATABASE_ID" {
+  description = "GitHub Organization Database ID, specified via TF_VAR env var."
   type        = string
   default     = "DEV"
 }
@@ -69,4 +70,9 @@ variable "tags" {
   description = "Tags to be applied to resources"
   type        = map(string)
   default     = {}
+}
+
+variable "TARGET_SUBSCRIPTION_ID" {
+  description = "ID of a subscription to deploy infrastructure"
+  type        = string
 }

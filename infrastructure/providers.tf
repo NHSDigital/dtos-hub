@@ -1,4 +1,5 @@
 terraform {
+  backend "azurerm" {}
   required_version = ">= 1.9.2"
   required_providers {
     azurerm = {
@@ -7,9 +8,14 @@ terraform {
     }
 
     random = "~> 3.5.1"
+
     azuread = {
       source  = "hashicorp/azuread"
       version = "2.53.1"
+    }
+
+    azapi = {
+      source  = "azure/azapi"
     }
   }
 }

@@ -6,8 +6,9 @@ locals {
 }
 
 module "managed_devops_pool" {
-  source = "github.com/Azure/terraform-azurerm-avm-res-devopsinfrastructure-pool"
   for_each = var.regions
+
+  source = "github.com/Azure/terraform-azurerm-avm-res-devopsinfrastructure-pool"
 
   resource_group_name                         = azurerm_resource_group.dev_center_rg[each.key].name
   location                                    = each.key

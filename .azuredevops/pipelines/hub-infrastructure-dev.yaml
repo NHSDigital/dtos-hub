@@ -1,0 +1,47 @@
+---
+
+# Things to change for further environments:
+# - stage variable group name: dtos_ENVIRONMENT_variables
+# -
+name: $(Build.SourceBranchName)-$(Date:yyyyMMdd)_$(Rev:r)
+
+trigger:
+  branches:
+    include:
+      - main
+  paths:
+    include:
+      - infrastructure/*
+
+variables:
+  - group: global_variable_group
+  - group: development_variable_group
+  - name: TF_DIRECTORY
+    value: $(System.DefaultWorkingDirectory)/infrastructure
+
+pool:
+  vmImage: ubuntu-latest
+
+stages:
+  - stage: terraform_plan
+    displayName: Terraform Plan
+    condition: eq(variables['Build.Reason'], 'Manual')
+    jobs:
+      - job: init_and_plan
+        displayName: Init, plan, store artifact
+        steps:
+          - template: ../templates/steps/tf_plan.yaml
+
+  - stage: terraform_apply
+    displayName: Terraform Apply
+    dependsOn: [terraform_plan]
+    condition: and(eq(dependencies.terraform_plan.outputs['init_and_plan.TerraformPlan.changesPresent'], 'true'), eq(variables['Build.Reason'], 'Manual'))
+    jobs:
+      - deployment: terraform_apply
+        displayName: Init, get plan artifact, apply
+        environment: $(ENVIRONMENT)
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - template: ../templates/steps/tf_apply.yaml

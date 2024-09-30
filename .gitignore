@@ -11,3 +11,9 @@
 !project.code-workspace
 
 # Please, add your custom content below!
+.terraform.lock.hcl
+terraform.tfstate
+terraform.tfstate.backup
+.terraform
+.DS_Store
+

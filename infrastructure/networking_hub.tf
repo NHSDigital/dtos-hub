@@ -9,7 +9,7 @@ module "vnets_hub" {
   for_each = var.regions
 
   # Source location updated to use the git:: prefix to avoid URL encoding issues - note // between the URL and the path is required
-  source = "git::https://github.com/NHSDigital/dtos-devops-templates.git//infrastructure/modules/vnet?ref=e125d928afd9546e06d8af9bdb6391cbf6336773"
+  source = "git::https://github.com/NHSDigital/dtos-devops-templates.git//infrastructure/modules/vnet?ref=6dbb0d4f42e3fd1f94d4b8e85ef596b7d01844bc"
 
   name                = module.config[each.key].names.virtual-network
   resource_group_name = azurerm_resource_group.rg_hub[each.key].name
@@ -25,11 +25,11 @@ locals {
   subnets_flatlist = flatten([
     for key, val in var.regions : [
       for subnet_key, subnet in val.subnets : merge({
-        vnet_key                   = key
-        subnet_name                = coalesce(subnet.name, "${module.config[key].names.subnet}-${subnet_key}")
-        nsg_name                   = "${module.config[key].names.network-security-group}-${subnet_key}"
-        nsg_rules                  = lookup(var.network_security_group_rules, subnet_key, [])
-        address_prefixes           = cidrsubnet(val.address_space, subnet.cidr_newbits, subnet.cidr_offset)
+        vnet_key         = key
+        subnet_name      = coalesce(subnet.name, "${module.config[key].names.subnet}-${subnet_key}") # unique since it combines both iterators
+        nsg_name         = "${module.config[key].names.network-security-group}-${subnet_key}"
+        nsg_rules        = lookup(var.network_security_group_rules, subnet_key, [])
+        address_prefixes = cidrsubnet(val.address_space, subnet.cidr_newbits, subnet.cidr_offset)
       }, subnet) # include all the declared key/value pairs for a specific subnet
     ]
   ])
@@ -79,4 +79,10 @@ resource "azapi_resource" "github_network_settings" {
   tags = var.tags
 
   response_export_values = ["*"]
+
+  lifecycle {
+    ignore_changes = [
+      tags["GitHubId"]
+    ]
+  }
 }

@@ -4,6 +4,11 @@ variable "application" {
   default     = "DToS"
 }
 
+variable "AVD_LOGIN_PRINCIPAL_ID" {
+  type        = string
+  description = "The id of the groups to grant the 'Virtual Machine User Login' role to for Azure Virtual Desktop, specified via TF_VAR env var."
+}
+
 variable "environment" {
   description = "Environment code for deployments"
   type        = string
@@ -14,6 +19,28 @@ variable "GITHUB_ORG_DATABASE_ID" {
   description = "GitHub Organization Database ID, specified via TF_VAR env var."
   type        = string
   default     = "DEV"
+}
+
+variable "acr" {
+  description = "Configuration for Azure Container Registry"
+  type = object({
+    sku                           = optional(string)
+    admin_enabled                 = optional(bool)
+    uai_name                      = optional(string)
+    public_network_access_enabled = optional(bool, false)
+  })
+  default = {}
+
+  # If any ACR configuration is provided, ensure that all required fields are provided
+  validation {
+    condition     = var.acr == {} || (var.acr.sku != null && var.acr.admin_enabled != null && var.acr.uai_name != null)
+    error_message = "If ACR configuration is provided, all fields must be provided."
+  }
+}
+
+variable "features" {
+  description = "Feature flags for the deployment"
+  type        = map(bool)
 }
 
 variable "network_security_group_rules" {
@@ -39,14 +66,23 @@ variable "network_security_group_rules" {
 variable "private_dns_zones" {
   description = "Configuration for private DNS zones"
   type = object({
-    is_app_services_enabled               = bool
-    is_azure_sql_private_dns_zone_enabled = bool
-    is_storage_private_dns_zone_enabled   = bool
+    is_app_services_enabled                  = bool
+    is_azure_sql_private_dns_zone_enabled    = bool
+    is_storage_private_dns_zone_enabled      = bool
+    is_acr_private_dns_zone_enabled          = bool
+    is_app_insights_private_dns_zone_enabled = bool
+    is_apim_private_dns_zone_enabled         = bool
+    is_key_vault_private_dns_zone_enabled    = bool
+
   })
   default = {
-    is_app_services_enabled               = false
-    is_azure_sql_private_dns_zone_enabled = false
-    is_storage_private_dns_zone_enabled   = false
+    is_app_services_enabled                  = false
+    is_azure_sql_private_dns_zone_enabled    = false
+    is_storage_private_dns_zone_enabled      = false
+    is_acr_private_dns_zone_enabled          = false
+    is_app_insights_private_dns_zone_enabled = false
+    is_apim_private_dns_zone_enabled         = false
+    is_key_vault_private_dns_zone_enabled    = false
   }
 }
 

@@ -1,7 +1,7 @@
 resource "azurerm_resource_group" "dev_center_rg" {
   for_each = var.regions
 
-  name     = "${module.config[each.key].names.resource-group}-${var.application}-networking"
+  name     = "${module.config[each.key].names.resource-group}-dev-center"
   location = each.key
 }
 

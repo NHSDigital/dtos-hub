@@ -17,7 +17,6 @@ module "managed_devops_pool" {
   version_control_system_organization_name    = var.version_control_system_organization_name
   version_control_system_project_names        = var.version_control_system_project_names
   agent_profile_kind                          = var.agent_profile_kind
-  agent_profile_max_agent_lifetime            = var.agent_profile_max_agent_lifetime
   agent_profile_resource_prediction_profile   = var.agent_profile_resource_prediction_profile
   agent_profile_resource_predictions_manual   = var.agent_profile_resource_predictions_manual
   enable_telemetry                            = false # sends telemetry data to Microsoft

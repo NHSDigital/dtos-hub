@@ -42,7 +42,7 @@ module "private_dns_zone_azure_sql" {
   tags = var.tags
 }
 
-module "private_dns_zone_storage" {
+module "private_dns_zone_storage_blob" {
   for_each = {
     for key, region in var.regions :
     key => region if region.is_primary_region && var.private_dns_zones.is_storage_private_dns_zone_enabled
@@ -51,7 +51,23 @@ module "private_dns_zone_storage" {
   # Source location updated to use the git:: prefix to avoid URL encoding issues - note // between the URL and the path is required
   source = "git::https://github.com/NHSDigital/dtos-devops-templates.git//infrastructure/modules/private-dns-zone?ref=2296f761f4edc3b413e2629c98309df9c6fa0849"
 
-  name                = "privatelink.storage.azure.com"
+  name                = "privatelink.blob.core.windows.net"
+  resource_group_name = azurerm_resource_group.private_dns_rg[each.key].name
+  vnet_id             = module.vnets_hub[each.key].vnet.id
+
+  tags = var.tags
+}
+
+module "private_dns_zone_storage_queue" {
+  for_each = {
+    for key, region in var.regions :
+    key => region if region.is_primary_region && var.private_dns_zones.is_storage_private_dns_zone_enabled
+  }
+
+  # Source location updated to use the git:: prefix to avoid URL encoding issues - note // between the URL and the path is required
+  source = "git::https://github.com/NHSDigital/dtos-devops-templates.git//infrastructure/modules/private-dns-zone?ref=2296f761f4edc3b413e2629c98309df9c6fa0849"
+
+  name                = "privatelink.queue.core.windows.net"
   resource_group_name = azurerm_resource_group.private_dns_rg[each.key].name
   vnet_id             = module.vnets_hub[each.key].vnet.id
 

@@ -12,6 +12,10 @@ output "private_dns_zone_azure_sql" {
   value = module.private_dns_zone_azure_sql
 }
 
-output "private_dns_zone_storage" {
-  value = module.private_dns_zone_storage
+output "private_dns_zone_storage_blob" {
+  value = module.private_dns_zone_storage_blob
+}
+
+output "private_dns_zone_storage_queue" {
+  value = module.private_dns_zone_storage_queue
 }

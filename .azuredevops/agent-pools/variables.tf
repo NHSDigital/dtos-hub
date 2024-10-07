@@ -3,11 +3,6 @@ variable "agent_profile_kind" {
   default = "Stateful" # "Stateless"
 }
 
-variable "agent_profile_max_agent_lifetime" {
-  type    = string
-  default = "2.00:00:00" # 2 days
-}
-
 variable "agent_profile_resource_prediction_profile" {
   type    = string
   default = "Manual"
@@ -50,7 +45,7 @@ variable "agent_profile_resource_predictions_manual" {
 variable "application" {
   description = "Project/Application code for deployment."
   type        = string
-  default     = "DToS"
+  default     = "hub"
 }
 
 variable "environment" {

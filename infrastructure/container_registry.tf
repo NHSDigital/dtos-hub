@@ -9,7 +9,7 @@ module "acr" {
   source = "git::https://github.com/NHSDigital/dtos-devops-templates.git//infrastructure/modules/azure-container-registry?ref=feat/DTOSS-3386-Private-Endpoint-Updates"
 
   name                = module.config[each.key].names.azure-container-registry
-  resource_group_name = azurerm_resource_group.rg_hub[each.key].name
+  resource_group_name = azurerm_resource_group.rg_base[each.key].name
   location            = each.key
 
   admin_enabled                 = var.acr.admin_enabled

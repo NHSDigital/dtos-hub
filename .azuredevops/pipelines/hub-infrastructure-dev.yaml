@@ -20,7 +20,8 @@ variables:
     value: $(System.DefaultWorkingDirectory)/infrastructure
 
 pool:
-  vmImage: ubuntu-latest
+  #vmImage: ubuntu-latest
+  name: 'private-pool-dev-uks'
 
 stages:
   - stage: terraform_plan

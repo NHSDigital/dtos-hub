@@ -9,7 +9,7 @@ module "virtual-desktop" {
   for_each = var.regions
 
   # Source location updated to use the git:: prefix to avoid URL encoding issues - note // between the URL and the path is required
-  source = "git::https://github.com/NHSDigital/dtos-devops-templates.git//infrastructure/modules/virtual-desktop?ref=301682d70bc1dda61bcb8d1309b6531eced516db"
+  source = "git::https://github.com/NHSDigital/dtos-devops-templates.git//infrastructure/modules/virtual-desktop?ref=9f8fedc673c36f4c406b958579cde873edde5f66"
 
   workspace_name      = module.config[each.key].names.avd-workspace
   dag_name            = module.config[each.key].names.avd-dag

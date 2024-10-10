@@ -4,6 +4,11 @@ variable "application" {
   default     = "DToS"
 }
 
+variable "AVD_LOGIN_PRINCIPAL_ID" {
+  type        = string
+  description = "The id of the groups to grant the 'Virtual Machine User Login' role to for Azure Virtual Desktop, specified via TF_VAR env var."
+}
+
 variable "environment" {
   description = "Environment code for deployments"
   type        = string

@@ -79,4 +79,10 @@ resource "azapi_resource" "github_network_settings" {
   tags = var.tags
 
   response_export_values = ["*"]
+
+  lifecycle {
+    ignore_changes = [
+      tags["GitHubId"]
+    ]
+  }
 }

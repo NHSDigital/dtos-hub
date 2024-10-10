@@ -15,6 +15,7 @@ module "virtual-desktop" {
   dag_name            = module.config[each.key].names.avd-dag
   host_pool_name      = module.config[each.key].names.avd-host-pool
   resource_group_name = azurerm_resource_group.avd[each.key].name
+  resource_group_id   = azurerm_resource_group.avd[each.key].id
   location            = each.key
   login_principal_id  = var.AVD_LOGIN_PRINCIPAL_ID
 

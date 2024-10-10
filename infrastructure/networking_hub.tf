@@ -25,11 +25,11 @@ locals {
   subnets_flatlist = flatten([
     for key, val in var.regions : [
       for subnet_key, subnet in val.subnets : merge({
-        vnet_key                   = key
-        subnet_name                = coalesce(subnet.name, "${module.config[key].names.subnet}-${subnet_key}")
-        nsg_name                   = "${module.config[key].names.network-security-group}-${subnet_key}"
-        nsg_rules                  = lookup(var.network_security_group_rules, subnet_key, [])
-        address_prefixes           = cidrsubnet(val.address_space, subnet.cidr_newbits, subnet.cidr_offset)
+        vnet_key         = key
+        subnet_name      = coalesce(subnet.name, "${module.config[key].names.subnet}-${subnet_key}")
+        nsg_name         = "${module.config[key].names.network-security-group}-${subnet_key}"
+        nsg_rules        = lookup(var.network_security_group_rules, subnet_key, [])
+        address_prefixes = cidrsubnet(val.address_space, subnet.cidr_newbits, subnet.cidr_offset)
       }, subnet) # include all the declared key/value pairs for a specific subnet
     ]
   ])

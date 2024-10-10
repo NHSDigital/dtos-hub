@@ -18,6 +18,7 @@ module "virtual-desktop" {
   resource_group_id   = azurerm_resource_group.avd[each.key].id
   location            = each.key
   login_principal_id  = var.AVD_LOGIN_PRINCIPAL_ID
+  subnet_id           = module.subnets_hub["${module.config[each.key].names.subnet}-virtual-desktop"].id
 
   #tags = var.tags
 }

@@ -7,6 +7,30 @@ resource "azurerm_resource_group" "private_dns_rg" {
 }
 
 /*--------------------------------------------------------------------------------------------------
+  Create the Private DNS Zone Resolver
+--------------------------------------------------------------------------------------------------*/
+
+module "private_dns_resolver" {
+  for_each = { for key, region in var.regions : key => region if region.is_primary_region }
+
+  # Source location updated to use the git:: prefix to avoid URL encoding issues - note // between the URL and the path is required
+  source = "git::https://github.com/NHSDigital/dtos-devops-templates.git//infrastructure/modules/private-dns-zone-resolver?ref=feat/DTOSS-3386-Private-Endpoint-Updates"
+
+  name                = "${module.config[each.key].names.resource-application}-private-dns-zone-resolver"
+  resource_group_name = azurerm_resource_group.private_dns_rg[each.key].name
+  location            = each.key
+  vnet_id             = module.vnets_hub[each.key].vnet.id
+
+  inbound_endpoint_config = {
+    name                         = "private-dns-resolver-inbound-endpoint"
+    private_ip_allocation_method = "Dynamic"
+    subnet_id                    = module.subnets_hub["${module.config[each.key].names.subnet}-dns-resolver-in"].id
+  }
+
+  tags = var.tags
+}
+
+/*--------------------------------------------------------------------------------------------------
   Create each private DNS zone if required to do so
 --------------------------------------------------------------------------------------------------*/
 

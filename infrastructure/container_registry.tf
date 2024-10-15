@@ -6,7 +6,7 @@ module "acr" {
     if value.is_primary_region && var.acr != {}
   }
 
-  source = "git::https://github.com/NHSDigital/dtos-devops-templates.git//infrastructure/modules/azure-container-registry?ref=08100f7db2da6c0f64f327d15477a217a7ed4cd9"
+  source = "git::https://github.com/NHSDigital/dtos-devops-templates.git//infrastructure/modules/azure-container-registry?ref=6dbb0d4f42e3fd1f94d4b8e85ef596b7d01844bc"
 
   name                = module.config[each.key].names.azure-container-registry
   resource_group_name = azurerm_resource_group.rg_base[each.key].name

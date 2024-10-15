@@ -9,7 +9,7 @@ module "vnets_hub" {
   for_each = var.regions
 
   # Source location updated to use the git:: prefix to avoid URL encoding issues - note // between the URL and the path is required
-  source = "git::https://github.com/NHSDigital/dtos-devops-templates.git//infrastructure/modules/vnet?ref=e125d928afd9546e06d8af9bdb6391cbf6336773"
+  source = "git::https://github.com/NHSDigital/dtos-devops-templates.git//infrastructure/modules/vnet?ref=08100f7db2da6c0f64f327d15477a217a7ed4cd9"
 
   name                = module.config[each.key].names.virtual-network
   resource_group_name = azurerm_resource_group.rg_hub[each.key].name

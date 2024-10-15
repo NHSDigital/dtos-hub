@@ -3,6 +3,11 @@ output "vnets_hub" {
   value = module.vnets_hub
 }
 
+# Output the DNS resolver inbound private ip addresses so they can be used in the private endpoint modules
+output "private_dns_resolver_inbound_ips" {
+  value = module.private_dns_resolver
+}
+
 # Output the private DNS zone IDs so they can be used in private endpoint modules
 output "private_dns_zone_acr" {
   value = module.private_dns_zone_acr

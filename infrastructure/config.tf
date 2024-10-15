@@ -2,7 +2,7 @@ module "config" {
   for_each = var.regions
 
   # Source location updated to use the git:: prefix to avoid URL encoding issues - note // between the URL and the path is required
-  source = "git::https://github.com/NHSDigital/dtos-devops-templates.git//infrastructure/modules/shared-config?ref=25800a1f5bce5c7cf0fcfe7725026f5c8f1542fb"
+  source = "git::https://github.com/NHSDigital/dtos-devops-templates.git//infrastructure/modules/shared-config?ref=ab8c9569ee277254cf485777680617b93a45bf8c"
 
   location    = each.key
   application = var.application

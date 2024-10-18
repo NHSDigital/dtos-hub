@@ -9,9 +9,9 @@ module "virtual-desktop" {
   for_each = var.regions
 
   # Source location updated to use the git:: prefix to avoid URL encoding issues - note // between the URL and the path is required
-  source = "git::https://github.com/NHSDigital/dtos-devops-templates.git//infrastructure/modules/virtual-desktop?ref=32df88c630d01cda9395a3433315bf47dc6ed122"
+  source = "git::https://github.com/NHSDigital/dtos-devops-templates.git//infrastructure/modules/virtual-desktop?ref=892f57534a22ec9b17046856c0bd28cfa3c90389"
 
-  custom_rdp_properties   = "enablecredsspsupport:i:1;enablerdsaadauth:i:1;videoplaybackmode:i:1;audiomode:i:0;devicestoredirect:s:*;drivestoredirect:s:*;redirectclipboard:i:1;redirectcomports:i:1;redirectprinters:i:1;redirectsmartcards:i:1;redirectwebauthn:i:1;usbdevicestoredirect:s:*;use multimon:i:1;autoreconnection enabled:i:1;bandwidthautodetect:i:1;networkautodetect:i:1;compression:i:1;"
+  custom_rdp_properties   = "drivestoredirect:s:*;audiomode:i:0;videoplaybackmode:i:1;redirectclipboard:i:1;redirectprinters:i:1;devicestoredirect:s:*;redirectcomports:i:1;redirectsmartcards:i:1;usbdevicestoredirect:s:*;enablecredsspsupport:i:1;redirectwebauthn:i:1;use multimon:i:1;enablerdsaadauth:i:1;"
   dag_name                = module.config[each.key].names.avd-dag
   host_pool_name          = module.config[each.key].names.avd-host-pool
   location                = each.key

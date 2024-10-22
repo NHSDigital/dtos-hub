@@ -15,7 +15,7 @@ steps:
       commandOptions: -upgrade
       workingDirectory: $(TF_DIRECTORY)
       backendAzureRmUseEnvironmentVariablesForAuthentication: false
-      backendServiceArm: sc-dtos-hub-development
+      backendServiceArm: $(SERVICE_CONNECTION)
       backendAzureRmResourceGroupName: $(BACKEND_AZURE_RESOURCE_GROUP_NAME)
       backendAzureRmStorageAccountName: $(BACKEND_AZURE_STORAGE_ACCOUNT_NAME)
       backendAzureRmContainerName: $(BACKEND_AZURE_STORAGE_ACCOUNT_CONTAINER_NAME)

@@ -59,6 +59,30 @@ module "subnets_hub" {
   tags = var.tags
 }
 
+
+# Needed for Managed DevOps Pool
+data "azuread_service_principal" "devops_infrastructure" {
+  display_name = "DevOpsInfrastructure"
+}
+
+resource "azurerm_role_assignment" "devops" {
+  for_each = var.regions
+
+  scope                = module.vnets_hub[each.key].vnet.id
+  role_definition_name = "Network Contributor"
+  principal_id         = data.azuread_service_principal.devops_infrastructure.id
+}
+
+resource "azurerm_role_assignment" "devops_reader" {
+  for_each = var.regions
+
+  scope                = module.vnets_hub[each.key].vnet.id
+  role_definition_name = "Reader"
+  principal_id         = data.azuread_service_principal.devops_infrastructure.id
+}
+
+
+
 # Used to grant GitHub Actions runners access to private subnets
 resource "azapi_resource" "github_network_settings" {
   for_each = {

@@ -61,7 +61,10 @@ module "subnets_hub" {
 
 # Used to grant GitHub Actions runners access to private subnets
 resource "azapi_resource" "github_network_settings" {
-  for_each = var.regions
+  for_each = {
+    for key, value in var.regions : key => value
+    if value.features.github_actions_enabled == true
+  }
 
   type                      = "GitHub.Network/networkSettings@2024-04-02"
   name                      = "gh-enterprise-link"

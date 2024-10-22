@@ -63,7 +63,7 @@ module "subnets_hub" {
 resource "azapi_resource" "github_network_settings" {
   for_each = {
     for key, value in var.regions : key => value
-    if value.features.github_actions_enabled == true
+    if var.features.github_actions_enabled == true
   }
 
   type                      = "GitHub.Network/networkSettings@2024-04-02"

@@ -69,12 +69,12 @@ resource "azapi_resource" "github_network_settings" {
   schema_validation_enabled = false
   location                  = each.key
 
-  body = jsonencode({
+  body = {
     properties = {
       subnetId   = module.subnets_hub["${module.config[each.key].names.subnet}-github-actions"].id
       businessId = var.GITHUB_ORG_DATABASE_ID
     }
-  })
+  }
 
   tags = var.tags
 

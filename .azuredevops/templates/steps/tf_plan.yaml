@@ -20,7 +20,7 @@ steps:
       command: plan
       workingDirectory: $(TF_DIRECTORY)
       commandOptions: -input=false -var-file=environments/$(ENVIRONMENT).tfvars.config -out=$(Build.ArtifactStagingDirectory)/$(ENVIRONMENT).tfplan
-      environmentServiceNameAzureRM: sc-dtos-hub-development
+      environmentServiceNameAzureRM: $(SERVICE_CONNECTION)
       environmentServiceName: $(TARGET_SUBSCRIPTION)
 
   - task: PublishBuildArtifacts@1

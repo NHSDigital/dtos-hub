@@ -13,7 +13,6 @@ module "managed_devops_pool" {
   resource_group_name                         = azurerm_resource_group.dev_center_rg[each.key].name
   location                                    = each.key
   name                                        = module.config[each.key].names.managed-devops-pool
-  agent_profile_resource_predictions_manual   = var.agent_profile_resource_predictions_manual
   dev_center_project_resource_id              = azapi_resource.dev_center_project[each.key].id
   agent_profile_kind                          = var.agent_profile_kind
   agent_profile_resource_prediction_profile   = var.agent_profile_resource_prediction_profile

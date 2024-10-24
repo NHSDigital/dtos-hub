@@ -13,9 +13,8 @@ module "managed_devops_pool" {
   resource_group_name                         = azurerm_resource_group.dev_center_rg[each.key].name
   location                                    = each.key
   name                                        = module.config[each.key].names.managed-devops-pool
+  agent_profile_resource_predictions_manual   = var.agent_profile_resource_predictions_manual
   dev_center_project_resource_id              = azapi_resource.dev_center_project[each.key].id
-  version_control_system_organization_name    = var.version_control_system_organization_name
-  version_control_system_project_names        = var.version_control_system_project_names
   agent_profile_kind                          = var.agent_profile_kind
   agent_profile_resource_prediction_profile   = var.agent_profile_resource_prediction_profile
   agent_profile_resource_predictions_manual   = var.agent_profile_resource_predictions_manual
@@ -25,4 +24,6 @@ module "managed_devops_pool" {
   fabric_profile_sku_name                     = var.fabric_profile_sku_name
   maximum_concurrency                         = var.maximum_concurrency
   subnet_id                                   = local.devops_subnet_id[each.key]
+  version_control_system_organization_name    = var.version_control_system_organization_name
+  version_control_system_project_names        = var.version_control_system_project_names
 }

@@ -9,7 +9,7 @@ module "application-gateway-pip" {
   for_each = var.regions
 
   # Source location updated to use the git:: prefix to avoid URL encoding issues - note // between the URL and the path is required
-  source = "git::https://github.com/NHSDigital/dtos-devops-templates.git//infrastructure/modules/public-ip?ref=783b7d1e39b4f8e299fad5018396c7399742a0dc"
+  source = "git::https://github.com/NHSDigital/dtos-devops-templates.git//infrastructure/modules/public-ip?ref=622e1fb640a409a3659bb23463e4f265b315908a"
 
   name                 = "${module.config[each.key].names.public-ip-address}-AGW"
   resource_group_name  = azurerm_resource_group.rg_hub[each.key]

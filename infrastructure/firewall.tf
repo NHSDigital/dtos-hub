@@ -3,7 +3,7 @@ module "firewall" {
 
   source = "git::https://github.com/NHSDigital/dtos-devops-templates.git//infrastructure/modules/firewall?ref=36101b5776ad52fb0909a6e17fd3fb9b6c6db540"
 
-  firewall_name       = "${module.config[each.key].names.firewall}-${var.application}"
+  firewall_name       = "${module.config[each.key].names.firewall}"
   resource_group_name = azurerm_resource_group.rg_hub[each.key].name
   location            = each.key
 
@@ -22,7 +22,7 @@ module "firewall" {
   tags = var.tags
 
   ### policy variables
-  policy_name              = "${module.config[each.key].names.firewall}-${var.application}-policy"
+  policy_name              = "${module.config[each.key].names.firewall}-policy"
   sku                      = var.firewall_config.policy_sku
   threat_intelligence_mode = var.firewall_config.policy_threat_intelligence_mode
   dns_proxy_enabled        = var.firewall_config.policy_dns_proxy_enabled

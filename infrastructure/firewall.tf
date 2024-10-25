@@ -1,7 +1,7 @@
 module "firewall" {
   for_each = var.regions
 
-  source = "git::https://github.com/NHSDigital/dtos-devops-templates.git//infrastructure/modules/firewall?ref=feat/DTOSS-3407-Azure-Firewall-Deployment-2"
+  source = "git::https://github.com/NHSDigital/dtos-devops-templates.git//infrastructure/modules/firewall?ref=36101b5776ad52fb0909a6e17fd3fb9b6c6db540"
 
   firewall_name       = "${module.config[each.key].names.firewall}-${var.application}"
   resource_group_name = azurerm_resource_group.rg_hub[each.key].name
@@ -33,7 +33,7 @@ module "firewall" {
 module "public_ip" {
   for_each = local.public_ips_map
 
-  source = "git::https://github.com/NHSDigital/dtos-devops-templates.git//infrastructure/modules/public-ip?ref=feat/DTOSS-3407-Azure-Firewall-Deployment-2"
+  source = "git::https://github.com/NHSDigital/dtos-devops-templates.git//infrastructure/modules/public-ip?ref=36101b5776ad52fb0909a6e17fd3fb9b6c6db540"
 
   name                = "${module.config[each.value.region_key].names.public-ip-address}-${each.value.name_suffix}"
   resource_group_name = azurerm_resource_group.rg_hub[each.value.region_key].name

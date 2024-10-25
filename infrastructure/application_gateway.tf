@@ -29,7 +29,7 @@ module "application-gateway" {
 
   name                    = module.config[each.key].names.application-gateway.name
   location                = each.key
-  resource_group_name     = azurerm_resource_group.agw.name
+  resource_group_name     = azurerm_resource_group.agw[each.key].name
   gateway_subnet          = module.subnets_hub["${module.config[each.key].names.subnet}-app-gateway"]
   public_ip_address_id    = module.application-gateway-pip[each.key].id
 

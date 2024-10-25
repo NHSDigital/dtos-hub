@@ -44,7 +44,7 @@ locals {
 module "subnets_hub" {
   for_each = local.subnets_map
 
-  source = "git::https://github.com/NHSDigital/dtos-devops-templates.git//infrastructure/modules/subnet?ref=e125d928afd9546e06d8af9bdb6391cbf6336773"
+  source = "git::https://github.com/NHSDigital/dtos-devops-templates.git//infrastructure/modules/subnet?ref=a97430c23c686fc16fa5cf387794c394aab01f54"
 
   name                              = each.value.subnet_name
   location                          = module.vnets_hub[each.value.vnet_key].vnet.location

@@ -25,7 +25,7 @@ module "application-gateway" {
   for_each = var.regions
 
   # Source location updated to use the git:: prefix to avoid URL encoding issues - note // between the URL and the path is required
-  source = "git::https://github.com/NHSDigital/dtos-devops-templates.git//infrastructure/modules/application-gateway?ref=f693566bc9d67bd8d7d5a196fb1a244ff7478ee2"
+  source = "git::https://github.com/NHSDigital/dtos-devops-templates.git//infrastructure/modules/application-gateway?ref=3255b1a884bb055dac008ddd38c31f21a7ddca92"
 
   name                 = module.config[each.key].names.application-gateway.name
   location             = each.key

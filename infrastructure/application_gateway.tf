@@ -25,7 +25,7 @@ module "application-gateway" {
   for_each = var.regions
 
   # Source location updated to use the git:: prefix to avoid URL encoding issues - note // between the URL and the path is required
-  source = "git::https://github.com/NHSDigital/dtos-devops-templates.git//infrastructure/modules/application-gateway?ref=3255b1a884bb055dac008ddd38c31f21a7ddca92"
+  source = "git::https://github.com/NHSDigital/dtos-devops-templates.git//infrastructure/modules/application-gateway?ref=ce9858c0187d0e3e62ffbc2d594cd6a1d61270a4"
 
   name                 = module.config[each.key].names.application-gateway.name
   location             = each.key
@@ -33,6 +33,7 @@ module "application-gateway" {
   common_names         = module.config[each.key].names.application-gateway
   gateway_subnet       = module.subnets_hub["${module.config[each.key].names.subnet}-app-gateway"]
   public_ip_address_id = module.application-gateway-pip[each.key].id
+  zones                = each.value.is_primary_region ? ["1", "2", "3"] : null
 
   tags = var.tags
 }

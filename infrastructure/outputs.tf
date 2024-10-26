@@ -40,3 +40,7 @@ output "private_dns_zone_storage_blob" {
 output "private_dns_zone_storage_queue" {
   value = module.private_dns_zone_storage_queue
 }
+
+output "firewall__ip_configurations" {
+  value = module.firewall.private_ip_address
+}

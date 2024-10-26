@@ -41,9 +41,9 @@ output "private_dns_zone_storage_queue" {
   value = module.private_dns_zone_storage_queue
 }
 
-output "firewall_private_ip_address" {
+output "firewall_private_ip_addresses" {
   value = {
-    for region_key, region_val in module.firewall.ip_configuration[0].private_ip_address :
-    region_key => region_val
+    for region_key, region_val in module.firewall :
+    region_key => region_val.private_ip_address
   }
 }

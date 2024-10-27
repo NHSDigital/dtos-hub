@@ -41,6 +41,22 @@ output "private_dns_zone_storage_queue" {
   value = module.private_dns_zone_storage_queue
 }
 
+output "private_dns_zone_app_insight" {
+  value = module.private_dns_zone_app_insight
+}
+
+output "private_dns_zone_azure_automation" {
+  value = module.private_dns_zone_azure_automation
+}
+
+output "private_dns_zone_od_insights" {
+  value = module.private_dns_zone_od_insights
+}
+
+output "private_dns_zone_op_insights" {
+  value = module.private_dns_zone_op_insights
+}
+
 output "firewall_policy_id" {
   value = {
     for region_key, region_val in module.firewall :

@@ -41,10 +41,6 @@ output "private_dns_zone_storage_queue" {
   value = module.private_dns_zone_storage_queue
 }
 
-output "private_dns_zone_app_insight" {
-  value = module.private_dns_zone_app_insight
-}
-
 output "private_dns_zone_azure_automation" {
   value = module.private_dns_zone_azure_automation
 }

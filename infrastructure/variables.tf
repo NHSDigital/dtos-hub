@@ -86,24 +86,14 @@ variable "network_security_group_rules" {
 variable "private_dns_zones" {
   description = "Configuration for private DNS zones"
   type = object({
-    is_app_services_enabled                  = bool
-    is_azure_sql_private_dns_zone_enabled    = bool
-    is_storage_private_dns_zone_enabled      = bool
-    is_acr_private_dns_zone_enabled          = bool
-    is_app_insights_private_dns_zone_enabled = bool
-    is_apim_private_dns_zone_enabled         = bool
-    is_key_vault_private_dns_zone_enabled    = bool
-
+    is_app_services_enabled                  = optional(bool, false)
+    is_azure_sql_private_dns_zone_enabled    = optional(bool, false)
+    is_storage_private_dns_zone_enabled      = optional(bool, false)
+    is_acr_private_dns_zone_enabled          = optional(bool, false)
+    is_app_insights_private_dns_zone_enabled = optional(bool, false)
+    is_apim_private_dns_zone_enabled         = optional(bool, false)
+    is_key_vault_private_dns_zone_enabled    = optional(bool, false)
   })
-  default = {
-    is_app_services_enabled                  = false
-    is_azure_sql_private_dns_zone_enabled    = false
-    is_storage_private_dns_zone_enabled      = false
-    is_acr_private_dns_zone_enabled          = false
-    is_app_insights_private_dns_zone_enabled = false
-    is_apim_private_dns_zone_enabled         = false
-    is_key_vault_private_dns_zone_enabled    = false
-  }
 }
 
 variable "regions" {

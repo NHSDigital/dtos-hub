@@ -4,6 +4,16 @@ variable "application" {
   default     = "hub"
 }
 
+variable "projects" {
+  description = "Project code for deployment"
+  type = map(object({
+    full_name  = string
+    short_name = string
+    features   = map(bool)
+    tags       = map(string)
+  }))
+}
+
 variable "regions" {
   type = map(object({
     address_space     = string
@@ -17,16 +27,6 @@ variable "regions" {
       service_delegation_name    = optional(string)
       service_delegation_actions = optional(list(string))
     }))
-  }))
-}
-
-variable "projects" {
-  description = "Project code for deployment"
-  type = map(object({
-    full_name  = string
-    short_name = string
-    features   = map(bool)
-    tags       = map(string)
   }))
 }
 

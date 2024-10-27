@@ -27,5 +27,4 @@ module "acr" {
   } : null
 
   tags = var.tags
-
 }

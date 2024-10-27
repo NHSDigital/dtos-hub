@@ -1,7 +1,7 @@
 module "acr" {
 
   # only create in regions where is_primary_region is true and only when acr map is not empty
-  for_each = locals.acr_map
+  for_each = local.acr_map
 
   source = "git::https://github.com/NHSDigital/dtos-devops-templates.git//infrastructure/modules/azure-container-registry?ref=6dbb0d4f42e3fd1f94d4b8e85ef596b7d01844bc"
 

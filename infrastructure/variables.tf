@@ -43,6 +43,26 @@ variable "features" {
   type        = map(bool)
 }
 
+variable "firewall_config" {
+  description = "Configuration for the firewall"
+
+  type = object({
+    firewall_sku_name = optional(string)
+    firewall_sku_tier = optional(string)
+    public_ip_addresses = optional(map(object({
+      name_suffix          = string
+      allocation_method    = string
+      ddos_protection_mode = string
+      sku                  = string
+    })))
+    policy_sku                      = optional(string)
+    policy_threat_intelligence_mode = optional(string)
+    policy_dns_proxy_enabled        = optional(bool)
+    zones                           = optional(list(string))
+  })
+  default = {}
+}
+
 variable "network_security_group_rules" {
   description = "The network security group rules."
   default     = {}

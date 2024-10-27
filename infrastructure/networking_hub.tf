@@ -25,7 +25,11 @@ locals {
   subnets_flatlist = flatten([
     for key, val in var.regions : [
       for subnet_key, subnet in val.subnets : merge({
-        vnet_key         = key
+        vnet_key = key
+        # Ensure we have a region-dependednt key even for subnets with user-specific names
+        subnet_name_region_key = coalesce(
+          subnet.name != null ? "${subnet.name}-${key}" : null, "${module.config[key].names.subnet}-${subnet_key}"
+        )
         subnet_name      = coalesce(subnet.name, "${module.config[key].names.subnet}-${subnet_key}")
         nsg_name         = "${module.config[key].names.network-security-group}-${subnet_key}"
         nsg_rules        = lookup(var.network_security_group_rules, subnet_key, [])
@@ -34,7 +38,7 @@ locals {
     ]
   ])
   # Project the above list into a map with unique keys for consumption in a for_each meta argument
-  subnets_map = { for subnet in local.subnets_flatlist : subnet.subnet_name => subnet }
+  subnets_map = { for subnet in local.subnets_flatlist : subnet.subnet_name_region_key => subnet }
 }
 
 module "subnets_hub" {

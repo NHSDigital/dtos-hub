@@ -5,7 +5,7 @@ module "acr" {
 
   source = "git::https://github.com/NHSDigital/dtos-devops-templates.git//infrastructure/modules/azure-container-registry?ref=6dbb0d4f42e3fd1f94d4b8e85ef596b7d01844bc"
 
-  name                = module.config[each.value.region_key].names.azure-container-registry
+  name                = "${module.config[each.value.region_key].names.azure-container-registry}${each.value.name_suffix}"
   resource_group_name = azurerm_resource_group.rg_base[each.value.region_key].name
   location            = each.value.region_key
 
@@ -30,6 +30,7 @@ module "acr" {
 locals {
   acr_map = {
     for key, value in local.projects_map : key => {
+      name_suffix                   = value.short_name
       admin_enabled                 = value.acr.admin_enabled
       uai_name                      = value.acr.uai_name
       sku                           = value.acr.sku

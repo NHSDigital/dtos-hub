@@ -1,7 +1,7 @@
 resource "azurerm_resource_group" "rg_base" {
   for_each = var.regions
 
-  name     = "${module.config[each.key].names.resource-group}"
+  name     = module.config[each.key].names.resource-group
   location = each.key
 }
 
@@ -15,24 +15,21 @@ resource "azurerm_resource_group" "rg_project" {
 }
 
 locals {
-  # Create a map of regions to projects:
-  regions_to_projects = {
-    for project in var.projects :
-    project.name => project.regions
-  }
-}
+  # Get the primary region from the regions map:
+  primary_region = {
+    for region_key, region in var.regions :
+  region_key => region if region.is_primary_region }
 
-# Get the primary region from the regions map:
-locals {
+  # Create a flat list of projects with region keys for consumption in a for_each meta argument
   projects_flatlist = flatten([
     for region_key, region_val in var.regions : [
       for project_key, project_val in var.projects : {
-        key                          = "${project_key}-${region_key}"
-        region_key                    = region_key
-        project_key                   = project_key
-        full_name = project_val.full_name
-        short_name = project_val.short_name
-        tags = project_val.tags
+        key         = "${project_key}-${region_key}"
+        region_key  = region_key
+        project_key = project_key
+        full_name   = project_val.full_name
+        short_name  = project_val.short_name
+        tags        = project_val.tags
       }
     ]
   ])

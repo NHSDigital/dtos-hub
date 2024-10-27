@@ -10,7 +10,13 @@ variable "projects" {
     full_name  = string
     short_name = string
     features   = map(bool)
-    tags       = map(string)
+    acr = optional(object({
+      sku                           = string
+      admin_enabled                 = bool
+      uai_name                      = string
+      public_network_access_enabled = bool
+    }))
+    tags = map(string)
   }))
 }
 
@@ -47,22 +53,22 @@ variable "GITHUB_ORG_DATABASE_ID" {
   default     = "DEV"
 }
 
-variable "acr" {
-  description = "Configuration for Azure Container Registry"
-  type = object({
-    sku                           = optional(string)
-    admin_enabled                 = optional(bool)
-    uai_name                      = optional(string)
-    public_network_access_enabled = optional(bool, false)
-  })
-  default = {}
+# variable "acr" {
+#   description = "Configuration for Azure Container Registry"
+#   type = map(object({
+#     sku                           = optional(string)
+#     admin_enabled                 = optional(bool)
+#     uai_name                      = optional(string)
+#     public_network_access_enabled = optional(bool, false)
+#   }))
+#   default = {}
 
-  # If any ACR configuration is provided, ensure that all required fields are provided
-  validation {
-    condition     = var.acr == {} || (var.acr.sku != null && var.acr.admin_enabled != null && var.acr.uai_name != null)
-    error_message = "If ACR configuration is provided, all fields must be provided."
-  }
-}
+#   # If any ACR configuration is provided, ensure that all required fields are provided
+#   validation {
+#     condition     = var.acr == {} || (var.acr.sku != null && var.acr.admin_enabled != null && var.acr.uai_name != null)
+#     error_message = "If ACR configuration is provided, all fields must be provided."
+#   }
+# }
 
 variable "features" {
   description = "Feature flags for the deployment"

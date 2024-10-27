@@ -24,12 +24,14 @@ locals {
   projects_flatlist = flatten([
     for region_key, region_val in var.regions : [
       for project_key, project_val in var.projects : {
-        key         = "${project_key}-${region_key}"
-        region_key  = region_key
-        project_key = project_key
-        full_name   = project_val.full_name
-        short_name  = project_val.short_name
-        tags        = project_val.tags
+        key               = "${project_key}-${region_key}"
+        region_key        = region_key
+        is_primary_region = region_val.is_primary_region
+        project_key       = project_key
+        full_name         = project_val.full_name
+        short_name        = project_val.short_name
+        acr               = project_val.acr
+        tags              = project_val.tags
       }
     ]
   ])

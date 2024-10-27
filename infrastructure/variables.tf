@@ -1,7 +1,32 @@
 variable "application" {
   description = "Project/Application code for deployment"
   type        = string
-  default     = "DToS"
+  default     = "hub"
+}
+
+variable "projects" {
+  description = "Project code for deployment"
+  type = map(object({
+    full_name  = string
+    short_name = string
+    tags       = map(string)
+  }))
+}
+
+variable "regions" {
+  type = map(object({
+    address_space     = string
+    is_primary_region = bool
+    subnets = map(object({
+      cidr_newbits               = string
+      cidr_offset                = string
+      create_nsg                 = optional(bool)   # defaults to true
+      name                       = optional(string) # Optional name override
+      delegation_name            = optional(string)
+      service_delegation_name    = optional(string)
+      service_delegation_actions = optional(list(string))
+    }))
+  }))
 }
 
 variable "AVD_LOGIN_PRINCIPAL_ID" {
@@ -94,22 +119,6 @@ variable "private_dns_zones" {
     is_apim_private_dns_zone_enabled         = optional(bool, false)
     is_key_vault_private_dns_zone_enabled    = optional(bool, false)
   })
-}
-
-variable "regions" {
-  type = map(object({
-    address_space     = string
-    is_primary_region = bool
-    subnets = map(object({
-      cidr_newbits               = string
-      cidr_offset                = string
-      create_nsg                 = optional(bool)   # defaults to true
-      name                       = optional(string) # Optional name override
-      delegation_name            = optional(string)
-      service_delegation_name    = optional(string)
-      service_delegation_actions = optional(list(string))
-    }))
-  }))
 }
 
 variable "tags" {

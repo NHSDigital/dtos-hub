@@ -5,9 +5,9 @@ module "acr" {
 
   source = "git::https://github.com/NHSDigital/dtos-devops-templates.git//infrastructure/modules/azure-container-registry?ref=6dbb0d4f42e3fd1f94d4b8e85ef596b7d01844bc"
 
-  name                = "${module.config[each.value.region_key].names.azure-container-registry}${each.value.name_suffix}"
-  resource_group_name = azurerm_resource_group.rg_base[each.value.region_key].name
-  location            = each.value.region_key
+  name                = "${module.config[each.value.region].names.azure-container-registry}${each.value.name_suffix}"
+  resource_group_name = azurerm_resource_group.rg_base[each.value.region].name
+  location            = each.value.region
 
   admin_enabled                 = each.value.admin_enabled
   uai_name                      = each.value.uai_name
@@ -16,10 +16,10 @@ module "acr" {
 
   # Private Endpoint Configuration if enabled
   private_endpoint_properties = var.features.private_endpoints_enabled ? {
-    private_dns_zone_ids                 = [module.private_dns_zone_acr[each.value.region_key].private_dns_zone.id]
+    private_dns_zone_ids                 = [module.private_dns_zone_acr[each.value.region].private_dns_zone.id]
     private_endpoint_enabled             = var.features.private_endpoints_enabled
-    private_endpoint_subnet_id           = module.subnets_hub["${module.config[each.value.region_key].names.subnet}-acr"].id
-    private_endpoint_resource_group_name = azurerm_resource_group.rg_base[each.value.region_key].name
+    private_endpoint_subnet_id           = module.subnets_hub["${module.config[each.value.region].names.subnet}-acr"].id
+    private_endpoint_resource_group_name = azurerm_resource_group.rg_base[each.value.region].name
     private_service_connection_is_manual = var.features.private_service_connection_is_manual
   } : null
 

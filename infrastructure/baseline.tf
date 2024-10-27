@@ -9,7 +9,7 @@ resource "azurerm_resource_group" "rg_project" {
   # create a resource group for every project for every region:
   for_each = local.projects_map
 
-  name     = "${module.config[each.key].names.resource-group}-${each.value.short_name}"
+  name     = "${module.config[each.value.region_key].names.resource-group}-${each.value.short_name}"
   location = each.value.region_key
   tags     = length(each.value.tags) > 0 ? each.value.tags : var.tags
 }

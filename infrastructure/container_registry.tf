@@ -36,7 +36,7 @@ locals {
       sku                           = value.acr.sku
       public_network_access_enabled = value.acr.public_network_access_enabled
       region                        = value.region_key
-      tags                          = value.acr.tags
+      tags                          = value.tags
     }
     if value.acr != {} # only include acrs that are not empty
     && value.is_primary_region # only include acrs in primary regions

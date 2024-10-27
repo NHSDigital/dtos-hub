@@ -9,7 +9,6 @@ variable "projects" {
   type = map(object({
     full_name  = string
     short_name = string
-    features   = map(bool)
     acr = optional(object({
       sku                           = string
       admin_enabled                 = bool

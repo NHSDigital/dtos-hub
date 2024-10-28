@@ -50,6 +50,7 @@ module "private_dns_zone_acr" {
   tags = var.tags
 }
 
+###### Note multiple DNS zones are all deployed via the is_app_insights_private_dns_zone_enabled flag: ######
 module "private_dns_zone_app_insight" {
   for_each = {
     for key, region in var.regions :
@@ -65,6 +66,56 @@ module "private_dns_zone_app_insight" {
 
   tags = var.tags
 }
+
+module "private_dns_zone_azure_automation" {
+  for_each = {
+    for key, region in var.regions :
+    key => region if region.is_primary_region && var.private_dns_zones.is_app_insights_private_dns_zone_enabled
+  }
+
+  # Source location updated to use the git:: prefix to avoid URL encoding issues - note // between the URL and the path is required
+  source = "git::https://github.com/NHSDigital/dtos-devops-templates.git//infrastructure/modules/private-dns-zone?ref=6dbb0d4f42e3fd1f94d4b8e85ef596b7d01844bc"
+
+  name                = "privatelink.agentsvc.azure-automation.net"
+  resource_group_name = azurerm_resource_group.private_dns_rg[each.key].name
+  vnet_id             = module.vnets_hub[each.key].vnet.id
+
+  tags = var.tags
+}
+
+module "private_dns_zone_od_insights" {
+  for_each = {
+    for key, region in var.regions :
+    key => region if region.is_primary_region && var.private_dns_zones.is_app_insights_private_dns_zone_enabled
+  }
+
+  # Source location updated to use the git:: prefix to avoid URL encoding issues - note // between the URL and the path is required
+  source = "git::https://github.com/NHSDigital/dtos-devops-templates.git//infrastructure/modules/private-dns-zone?ref=6dbb0d4f42e3fd1f94d4b8e85ef596b7d01844bc"
+
+  name                = "privatelink.ods.opinsights.azure.com"
+  resource_group_name = azurerm_resource_group.private_dns_rg[each.key].name
+  vnet_id             = module.vnets_hub[each.key].vnet.id
+
+  tags = var.tags
+}
+
+module "private_dns_zone_op_insights" {
+  for_each = {
+    for key, region in var.regions :
+    key => region if region.is_primary_region && var.private_dns_zones.is_app_insights_private_dns_zone_enabled
+  }
+
+  # Source location updated to use the git:: prefix to avoid URL encoding issues - note // between the URL and the path is required
+  source = "git::https://github.com/NHSDigital/dtos-devops-templates.git//infrastructure/modules/private-dns-zone?ref=6dbb0d4f42e3fd1f94d4b8e85ef596b7d01844bc"
+
+  name                = "privatelink.oms.opinsights.azure.com"
+  resource_group_name = azurerm_resource_group.private_dns_rg[each.key].name
+  vnet_id             = module.vnets_hub[each.key].vnet.id
+
+  tags = var.tags
+}
+
+###### End of Azure Monitor / Application Insights DNS Zone ######
 
 module "private_dns_zone_api_management" {
   for_each = {

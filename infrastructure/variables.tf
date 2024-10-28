@@ -1,7 +1,38 @@
 variable "application" {
   description = "Project/Application code for deployment"
   type        = string
-  default     = "DToS"
+  default     = "hub"
+}
+
+variable "projects" {
+  description = "Project code for deployment"
+  type = map(object({
+    full_name  = string
+    short_name = string
+    acr = optional(object({
+      sku                           = string
+      admin_enabled                 = bool
+      uai_name                      = string
+      public_network_access_enabled = bool
+    }))
+    tags = map(string)
+  }))
+}
+
+variable "regions" {
+  type = map(object({
+    address_space     = string
+    is_primary_region = bool
+    subnets = map(object({
+      cidr_newbits               = string
+      cidr_offset                = string
+      create_nsg                 = optional(bool)   # defaults to true
+      name                       = optional(string) # Optional name override
+      delegation_name            = optional(string)
+      service_delegation_name    = optional(string)
+      service_delegation_actions = optional(list(string))
+    }))
+  }))
 }
 
 variable "AVD_LOGIN_PRINCIPAL_ID" {
@@ -21,22 +52,22 @@ variable "GITHUB_ORG_DATABASE_ID" {
   default     = "DEV"
 }
 
-variable "acr" {
-  description = "Configuration for Azure Container Registry"
-  type = object({
-    sku                           = optional(string)
-    admin_enabled                 = optional(bool)
-    uai_name                      = optional(string)
-    public_network_access_enabled = optional(bool, false)
-  })
-  default = {}
+# variable "acr" {
+#   description = "Configuration for Azure Container Registry"
+#   type = map(object({
+#     sku                           = optional(string)
+#     admin_enabled                 = optional(bool)
+#     uai_name                      = optional(string)
+#     public_network_access_enabled = optional(bool, false)
+#   }))
+#   default = {}
 
-  # If any ACR configuration is provided, ensure that all required fields are provided
-  validation {
-    condition     = var.acr == {} || (var.acr.sku != null && var.acr.admin_enabled != null && var.acr.uai_name != null)
-    error_message = "If ACR configuration is provided, all fields must be provided."
-  }
-}
+#   # If any ACR configuration is provided, ensure that all required fields are provided
+#   validation {
+#     condition     = var.acr == {} || (var.acr.sku != null && var.acr.admin_enabled != null && var.acr.uai_name != null)
+#     error_message = "If ACR configuration is provided, all fields must be provided."
+#   }
+# }
 
 variable "features" {
   description = "Feature flags for the deployment"
@@ -86,40 +117,14 @@ variable "network_security_group_rules" {
 variable "private_dns_zones" {
   description = "Configuration for private DNS zones"
   type = object({
-    is_app_services_enabled                  = bool
-    is_azure_sql_private_dns_zone_enabled    = bool
-    is_storage_private_dns_zone_enabled      = bool
-    is_acr_private_dns_zone_enabled          = bool
-    is_app_insights_private_dns_zone_enabled = bool
-    is_apim_private_dns_zone_enabled         = bool
-    is_key_vault_private_dns_zone_enabled    = bool
-
+    is_app_services_enabled                  = optional(bool, false)
+    is_azure_sql_private_dns_zone_enabled    = optional(bool, false)
+    is_storage_private_dns_zone_enabled      = optional(bool, false)
+    is_acr_private_dns_zone_enabled          = optional(bool, false)
+    is_app_insights_private_dns_zone_enabled = optional(bool, false)
+    is_apim_private_dns_zone_enabled         = optional(bool, false)
+    is_key_vault_private_dns_zone_enabled    = optional(bool, false)
   })
-  default = {
-    is_app_services_enabled                  = false
-    is_azure_sql_private_dns_zone_enabled    = false
-    is_storage_private_dns_zone_enabled      = false
-    is_acr_private_dns_zone_enabled          = false
-    is_app_insights_private_dns_zone_enabled = false
-    is_apim_private_dns_zone_enabled         = false
-    is_key_vault_private_dns_zone_enabled    = false
-  }
-}
-
-variable "regions" {
-  type = map(object({
-    address_space     = string
-    is_primary_region = bool
-    subnets = map(object({
-      cidr_newbits               = string
-      cidr_offset                = string
-      create_nsg                 = optional(bool)   # defaults to true
-      name                       = optional(string) # Optional name override
-      delegation_name            = optional(string)
-      service_delegation_name    = optional(string)
-      service_delegation_actions = optional(list(string))
-    }))
-  }))
 }
 
 variable "tags" {

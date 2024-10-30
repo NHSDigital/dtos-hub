@@ -39,7 +39,21 @@ variable "AVD_LOGIN_PRINCIPAL_ID" {
   type        = string
   description = "The id of the group to grant access to Azure Virtual Desktop, specified via TF_VAR env var."
 }
-
+variable "apim_config" {
+  description = "Configuration for API Management"
+  type = object({
+    sku_name                   = string
+    sku_capacity               = number
+    virtual_network_type       = string
+    publisher_email            = string
+    publisher_name             = string
+    gateway_disabled           = bool
+    public_ip_allocation_method = string
+    public_ip_sku              = string
+    zones                      = list(string)
+    tags                       = map(string)
+  })
+}
 variable "environment" {
   description = "Environment code for deployments"
   type        = string

@@ -34,7 +34,7 @@ module "apim-public-ip" {
   allocation_method   = var.apim_config.public_ip_allocation_method
   domain_name_label   = "${module.config[each.key].names.api-management}"
   sku                 = var.apim_config.public_ip_sku
-  zones               = each.value.is_primary_region ? ["1"] : null
+  zones               = var.apim_config.zones
 
   tags = var.tags
 }

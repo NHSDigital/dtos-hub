@@ -42,16 +42,16 @@ variable "AVD_LOGIN_PRINCIPAL_ID" {
 variable "apim_config" {
   description = "Configuration for API Management"
   type = object({
-    sku_name                   = string
-    sku_capacity               = number
-    virtual_network_type       = string
-    publisher_email            = string
-    publisher_name             = string
-    gateway_disabled           = bool
+    sku_name                    = string
+    sku_capacity                = number
+    virtual_network_type        = string
+    publisher_email             = string
+    publisher_name              = string
+    gateway_disabled            = bool
     public_ip_allocation_method = string
-    public_ip_sku              = string
-    zones                      = list(string)
-    tags                       = map(string)
+    public_ip_sku               = string
+    zones                       = list(string)
+    tags                        = map(string)
   })
 }
 variable "environment" {
@@ -65,23 +65,6 @@ variable "GITHUB_ORG_DATABASE_ID" {
   type        = string
   default     = "DEV"
 }
-
-# variable "acr" {
-#   description = "Configuration for Azure Container Registry"
-#   type = map(object({
-#     sku                           = optional(string)
-#     admin_enabled                 = optional(bool)
-#     uai_name                      = optional(string)
-#     public_network_access_enabled = optional(bool, false)
-#   }))
-#   default = {}
-
-#   # If any ACR configuration is provided, ensure that all required fields are provided
-#   validation {
-#     condition     = var.acr == {} || (var.acr.sku != null && var.acr.admin_enabled != null && var.acr.uai_name != null)
-#     error_message = "If ACR configuration is provided, all fields must be provided."
-#   }
-# }
 
 variable "features" {
   description = "Feature flags for the deployment"

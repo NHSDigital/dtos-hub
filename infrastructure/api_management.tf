@@ -1,10 +1,9 @@
 module "api-management" {
   for_each = var.regions
 
-  # Source location updated to use the git:: prefix to avoid URL encoding issues - note // between the URL and the path is required
-  source = "git::https://github.com/NHSDigital/dtos-devops-templates.git//infrastructure/modules/api-management?ref=0151db0bc6eb554a8e4ced044be36cb1cb7ba7b3"
+  source = "../../dtos-devops-templates/infrastructure/modules/api-management"
 
-  name                          = "${module.config[each.key].names.api-management}"
+  name                          = module.config[each.key].names.api-management
   resource_group_name           = azurerm_resource_group.rg_hub[each.key].name
   location                      = each.key
   certificate_details           = []
@@ -25,14 +24,13 @@ module "api-management" {
 module "apim-public-ip" {
   for_each = var.regions
 
-  # Source location updated to use the git:: prefix to avoid URL encoding issues - note // between the URL and the path is required
-  source = "git::https://github.com/NHSDigital/dtos-devops-templates.git//infrastructure/modules/public-ip?ref=03f00be0347a4b086911abefb67dc3dc432d8eff"
+  source = "../../dtos-devops-templates/infrastructure/modules/public-ip"
 
   name                = "${module.config[each.key].names.public-ip-address}-api-mgmt"
   resource_group_name = azurerm_resource_group.rg_hub[each.key].name
   location            = each.key
   allocation_method   = var.apim_config.public_ip_allocation_method
-  domain_name_label   = "${module.config[each.key].names.api-management}"
+  domain_name_label   = module.config[each.key].names.api-management
   sku                 = var.apim_config.public_ip_sku
   zones               = var.apim_config.zones
 

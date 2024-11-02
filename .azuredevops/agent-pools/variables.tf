@@ -82,7 +82,7 @@ variable "fabric_profile_sku_name" {
 
 variable "maximum_concurrency" {
   type    = number
-  default = 1
+  default = 2
 }
 
 variable "regions" {

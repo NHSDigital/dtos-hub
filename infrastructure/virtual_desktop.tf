@@ -8,8 +8,7 @@ resource "azurerm_resource_group" "avd" {
 module "virtual-desktop" {
   for_each = var.regions
 
-  # Source location updated to use the git:: prefix to avoid URL encoding issues - note // between the URL and the path is required
-  source = "git::https://github.com/NHSDigital/dtos-devops-templates.git//infrastructure/modules/virtual-desktop?ref=783b7d1e39b4f8e299fad5018396c7399742a0dc"
+  source = "../../dtos-devops-templates/infrastructure/modules/virtual-desktop"
 
   custom_rdp_properties   = "drivestoredirect:s:*;audiomode:i:0;videoplaybackmode:i:1;redirectclipboard:i:1;redirectprinters:i:1;devicestoredirect:s:*;redirectcomports:i:1;redirectsmartcards:i:1;usbdevicestoredirect:s:*;enablecredsspsupport:i:1;redirectwebauthn:i:1;use multimon:i:1;enablerdsaadauth:i:1;"
   dag_name                = module.config[each.key].names.avd-dag

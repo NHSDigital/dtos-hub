@@ -13,8 +13,7 @@ resource "azurerm_resource_group" "private_dns_rg" {
 module "private_dns_resolver" {
   for_each = { for key, region in var.regions : key => region if region.is_primary_region }
 
-  # Source location updated to use the git:: prefix to avoid URL encoding issues - note // between the URL and the path is required
-  source = "git::https://github.com/NHSDigital/dtos-devops-templates.git//infrastructure/modules/private-dns-zone-resolver?ref=6dbb0d4f42e3fd1f94d4b8e85ef596b7d01844bc"
+  source = "../../dtos-devops-templates/infrastructure/modules/private-dns-zone-resolver"
 
   name                = "${module.config[each.key].names.resource-application}-private-dns-zone-resolver"
   resource_group_name = azurerm_resource_group.private_dns_rg[each.key].name
@@ -40,8 +39,7 @@ module "private_dns_zone_acr" {
     key => region if region.is_primary_region && var.private_dns_zones.is_acr_private_dns_zone_enabled
   }
 
-  # Source location updated to use the git:: prefix to avoid URL encoding issues - note // between the URL and the path is required
-  source = "git::https://github.com/NHSDigital/dtos-devops-templates.git//infrastructure/modules/private-dns-zone?ref=6dbb0d4f42e3fd1f94d4b8e85ef596b7d01844bc"
+  source = "../../dtos-devops-templates/infrastructure/modules/private-dns-zone"
 
   name                = "privatelink.azurecr.io"
   resource_group_name = azurerm_resource_group.private_dns_rg[each.key].name
@@ -57,8 +55,7 @@ module "private_dns_zone_app_insight" {
     key => region if region.is_primary_region && var.private_dns_zones.is_app_insights_private_dns_zone_enabled
   }
 
-  # Source location updated to use the git:: prefix to avoid URL encoding issues - note // between the URL and the path is required
-  source = "git::https://github.com/NHSDigital/dtos-devops-templates.git//infrastructure/modules/private-dns-zone?ref=6dbb0d4f42e3fd1f94d4b8e85ef596b7d01844bc"
+  source = "../../dtos-devops-templates/infrastructure/modules/private-dns-zone"
 
   name                = "privatelink.monitor.azure.com"
   resource_group_name = azurerm_resource_group.private_dns_rg[each.key].name
@@ -73,8 +70,7 @@ module "private_dns_zone_azure_automation" {
     key => region if region.is_primary_region && var.private_dns_zones.is_app_insights_private_dns_zone_enabled
   }
 
-  # Source location updated to use the git:: prefix to avoid URL encoding issues - note // between the URL and the path is required
-  source = "git::https://github.com/NHSDigital/dtos-devops-templates.git//infrastructure/modules/private-dns-zone?ref=6dbb0d4f42e3fd1f94d4b8e85ef596b7d01844bc"
+  source = "../../dtos-devops-templates/infrastructure/modules/private-dns-zone"
 
   name                = "privatelink.agentsvc.azure-automation.net"
   resource_group_name = azurerm_resource_group.private_dns_rg[each.key].name
@@ -89,8 +85,7 @@ module "private_dns_zone_od_insights" {
     key => region if region.is_primary_region && var.private_dns_zones.is_app_insights_private_dns_zone_enabled
   }
 
-  # Source location updated to use the git:: prefix to avoid URL encoding issues - note // between the URL and the path is required
-  source = "git::https://github.com/NHSDigital/dtos-devops-templates.git//infrastructure/modules/private-dns-zone?ref=6dbb0d4f42e3fd1f94d4b8e85ef596b7d01844bc"
+  source = "../../dtos-devops-templates/infrastructure/modules/private-dns-zone"
 
   name                = "privatelink.ods.opinsights.azure.com"
   resource_group_name = azurerm_resource_group.private_dns_rg[each.key].name
@@ -105,8 +100,7 @@ module "private_dns_zone_op_insights" {
     key => region if region.is_primary_region && var.private_dns_zones.is_app_insights_private_dns_zone_enabled
   }
 
-  # Source location updated to use the git:: prefix to avoid URL encoding issues - note // between the URL and the path is required
-  source = "git::https://github.com/NHSDigital/dtos-devops-templates.git//infrastructure/modules/private-dns-zone?ref=6dbb0d4f42e3fd1f94d4b8e85ef596b7d01844bc"
+  source = "../../dtos-devops-templates/infrastructure/modules/private-dns-zone"
 
   name                = "privatelink.oms.opinsights.azure.com"
   resource_group_name = azurerm_resource_group.private_dns_rg[each.key].name
@@ -123,8 +117,7 @@ module "private_dns_zone_api_management" {
     key => region if region.is_primary_region && var.private_dns_zones.is_apim_private_dns_zone_enabled
   }
 
-  # Source location updated to use the git:: prefix to avoid URL encoding issues - note // between the URL and the path is required
-  source = "git::https://github.com/NHSDigital/dtos-devops-templates.git//infrastructure/modules/private-dns-zone?ref=6dbb0d4f42e3fd1f94d4b8e85ef596b7d01844bc"
+  source = "../../dtos-devops-templates/infrastructure/modules/private-dns-zone"
 
   name                = "privatelink.azure-api.net"
   resource_group_name = azurerm_resource_group.private_dns_rg[each.key].name
@@ -139,8 +132,7 @@ module "private_dns_zone_app_services" {
     key => region if region.is_primary_region && var.private_dns_zones.is_app_services_enabled
   }
 
-  # Source location updated to use the git:: prefix to avoid URL encoding issues - note // between the URL and the path is required
-  source = "git::https://github.com/NHSDigital/dtos-devops-templates.git//infrastructure/modules/private-dns-zone?ref=6dbb0d4f42e3fd1f94d4b8e85ef596b7d01844bc"
+  source = "../../dtos-devops-templates/infrastructure/modules/private-dns-zone"
 
   name                = "privatelink.azurewebsites.net"
   resource_group_name = azurerm_resource_group.private_dns_rg[each.key].name
@@ -155,8 +147,7 @@ module "private_dns_zone_azure_sql" {
     key => region if region.is_primary_region && var.private_dns_zones.is_azure_sql_private_dns_zone_enabled
   }
 
-  # Source location updated to use the git:: prefix to avoid URL encoding issues - note // between the URL and the path is required
-  source = "git::https://github.com/NHSDigital/dtos-devops-templates.git//infrastructure/modules/private-dns-zone?ref=6dbb0d4f42e3fd1f94d4b8e85ef596b7d01844bc"
+  source = "../../dtos-devops-templates/infrastructure/modules/private-dns-zone"
 
   name                = "privatelink.database.windows.net"
   resource_group_name = azurerm_resource_group.private_dns_rg[each.key].name
@@ -171,8 +162,7 @@ module "private_dns_zone_key_vault" {
     key => region if region.is_primary_region && var.private_dns_zones.is_key_vault_private_dns_zone_enabled
   }
 
-  # Source location updated to use the git:: prefix to avoid URL encoding issues - note // between the URL and the path is required
-  source = "git::https://github.com/NHSDigital/dtos-devops-templates.git//infrastructure/modules/private-dns-zone?ref=6dbb0d4f42e3fd1f94d4b8e85ef596b7d01844bc"
+  source = "../../dtos-devops-templates/infrastructure/modules/private-dns-zone"
 
   name                = "privatelink.vaultcore.azure.net"
   resource_group_name = azurerm_resource_group.private_dns_rg[each.key].name
@@ -187,8 +177,7 @@ module "private_dns_zone_storage_blob" {
     key => region if region.is_primary_region && var.private_dns_zones.is_storage_private_dns_zone_enabled
   }
 
-  # Source location updated to use the git:: prefix to avoid URL encoding issues - note // between the URL and the path is required
-  source = "git::https://github.com/NHSDigital/dtos-devops-templates.git//infrastructure/modules/private-dns-zone?ref=6dbb0d4f42e3fd1f94d4b8e85ef596b7d01844bc"
+  source = "../../dtos-devops-templates/infrastructure/modules/private-dns-zone"
 
   name                = "privatelink.blob.core.windows.net"
   resource_group_name = azurerm_resource_group.private_dns_rg[each.key].name
@@ -203,8 +192,7 @@ module "private_dns_zone_storage_queue" {
     key => region if region.is_primary_region && var.private_dns_zones.is_storage_private_dns_zone_enabled
   }
 
-  # Source location updated to use the git:: prefix to avoid URL encoding issues - note // between the URL and the path is required
-  source = "git::https://github.com/NHSDigital/dtos-devops-templates.git//infrastructure/modules/private-dns-zone?ref=6dbb0d4f42e3fd1f94d4b8e85ef596b7d01844bc"
+  source = "../../dtos-devops-templates/infrastructure/modules/private-dns-zone"
 
   name                = "privatelink.queue.core.windows.net"
   resource_group_name = azurerm_resource_group.private_dns_rg[each.key].name

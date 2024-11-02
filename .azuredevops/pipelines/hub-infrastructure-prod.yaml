@@ -13,25 +13,39 @@ trigger:
     include:
       - infrastructure/*
 
+pool:
+  #vmImage: ubuntu-latest
+  name: private-pool-prod-uks
+
+resources:
+  repositories:
+    - repository: dtos-devops-templates
+      type: github
+      name: NHSDigital/dtos-devops-templates
+      ref: 46e5d81bf58a7b9324a35e191eac7f6cc3660dfd
+      endpoint: NHSDigital
+
 variables:
   - group: global_prod_variable_group
   - group: prod_variable_group
   - name: TF_DIRECTORY
-    value: $(System.DefaultWorkingDirectory)/infrastructure
-
-pool:
-  #vmImage: ubuntu-latest
-  name: 'private-pool-prod-uks'
+    value: $(System.DefaultWorkingDirectory)/$(System.TeamProject)/infrastructure
+  - name: ENVIRONMENT
+    value: production
 
 stages:
   - stage: terraform_plan
     displayName: Terraform Plan
     condition: eq(variables['Build.Reason'], 'Manual')
+    variables:
+      tfvars: environments/$(ENVIRONMENT).tfvars
     jobs:
       - job: init_and_plan
         displayName: Init, plan, store artifact
         steps:
-          - template: ../templates/steps/tf_plan.yaml
+          - checkout: self
+          - checkout: dtos-devops-templates
+          - template: .azuredevops/templates/steps/tf_plan.yaml@dtos-devops-templates
 
   - stage: terraform_apply
     displayName: Terraform Apply
@@ -45,4 +59,6 @@ stages:
           runOnce:
             deploy:
               steps:
-                - template: ../templates/steps/tf_apply.yaml
+                - checkout: self
+                - checkout: dtos-devops-templates
+                - template: .azuredevops/templates/steps/tf_apply.yaml@dtos-devops-templates

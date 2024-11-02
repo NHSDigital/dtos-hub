@@ -3,7 +3,7 @@ environment = "DEV"
 
 projects = {
   dtos-cohort-manager = {
-    full_name = "cohort-manager"
+    full_name  = "cohort-manager"
     short_name = "cohman"
     acr = {
       sku                           = "Premium"
@@ -15,8 +15,9 @@ projects = {
       Project = "DToS Cohort Manager"
     }
   }
+
   dtos-communication-management = {
-    full_name = "communication-management"
+    full_name  = "communication-management"
     short_name = "commgt"
     acr = {
       sku                           = "Premium"
@@ -73,14 +74,14 @@ regions = {
         service_delegation_actions = ["Microsoft.Network/virtualNetworks/subnets/join/action"]
       }
       dns-resolver-in = {
-        cidr_newbits = 12
-        cidr_offset  = 112
+        cidr_newbits               = 12
+        cidr_offset                = 112
         delegation_name            = "Microsoft.Network/dnsResolvers"
         service_delegation_name    = "Microsoft.Network/dnsResolvers"
         service_delegation_actions = ["Microsoft.Network/virtualNetworks/subnets/join/action"]
       }
       firewall = {
-        name = "AzureFirewallSubnet"
+        name         = "AzureFirewallSubnet"
         cidr_newbits = 10
         cidr_offset  = 192
         create_nsg   = false
@@ -88,18 +89,19 @@ regions = {
     }
   }
 }
+
 apim_config = {
-  sku_name = "Developer"
-  sku_capacity = 1
+  sku_name             = "Developer"
+  sku_capacity         = 1
   virtual_network_type = "Internal"
-  publisher_email = "apim.dtos@hscic.gov.uk"
-  publisher_name = "DToS - NHS Digital"
-  gateway_disabled = false
-  zones = []
+  publisher_email      = "apim.dtos@hscic.gov.uk"
+  publisher_name       = "DToS - NHS Digital"
+  gateway_disabled     = false
+  zones                = []
 
   # ip address configuration
   public_ip_allocation_method = "Static"
-  public_ip_sku = "Standard"
+  public_ip_sku               = "Standard"
 
   tags = {
     Project = "DToS Hub"
@@ -135,7 +137,7 @@ private_dns_zones = {
 }
 
 network_security_group_rules = {
-  api-mgmt = [
+  api-mgmt = [ # subnet key from regions map above
     {
       name                       = "ManagementEndpointForAzureportal"
       priority                   = 1600
@@ -192,28 +194,29 @@ network_security_group_rules = {
       destination_address_prefix = "AzureMonitor"
     }
   ],
+
   app-gateway = [
     {
-      name                        = "Azure_Traffic_Manager_Probes"
-      priority                    = 1400
-      direction                   = "Inbound"
-      access                      = "Allow"
-      protocol                    = "Tcp"
-      source_port_range           = "*"
-      destination_port_range      = "443"
-      source_address_prefix       = "AzureTrafficManager"
-      destination_address_prefix  = "VirtualNetwork"
+      name                       = "Azure_Traffic_Manager_Probes"
+      priority                   = 1400
+      direction                  = "Inbound"
+      access                     = "Allow"
+      protocol                   = "Tcp"
+      source_port_range          = "*"
+      destination_port_range     = "443"
+      source_address_prefix      = "AzureTrafficManager"
+      destination_address_prefix = "VirtualNetwork"
     },
     {
-      name                        = "Gateway_Manager_Ports"
-      priority                    = 1500
-      direction                   = "Inbound"
-      access                      = "Allow"
-      protocol                    = "*"
-      source_port_range           = "*"
-      destination_port_range      = "65200-65535"
-      source_address_prefix       = "GatewayManager"
-      destination_address_prefix  = "*"
+      name                       = "Gateway_Manager_Ports"
+      priority                   = 1500
+      direction                  = "Inbound"
+      access                     = "Allow"
+      protocol                   = "*"
+      source_port_range          = "*"
+      destination_port_range     = "65200-65535"
+      source_address_prefix      = "GatewayManager"
+      destination_address_prefix = "*"
     }
   ],
 

@@ -3,7 +3,7 @@ module "acr" {
   # only create in regions where is_primary_region is true and only when acr map is not empty
   for_each = local.acr_map
 
-  source = "git::https://github.com/NHSDigital/dtos-devops-templates.git//infrastructure/modules/azure-container-registry?ref=6dbb0d4f42e3fd1f94d4b8e85ef596b7d01844bc"
+  source = "../../dtos-devops-templates/infrastructure/modules/container-registry"
 
   name                = "${module.config[each.value.region].names.azure-container-registry}${each.value.name_suffix}"
   resource_group_name = azurerm_resource_group.rg_project[each.value.project_key].name
@@ -39,7 +39,7 @@ locals {
       region                        = value.region_key
       tags                          = value.tags
     }
-    if value.acr != {} # only include acrs that are not empty
+    if value.acr != {}         # only include acrs that are not empty
     && value.is_primary_region # only include acrs in primary regions
   }
 }

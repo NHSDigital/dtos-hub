@@ -8,8 +8,7 @@ resource "azurerm_resource_group" "rg_hub" {
 module "vnets_hub" {
   for_each = var.regions
 
-  # Source location updated to use the git:: prefix to avoid URL encoding issues - note // between the URL and the path is required
-  source = "git::https://github.com/NHSDigital/dtos-devops-templates.git//infrastructure/modules/vnet?ref=6dbb0d4f42e3fd1f94d4b8e85ef596b7d01844bc"
+  source = "../../dtos-devops-templates/infrastructure/modules/vnet"
 
   name                = module.config[each.key].names.virtual-network
   resource_group_name = azurerm_resource_group.rg_hub[each.key].name
@@ -44,7 +43,7 @@ locals {
 module "subnets_hub" {
   for_each = local.subnets_map
 
-  source = "git::https://github.com/NHSDigital/dtos-devops-templates.git//infrastructure/modules/subnet?ref=a97430c23c686fc16fa5cf387794c394aab01f54"
+  source = "../../dtos-devops-templates/infrastructure/modules/subnet"
 
   name                              = each.value.subnet_name
   location                          = module.vnets_hub[each.value.vnet_key].vnet.location

@@ -1,9 +1,9 @@
 module "firewall" {
   for_each = var.regions
 
-  source = "git::https://github.com/NHSDigital/dtos-devops-templates.git//infrastructure/modules/firewall?ref=36101b5776ad52fb0909a6e17fd3fb9b6c6db540"
+  source = "../../dtos-devops-templates/infrastructure/modules/firewall"
 
-  firewall_name       = "${module.config[each.key].names.firewall}"
+  firewall_name       = module.config[each.key].names.firewall
   resource_group_name = azurerm_resource_group.rg_hub[each.key].name
   location            = each.key
 
@@ -33,7 +33,7 @@ module "firewall" {
 module "public_ip" {
   for_each = local.public_ips_map
 
-  source = "git::https://github.com/NHSDigital/dtos-devops-templates.git//infrastructure/modules/public-ip?ref=36101b5776ad52fb0909a6e17fd3fb9b6c6db540"
+  source = "../../dtos-devops-templates/infrastructure/modules/public-ip"
 
   name                = "${module.config[each.value.region_key].names.public-ip-address}-${each.value.name_suffix}"
   resource_group_name = azurerm_resource_group.rg_hub[each.value.region_key].name
@@ -50,13 +50,13 @@ locals {
   public_ips_flatlist = flatten([
     for region_key, region_val in var.regions : [
       for public_ip_key, public_ip_val in var.firewall_config.public_ip_addresses : {
-        key_name = "${public_ip_key}-${region_key}"
-        region_key = region_key
-        name_suffix = public_ip_val.name_suffix
-        allocation_method = public_ip_val.allocation_method
+        key_name             = "${public_ip_key}-${region_key}"
+        region_key           = region_key
+        name_suffix          = public_ip_val.name_suffix
+        allocation_method    = public_ip_val.allocation_method
         ddos_protection_mode = public_ip_val.ddos_protection_mode
-        sku = public_ip_val.sku
-        zones = var.firewall_config.zones
+        sku                  = public_ip_val.sku
+        zones                = var.firewall_config.zones
       }
     ]
   ])

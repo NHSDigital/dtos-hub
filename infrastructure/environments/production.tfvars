@@ -3,7 +3,7 @@ environment = "PROD"
 
 projects = {
   dtos-cohort-manager = {
-    full_name = "cohort-manager"
+    full_name  = "cohort-manager"
     short_name = "cohman"
     acr = {
       sku                           = "Premium"
@@ -15,6 +15,13 @@ projects = {
       Project = "DToS Cohort Manager"
     }
   }
+}
+
+features = {
+  private_endpoints_enabled            = true
+  private_service_connection_is_manual = false
+  public_network_access_enabled        = true
+  github_actions_enabled               = false
 }
 
 regions = {
@@ -63,24 +70,18 @@ regions = {
   }
 }
 
-features = {
-  private_endpoints_enabled            = true
-  private_service_connection_is_manual = false
-  public_network_access_enabled        = true
-  github_actions_enabled               = false
-}
 apim_config = {
-  sku_name = "Premium"
-  sku_capacity = 3
+  sku_name             = "Premium"
+  sku_capacity         = 3
   virtual_network_type = "Internal"
-  publisher_email = "apim.dtos@hscic.gov.uk"
-  publisher_name = "DToS - NHS Digital"
-  gateway_disabled = false
-  zones = ["1", "2", "3"]
+  publisher_email      = "apim.dtos@hscic.gov.uk"
+  publisher_name       = "DToS - NHS Digital"
+  gateway_disabled     = false
+  zones                = ["1", "2", "3"]
 
   # ip address configuration
   public_ip_allocation_method = "Static"
-  public_ip_sku = "Standard"
+  public_ip_sku               = "Standard"
 
   tags = {
     Project = "DToS Hub"
@@ -116,7 +117,7 @@ private_dns_zones = {
 }
 
 network_security_group_rules = {
-  api-mgmt = [
+  api-mgmt = [ # subnet key from regions map above
     {
       name                       = "ManagementEndpointForAzureportal"
       priority                   = 1600
@@ -173,6 +174,7 @@ network_security_group_rules = {
       destination_address_prefix = "AzureMonitor"
     }
   ],
+
   virtual-desktop = [ # subnet key from regions map above
     {
       name                       = "AllowRDPfromAVD"
@@ -186,6 +188,7 @@ network_security_group_rules = {
       destination_address_prefix = "VirtualNetwork"
     }
   ],
+
   github-actions = [
     {
       name                       = "AllowStorageOutbound"

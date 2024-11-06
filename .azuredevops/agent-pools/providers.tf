@@ -20,3 +20,8 @@ provider "azurerm" {
   subscription_id = var.TARGET_SUBSCRIPTION_ID
   features {}
 }
+
+provider "azapi" {
+  subscription_id = var.TARGET_SUBSCRIPTION_ID
+  use_msi         = false # prevents 'ChainedTokenCredential authentication failed' when terraform uses AzureCLI auth
+}

@@ -29,6 +29,20 @@ projects = {
       Project = "DToS Communication Management"
     }
   }
+
+  dtos-service-insights = {
+    full_name  = "service-insights"
+    short_name = "serint"
+    acr = {
+      sku                           = "Premium"
+      admin_enabled                 = false
+      uai_name                      = "dtos-service-insights-acr-push"
+      public_network_access_enabled = true
+    }
+    tags = {
+      Project = "DToS Service Insights"
+    }
+  }
 }
 
 features = {

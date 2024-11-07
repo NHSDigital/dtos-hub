@@ -22,7 +22,7 @@ module "virtual-desktop" {
   source_image_sku        = "win11-23h2-avd"
   source_image_version    = "latest"
   subnet_id               = module.subnets_hub["${module.config[each.key].names.subnet}-virtual-desktop"].id
-  vm_count                = 1
+  vm_count                = 2
   vm_name_prefix          = module.config[each.key].names.avd-host
   vm_storage_account_type = "StandardSSD_LRS"
   vm_size                 = "Standard_D2as_v5"

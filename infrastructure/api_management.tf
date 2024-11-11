@@ -8,6 +8,7 @@ module "api-management" {
   location                      = each.key
   certificate_details           = []
   gateway_disabled              = var.apim_config.gateway_disabled
+  log_analytics_workspace_id = data.terraform_remote_state.audit.outputs.log_analytics_workspace_id[local.primary_region].id
   public_ip_address_id          = module.apim-public-ip[each.key].id
   publisher_email               = var.apim_config.publisher_email
   publisher_name                = var.apim_config.publisher_name

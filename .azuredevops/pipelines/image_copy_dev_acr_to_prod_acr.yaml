@@ -1,0 +1,200 @@
+---
+# Parameters for pipeline
+parameters:
+  - name: sourceRegistry
+    displayName: Source Registry
+    type: string
+    default: acrukscohmandev
+  - name: sourceImageTag
+    displayName: Source Image Tag
+    type: string
+    default: integration
+
+  - name: destRegistry
+    displayName: Destination Registry
+    type: string
+    default: acrukshubprodcohman
+  - name: destImageTag
+    displayName: Image Tag
+    type: string
+    default: preprod
+
+trigger:
+- none
+
+variables:
+  - name: why
+    ${{ if eq(variables['Build.Reason'], 'PullRequest') }}:
+      value: pr
+    ${{ elseif eq(variables['Build.Reason'], 'Manual' ) }}:
+      value: manual
+    ${{ elseif eq(variables['Build.Reason'], 'IndividualCI' ) }}:
+      value: indivci
+    ${{ else }}:
+      value: other
+
+name: $(Date:yyyyMMdd)$(Rev:.r)_$(SourceBranchName)_$(why)
+
+stages:
+- stage: stage_copy_images
+  displayName: Copy images from Dev Registry to Prod Registry
+
+  jobs:
+    # Job 1: Save image as artifact
+  - job: job_pull_images
+    pool:
+      vmImage: 'ubuntu-latest'
+    displayName: Grab image and save as artifact
+    variables:
+    - group: development_variable_group
+    steps:
+    - task: AzureCLI@2
+      env:
+        SOURCE_REGISTRY: ${{ parameters.sourceRegistry }}
+        SOURCE_TAG: ${{ parameters.sourceImageTag}}
+      name: pull_images
+      displayName: Pull Images from ${{ parameters.sourceRegistry }}
+      inputs:
+        azureSubscription: $(SERVICE_CONNECTION)
+        scriptType: bash
+        scriptLocation: inlineScript
+        inlineScript: |
+
+          # Define array of image names:
+          dockerImageNames=(
+              "cohort-manager-process-caas-file"
+              "cohort-manager-receive-caas-file"
+              "cohort-manager-create-exception"
+              "cohort-manager-add-cohort-distribution-data"
+              "cohort-manager-create-cohort-distribution"
+              "cohort-manager-remove-cohort-distribution-data"
+              "cohort-manager-retrieve-cohort-distribution-data"
+              "cohort-manager-retrieve-cohort-replay"
+              "cohort-manager-retrieve-participant-data"
+              "cohort-manager-allocate-service-provider"
+              "cohort-manager-transform-data-service"
+              "cohort-manager-validate-cohort-distribution-record"
+              "cohort-manager-demographic-data-management"
+              "cohort-manager-devops-testing-service"
+              "cohort-manager-remove-participant"
+              "cohort-manager-add-participant"
+              "cohort-manager-update-participant"
+              "cohort-manager-create-participant"
+              "cohort-manager-demographic-data-service"
+              "cohort-manager-get-validation-exceptions"
+              "cohort-manager-mark-participant-as-eligible"
+              "cohort-manager-mark-participant-as-ineligible"
+              "cohort-manager-update-participant-details"
+              "cohort-manager-file-validation"
+              "cohort-manager-lookup-validation"
+              "cohort-manager-static-validation"
+              "cohort-manager-remove-validation-exception-data"
+              "cohort-manager-retrieve-cohort-request-audit"
+              "cohort-manager-retrieve-mesh-file"
+          )
+
+          echo "##[debug] Logging in to $SOURCE_REGISTRY:"
+          echo "##[command]az acr login -n $SOURCE_REGISTRY"
+          az acr login -n $SOURCE_REGISTRY
+
+          # Loop through the image names:
+          for dockerImageName in "${dockerImageNames[@]}"; do
+              echo "##[debug] Pulling image:"
+              echo "##[command]docker image pull ${SOURCE_REGISTRY}.azurecr.io/${dockerImageName}:${SOURCE_TAG}"
+              docker image pull ${SOURCE_REGISTRY}.azurecr.io/${dockerImageName}:${SOURCE_TAG}
+          done
+
+          echo "##[debug] Showing all images:"
+          echo "##[command]docker images"
+          docker images
+
+    - task: Bash@3
+      displayName: Save image to file
+      env:
+        SOURCE_TAG: ${{ parameters.sourceImageTag }}
+        SOURCE_REGISTRY: ${{ parameters.sourceRegistry }}
+        SOURCE_REPONAME: ${{ parameters.sourceRepoName}}
+      inputs:
+        targetType: inline
+        script: |
+          echo "##[debug] Saving docker image as a file:"
+          echo "##[command]docker image save $SOURCE_REGISTRY.azurecr.io/$SOURCE_REPONAME:$SOURCE_TAG | gzip > $(Pipeline.Workspace)/$SOURCE_REPONAME-$SOURCE_TAG.tar.gz"
+          docker image save $SOURCE_REGISTRY.azurecr.io/$SOURCE_REPONAME:$SOURCE_TAG | gzip > $(Pipeline.Workspace)/$SOURCE_REPONAME-$SOURCE_TAG.tar.gz
+
+          echo "##[debug] Confirming file was created..."
+          if [ ! -f $(Pipeline.Workspace)/$SOURCE_REPONAME-$SOURCE_TAG.tar.gz ]; then
+            echo "##[error] Could not find $(Pipeline.Workspace)/$SOURCE_REPONAME-$SOURCE_TAG.tar.gz."
+            echo "##vso[task.logissue type=error] Could not find $(Pipeline.Workspace)/$SOURCE_REPONAME-$SOURCE_TAG.tar.gz."
+          else
+            echo "##[debug] File created successfully."
+          fi
+
+    - task: PublishPipelineArtifact@1
+      displayName: Publish image to pipeline
+      name: publish_image
+      inputs:
+        targetPath: '$(Pipeline.Workspace)/${{ parameters.sourceRepoName }}-${{ parameters.sourceImageTag }}.tar.gz'
+        artifact: image
+        publishLocation: 'pipeline'
+
+    # Job 2: Copy image to destination repository
+  - job: job_push_images
+    pool:
+      name: 'private-pool-prod-uks'
+    displayName: Import image from artifact and push
+    variables:
+    - group: prod_variable_group
+    dependsOn:
+    - job_pull_images
+    steps:
+    - task: DownloadPipelineArtifact@1
+      displayName: Download image from pipeline
+      name: download_image
+      inputs:
+        targetPath: '$(Pipeline.Workspace)'
+        artifactName: image
+
+    - task: Bash@3
+      displayName: Test
+      inputs:
+        targetType: inline
+        script: |
+          ls $(Pipeline.Workspace)
+
+    - task: AzureCLI@2
+      displayName: Push image to ${{ parameters.destRegistry }}
+      name: push_image
+      env:
+        DEST_REGISTRY: ${{ parameters.destRegistry }}
+        SOURCE_REGISTRY: ${{ parameters.sourceRegistry }}
+        SOURCE_REPONAME: ${{ parameters.sourceRepoName }}
+        SOURCE_TAG: ${{ parameters.sourceImageTag }}
+        DEST_TAG: ${{ parameters.destImageTag }}
+        DEST_REPONAME: ${{ parameters.destRepoName }}
+      inputs:
+        azureSubscription: ${{ parameters.destServiceConnectionName }}
+        scriptType: bash
+        scriptLocation: inlineScript
+        inlineScript: |
+          echo "##[debug] Logging in to ACR Prod:"
+          echo "##[command]az acr login -n $DEST_REGISTRY"
+          az acr login -n $DEST_REGISTRY
+
+          echo "##[debug] Loading image from file:"
+          echo "##[command]docker load < $(Pipeline.Workspace)/$SOURCE_REPONAME-$SOURCE_TAG.tar.gz"
+          docker load < $(Pipeline.Workspace)/$SOURCE_REPONAME-$SOURCE_TAG.tar.gz
+          echo "##[debug] Done."
+
+          echo "##[debug] Tagging loaded image:"
+          echo "##[command]docker image tag $SOURCE_REGISTRY.azurecr.io/$SOURCE_REPONAME:$SOURCE_TAG $DEST_REGISTRY.azurecr.io/$DEST_REPONAME:$DEST_TAG"
+          docker image tag $SOURCE_REGISTRY.azurecr.io/$SOURCE_REPONAME:$SOURCE_TAG $DEST_REGISTRY.azurecr.io/$DEST_REPONAME:$DEST_TAG
+          echo "##[debug] Done."
+
+          echo "##[debug] Showing all images:"
+          echo "##[command]docker images"
+          docker images
+
+          echo "##[debug] Pushing to $DEST_REGISTRY:"
+          echo "##[command]docker image push $DEST_REGISTRY.azurecr.io/$DEST_REPONAME:$DEST_TAG"
+          docker image push $DEST_REGISTRY.azurecr.io/$DEST_REPONAME:$DEST_TAG
+          echo "##[debug] Done."

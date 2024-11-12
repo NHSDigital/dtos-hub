@@ -26,3 +26,10 @@ provider "azurerm" {
   # Subscription Id to create the resources is passed in via TF variables
   subscription_id = var.TARGET_SUBSCRIPTION_ID
 }
+
+provider "azapi" {
+  subscription_id = var.TARGET_SUBSCRIPTION_ID
+  use_msi         = false # prevents 'ChainedTokenCredential authentication failed' when terraform uses AzureCLI auth
+}
+
+provider "azuread" {}

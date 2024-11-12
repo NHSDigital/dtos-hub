@@ -14,7 +14,8 @@ module "virtual-desktop" {
   dag_name                = module.config[each.key].names.avd-dag
   host_pool_name          = module.config[each.key].names.avd-host-pool
   location                = each.key
-  login_principal_id      = var.AVD_LOGIN_PRINCIPAL_ID
+  entra_users_group_id    = data.azuread_group.avd_users.id
+  entra_admins_group_id   = data.azuread_group.avd_admins.id
   resource_group_name     = azurerm_resource_group.avd[each.key].name
   resource_group_id       = azurerm_resource_group.avd[each.key].id
   source_image_offer      = "windows-11"
@@ -22,7 +23,7 @@ module "virtual-desktop" {
   source_image_sku        = "win11-23h2-avd"
   source_image_version    = "latest"
   subnet_id               = module.subnets_hub["${module.config[each.key].names.subnet}-virtual-desktop"].id
-  vm_count                = 2
+  vm_count                = var.avd_vm_count
   vm_name_prefix          = module.config[each.key].names.avd-host
   vm_storage_account_type = "StandardSSD_LRS"
   vm_size                 = "Standard_D2as_v5"

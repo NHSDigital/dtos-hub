@@ -32,7 +32,7 @@ projects = {
 
   dtos-service-insights = {
     full_name  = "service-insights"
-    short_name = "serint"
+    short_name = "serins"
     acr = {
       sku                           = "Premium"
       admin_enabled                 = false

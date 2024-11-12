@@ -88,6 +88,10 @@ apim_config = {
   }
 }
 
+avd_vm_count          = 2
+avd_users_group_name  = "DToS-hub-prod-uks-hub-virtual-desktop-User-Login"
+avd_admins_group_name = "DToS-hub-prod-uks-hub-virtual-desktop-User-ADMIN-Login"
+
 firewall_config = {
   firewall_sku_name = "AZFW_VNet"
   firewall_sku_tier = "Standard"
@@ -103,6 +107,13 @@ firewall_config = {
   policy_threat_intelligence_mode = "Alert"
   policy_dns_proxy_enabled        = false
   zones                           = ["1", "2", "3"]
+}
+
+key_vault = {
+  disk_encryption   = true
+  soft_del_ret_days = 7
+  purge_prot        = false
+  sku_name          = "standard"
 }
 
 private_dns_zones = {

@@ -25,7 +25,7 @@ locals {
     for key, val in var.regions : [
       for subnet_key, subnet in val.subnets : merge({
         vnet_key = key
-        # Ensure we have a region-dependednt key even for subnets with user-specific names
+        # Ensure we have a region-dependent key even for subnets with user-specific names
         subnet_name_region_key = coalesce(
           subnet.name != null ? "${subnet.name}-${key}" : null, "${module.config[key].names.subnet}-${subnet_key}"
         )

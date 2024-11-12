@@ -18,19 +18,18 @@ resources:
     - repository: dtos-devops-templates
       type: github
       name: NHSDigital/dtos-devops-templates
-      ref: 46e5d81bf58a7b9324a35e191eac7f6cc3660dfd
+      ref: 6698a57ef95f35661bb668e1b929e6894a554ac6
       endpoint: NHSDigital
 
 variables:
-  - group: global_variable_group
-  - group: development_variable_group
-  - group: development_agent_pool
+  - group: DEV_agent_backend
+  - group: DEV_hub_backend_remote_state
   - name: TF_DIRECTORY
     value: $(System.DefaultWorkingDirectory)/$(System.TeamProject)/.azuredevops/agent-pools
-  - name: BACKEND_AZURE_STORAGE_ACCOUNT_KEY
-    value: agent-pool.tfstate
+  - name: TF_VERSION
+    value: 1.9.2
   - name: TF_PLAN_ARTIFACT
-    value: tf_plan_agent_pool_art
+    value: tf_plan_agent_pool_art_DEV
   - name: ENVIRONMENT
     value: development
 
@@ -39,7 +38,7 @@ stages:
     displayName: Terraform Plan
     condition: eq(variables['Build.Reason'], 'Manual')
     variables:
-      tfvars: environments/$(ENVIRONMENT).tfvars
+      tfVarsFile: environments/$(ENVIRONMENT).tfvars
     jobs:
       - job: init_and_plan
         displayName: Init, plan, store artifact

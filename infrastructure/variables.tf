@@ -1,44 +1,20 @@
+variable "GITHUB_ORG_DATABASE_ID" {
+  description = "GitHub Organization Database ID, specified via TF_VAR env var."
+  type        = string
+  default     = "DEV"
+}
+
+variable "TARGET_SUBSCRIPTION_ID" {
+  description = "ID of a subscription to deploy infrastructure"
+  type        = string
+}
+
 variable "application" {
   description = "Project/Application code for deployment"
   type        = string
   default     = "hub"
 }
 
-variable "projects" {
-  description = "Project code for deployment"
-  type = map(object({
-    full_name  = string
-    short_name = string
-    acr = optional(object({
-      sku                           = string
-      admin_enabled                 = bool
-      uai_name                      = string
-      public_network_access_enabled = bool
-    }))
-    tags = map(string)
-  }))
-}
-
-variable "regions" {
-  type = map(object({
-    address_space     = string
-    is_primary_region = bool
-    subnets = map(object({
-      cidr_newbits               = string
-      cidr_offset                = string
-      create_nsg                 = optional(bool)   # defaults to true
-      name                       = optional(string) # Optional name override
-      delegation_name            = optional(string)
-      service_delegation_name    = optional(string)
-      service_delegation_actions = optional(list(string))
-    }))
-  }))
-}
-
-variable "AVD_LOGIN_PRINCIPAL_ID" {
-  type        = string
-  description = "The id of the group to grant access to Azure Virtual Desktop, specified via TF_VAR env var."
-}
 variable "apim_config" {
   description = "Configuration for API Management"
   type = object({
@@ -54,14 +30,24 @@ variable "apim_config" {
     tags                        = map(string)
   })
 }
-variable "environment" {
-  description = "Environment code for deployments"
+
+variable "avd_users_group_name" {
+  description = "Entra ID group containing AVD users"
   type        = string
-  default     = "DEV"
 }
 
-variable "GITHUB_ORG_DATABASE_ID" {
-  description = "GitHub Organization Database ID, specified via TF_VAR env var."
+variable "avd_admins_group_name" {
+  description = "Entra ID group containing AVD admins"
+  type        = string
+}
+
+variable "avd_vm_count" {
+  type    = number
+  default = 1
+}
+
+variable "environment" {
+  description = "Environment code for deployments"
   type        = string
   default     = "DEV"
 }
@@ -124,13 +110,39 @@ variable "private_dns_zones" {
   })
 }
 
+variable "projects" {
+  description = "Project code for deployment"
+  type = map(object({
+    full_name  = string
+    short_name = string
+    acr = optional(object({
+      sku                           = string
+      admin_enabled                 = bool
+      uai_name                      = string
+      public_network_access_enabled = bool
+    }))
+    tags = map(string)
+  }))
+}
+
+variable "regions" {
+  type = map(object({
+    address_space     = string
+    is_primary_region = bool
+    subnets = map(object({
+      cidr_newbits               = string
+      cidr_offset                = string
+      create_nsg                 = optional(bool)   # defaults to true
+      name                       = optional(string) # Optional name override
+      delegation_name            = optional(string)
+      service_delegation_name    = optional(string)
+      service_delegation_actions = optional(list(string))
+    }))
+  }))
+}
+
 variable "tags" {
   description = "Tags to be applied to resources"
   type        = map(string)
   default     = {}
-}
-
-variable "TARGET_SUBSCRIPTION_ID" {
-  description = "ID of a subscription to deploy infrastructure"
-  type        = string
 }

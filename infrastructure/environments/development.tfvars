@@ -122,6 +122,10 @@ apim_config = {
   }
 }
 
+avd_vm_count          = 1
+avd_users_group_name  = "DToS-hub-dev-uks-hub-virtual-desktop-User-Login"
+avd_admins_group_name = "DToS-hub-dev-uks-hub-virtual-desktop-User-ADMIN-Login"
+
 firewall_config = {
   firewall_sku_name = "AZFW_VNet"
   firewall_sku_tier = "Standard"

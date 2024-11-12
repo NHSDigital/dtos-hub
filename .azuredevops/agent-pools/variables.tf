@@ -1,6 +1,41 @@
+variable "HUB_SUBSCRIPTION_ID" {
+  description = "ID of the subscription hosting the DevOps resources"
+  type        = string
+}
+
+variable "HUB_BACKEND_AZURE_STORAGE_ACCOUNT_NAME" {
+  description = "The name of the Azure Storage Account for the backend"
+  type        = string
+}
+
+variable "HUB_BACKEND_AZURE_STORAGE_ACCOUNT_CONTAINER_NAME" {
+  description = "The name of the container in the Azure Storage Account for the backend"
+  type        = string
+}
+
+variable "HUB_BACKEND_AZURE_STORAGE_ACCOUNT_KEY" {
+  description = "The name of the Statefile for the hub resources"
+  type        = string
+}
+
+variable "HUB_BACKEND_AZURE_RESOURCE_GROUP_NAME" {
+  description = "The name of the resource group for the Azure Storage Account"
+  type        = string
+}
+
+variable "TARGET_SUBSCRIPTION_ID" {
+  description = "The target Azure subscription ID, specified via TF_VAR env var."
+  type        = string
+}
+
 variable "agent_profile_kind" {
   type    = string
   default = "Stateful" # "Stateless"
+}
+
+variable "agent_profile_max_agent_lifetime" {
+  type    = string
+  default = "1.00:00:00"
 }
 
 variable "agent_profile_resource_prediction_profile" {
@@ -90,26 +125,10 @@ variable "regions" {
   type        = set(string)
 }
 
-variable "SUBNET_ID_UKSOUTH" {
-  description = "The uksouth virtual network subnet resource id to use for private networking, specified via TF_VAR env var."
-  type        = string
-}
-
-variable "SUBNET_ID_UKWEST" {
-  description = "The ukwest virtual network subnet resource id to use for private networking, specified via TF_VAR env var."
-  type        = string
-  default     = ""
-}
-
 variable "tags" {
   description = "Tags to be applied to resources"
   type        = map(string)
   default     = {}
-}
-
-variable "TARGET_SUBSCRIPTION_ID" {
-  description = "The target Azure subscription ID, specified via TF_VAR env var."
-  type        = string
 }
 
 variable "version_control_system_organization_name" {

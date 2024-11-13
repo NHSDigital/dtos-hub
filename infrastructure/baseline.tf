@@ -15,10 +15,7 @@ resource "azurerm_resource_group" "rg_project" {
 }
 
 locals {
-  # Get the primary region from the regions map:
-  primary_region = {
-    for region_key, region in var.regions :
-  region_key => region if region.is_primary_region }
+  primary_region = [for k, v in var.regions : k if v.is_primary_region][0]
 
   # Create a flat list of projects with region keys for consumption in a for_each meta argument
   projects_flatlist = flatten([

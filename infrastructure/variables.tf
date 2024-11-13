@@ -1,7 +1,17 @@
+variable "HUB_BACKEND_AZURE_STORAGE_ACCOUNT_NAME" {
+  description = "Storage account for certbot state"
+  type        = string
+}
+
 variable "GITHUB_ORG_DATABASE_ID" {
-  description = "GitHub Organization Database ID, specified via TF_VAR env var."
+  description = "GitHub Organization Database ID, specified via TF_VAR env var"
   type        = string
   default     = "DEV"
+}
+
+variable "LETS_ENCRYPT_CONTACT_EMAIL" {
+  description = "Contact email address for certificate expiry notifications."
+  type        = string
 }
 
 variable "TARGET_SUBSCRIPTION_ID" {
@@ -46,6 +56,14 @@ variable "avd_vm_count" {
   default = 1
 }
 
+variable "dns_zone_name" {
+  type = string
+}
+
+variable "dns_zone_resource_group_name" {
+  type = string
+}
+
 variable "environment" {
   description = "Environment code for deployments"
   type        = string
@@ -75,6 +93,20 @@ variable "firewall_config" {
     zones                           = optional(list(string))
   })
   default = {}
+}
+
+variable "lets_encrypt_certificates" {
+  type = map(string)
+}
+
+variable "key_vault" {
+  description = "Configuration for the key vault"
+  type = object({
+    disk_encryption   = optional(bool, true)
+    soft_del_ret_days = optional(number, 7)
+    purge_prot        = optional(bool, false)
+    sku_name          = optional(string, "standard")
+  })
 }
 
 variable "network_security_group_rules" {

@@ -5,6 +5,13 @@ resource "azurerm_resource_group" "rg_hub" {
   location = each.key
 }
 
+resource "azurerm_resource_group" "rg_private_endpoints" {
+  for_each = var.features.private_endpoints_enabled ? var.regions : {}
+
+  name     = "${module.config[each.key].names.resource-group}-${var.application}-private-endpoints"
+  location = each.key
+}
+
 module "vnets_hub" {
   for_each = var.regions
 

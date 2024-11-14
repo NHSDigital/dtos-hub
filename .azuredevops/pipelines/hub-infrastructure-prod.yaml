@@ -19,11 +19,12 @@ resources:
     - repository: dtos-devops-templates
       type: github
       name: NHSDigital/dtos-devops-templates
-      ref: 6698a57ef95f35661bb668e1b929e6894a554ac6
+      ref: cb523099bb7933a2b19b5da7cbe09ccea3951c34
       endpoint: NHSDigital
 
 variables:
   - group: PRD_hub_backend
+  - group: PRD_hub_backend_remote_state # to get storage account name for certbot state
   - group: PRD_hub_config
   - name: TF_DIRECTORY
     value: $(System.DefaultWorkingDirectory)/$(System.TeamProject)/infrastructure

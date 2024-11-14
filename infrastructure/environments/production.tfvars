@@ -42,6 +42,10 @@ regions = {
         cidr_offset  = 5
         create_nsg   = false
       }
+      pep = {
+        cidr_newbits = 8
+        cidr_offset  = 2
+      }
       virtual-desktop = {
         cidr_newbits = 11
         cidr_offset  = 32
@@ -107,6 +111,13 @@ firewall_config = {
   policy_threat_intelligence_mode = "Alert"
   policy_dns_proxy_enabled        = false
   zones                           = ["1", "2", "3"]
+}
+
+key_vault = {
+  disk_encryption   = true
+  soft_del_ret_days = 7
+  purge_prot        = false
+  sku_name          = "standard"
 }
 
 private_dns_zones = {

@@ -69,6 +69,10 @@ regions = {
         cidr_newbits = 8
         cidr_offset  = 5
       }
+      pep = {
+        cidr_newbits = 8
+        cidr_offset  = 2
+      }
       virtual-desktop = {
         cidr_newbits = 11
         cidr_offset  = 32
@@ -126,6 +130,14 @@ avd_vm_count          = 1
 avd_users_group_name  = "DToS-hub-dev-uks-hub-virtual-desktop-User-Login"
 avd_admins_group_name = "DToS-hub-dev-uks-hub-virtual-desktop-User-ADMIN-Login"
 
+dns_zone_name                = "dev.nationalscreening.nhs.uk"
+dns_zone_resource_group_name = "rg-hub-dev-uks-public-dns-zones"
+
+lets_encrypt_certificates = {
+  wildcard         = "*.dev.nationalscreening.nhs.uk"
+  wildcard_private = "*.private.dev.nationalscreening.nhs.uk"
+}
+
 firewall_config = {
   firewall_sku_name = "AZFW_VNet"
   firewall_sku_tier = "Standard"
@@ -141,6 +153,13 @@ firewall_config = {
   policy_threat_intelligence_mode = "Alert"
   policy_dns_proxy_enabled        = false
   zones                           = ["1", "2", "3"]
+}
+
+key_vault = {
+  disk_encryption   = true
+  soft_del_ret_days = 7
+  purge_prot        = false
+  sku_name          = "standard"
 }
 
 private_dns_zones = {

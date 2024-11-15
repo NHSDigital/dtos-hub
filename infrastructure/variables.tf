@@ -28,6 +28,10 @@ variable "application" {
 variable "apim_config" {
   description = "Configuration for API Management"
   type = object({
+    aad = object({
+      secrets         = list(string)
+      allowed_tenants = list(string)
+    })
     sku_name                    = string
     sku_capacity                = number
     virtual_network_type        = string
@@ -54,6 +58,17 @@ variable "avd_admins_group_name" {
 variable "avd_vm_count" {
   type    = number
   default = 1
+}
+
+variable "dns_a_records" {
+  description = "A records to create in the DNS zone"
+  type = map(list(object({
+    name    = string
+    records = list(string)
+    ttl     = number
+  })))
+  default = {}
+
 }
 
 variable "dns_zone_name" {

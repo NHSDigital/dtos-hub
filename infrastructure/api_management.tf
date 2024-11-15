@@ -3,12 +3,12 @@ module "api-management" {
 
   source = "../../dtos-devops-templates/infrastructure/modules/api-management"
 
-  name                          = module.config[each.key].names.api-management
-  resource_group_name           = azurerm_resource_group.rg_hub[each.key].name
-  location                      = each.key
-  certificate_details           = []
-  gateway_disabled              = var.apim_config.gateway_disabled
-  public_ip_address_id          = module.apim-public-ip[each.key].id
+  name                = module.config[each.key].names.api-management
+  resource_group_name = azurerm_resource_group.rg_hub[each.key].name
+  location            = each.key
+  certificate_details = []
+  gateway_disabled    = var.apim_config.gateway_disabled
+  # public_ip_address_id          = module.apim-public-ip[each.key].id
   publisher_email               = var.apim_config.publisher_email
   publisher_name                = var.apim_config.publisher_name
   sku_capacity                  = var.apim_config.sku_capacity
@@ -17,22 +17,39 @@ module "api-management" {
   virtual_network_configuration = [module.subnets_hub["${module.config[each.key].names.subnet}-api-mgmt"].id]
   zones                         = var.apim_config.zones
 
+  /*________________________________
+| API Management AAD Integration |
+__________________________________*/
+  client_id       = data.azurerm_key_vault_secret.this["dtos-apim-object-id"].value
+  client_secret   = data.azurerm_key_vault_secret.this["dtos-apim-secret"].value
+  allowed_tenants = output.tenant_id
+
+
   tags = var.tags
 
 }
 
-module "apim-public-ip" {
-  for_each = var.regions
 
-  source = "../../dtos-devops-templates/infrastructure/modules/public-ip"
 
-  name                = "${module.config[each.key].names.public-ip-address}-api-mgmt"
-  resource_group_name = azurerm_resource_group.rg_hub[each.key].name
-  location            = each.key
-  allocation_method   = var.apim_config.public_ip_allocation_method
-  domain_name_label   = module.config[each.key].names.api-management
-  sku                 = var.apim_config.public_ip_sku
-  zones               = var.apim_config.zones
+# /*_____________________________________
+# | API Management Private DNS A Record |
+# _______________________________________*/
 
-  tags = var.tags
-}
+# module "name-api-management-private-dns-a-record" {
+#   for_each = var.regions
+
+#   source = "../../dtos-devops-templates/infrastructure/modules/private-dns-a-record"
+
+#   name                = module.config[each.key].names.api-management
+#   zone_name           = module.private-dns-zone[each.key].name
+#   resource_group_name = azurerm_resource_group.rg_hub[each.key].name
+#   ttl                 = var.private_dns_a_record.ttl
+#   records             = [module.api-management[each.key].default_site_hostname]
+
+# }
+
+
+/*________________________________
+| API Management AAD Integration |
+__________________________________*/
+

@@ -72,3 +72,7 @@ output "firewall_policy_id" {
 output "firewall_private_ip_addresses" {
   value = { for k, v in module.firewall : k => v.private_ip_address }
 }
+
+output "tenant_id" {
+  value = data.azurerm_client_config.current.tenant_id
+}

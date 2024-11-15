@@ -116,10 +116,14 @@ apim_config = {
   publisher_name       = "DToS - NHS Digital"
   gateway_disabled     = false
   zones                = []
+  aad = {
+    secrets = ["dtos-apim-object-id", "dtos-apim-secret"]
+  }
 
   # ip address configuration
   public_ip_allocation_method = "Static"
   public_ip_sku               = "Standard"
+  private_dns_a_records       = ["management", "portal", "scm", "gateway"]
 
   tags = {
     Project = "DToS Hub"

@@ -120,9 +120,7 @@ apim_config = {
     secrets = ["dtos-apim-object-id", "dtos-apim-secret"]
   }
 
-  # ip address configuration
-  public_ip_allocation_method = "Static"
-  public_ip_sku               = "Standard"
+
   private_dns_a_records       = ["management", "portal", "scm", "gateway"]
 
   tags = {

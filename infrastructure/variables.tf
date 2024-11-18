@@ -30,7 +30,6 @@ variable "apim_config" {
   type = object({
     aad = object({
       secrets         = list(string)
-      allowed_tenants = list(string)
     })
     sku_name                    = string
     sku_capacity                = number
@@ -38,8 +37,6 @@ variable "apim_config" {
     publisher_email             = string
     publisher_name              = string
     gateway_disabled            = bool
-    public_ip_allocation_method = string
-    public_ip_sku               = string
     zones                       = list(string)
     tags                        = map(string)
   })

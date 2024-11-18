@@ -9,9 +9,17 @@ data "azuread_group" "avd_admins" {
 }
 
 
-data "azurerm_key_vault_secret" "this" {
-  for_each     = toset(var.apim_config.aad.secrets)
-  name         = each.key
-  key_vault_id = module.key_vault.key_vault_id
+
+data "azurerm_key_vault_secret" "object-id" {
+  for_each     = var.regions
+  name         = "dtos-apim-object-id"
+  key_vault_id = module.key_vault[each.key].key_vault_id
 }
+
+data "azurerm_key_vault_secret" "secret" {
+  for_each     = var.regions
+  name         = "dtos-apim-secret"
+  key_vault_id = module.key_vault[each.key].key_vault_id
+}
+
 

@@ -70,6 +70,10 @@ regions = {
         cidr_offset  = 192
         create_nsg   = false
       }
+      pep = {
+        cidr_newbits = 8
+        cidr_offset  = 2
+      }
     }
   }
 }

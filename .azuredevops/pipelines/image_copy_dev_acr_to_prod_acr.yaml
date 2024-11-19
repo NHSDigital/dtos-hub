@@ -64,7 +64,7 @@ stages:
 
           echo "##[debug] Logging in to ${{ parameters.sourceRegistry }}:"
           echo "##[command]az acr login -n ${{ parameters.sourceRegistry }}"
-          az acr login -n ${{ parameters.sourceRegistry }} -u SPN;$(AzureSubscriptionName)-CI
+          az acr login -n ${{ parameters.sourceRegistry }}
 
           # Fetch the list of repositories
           echo "Fetching repositories from ${{ parameters.sourceRegistry }}..."

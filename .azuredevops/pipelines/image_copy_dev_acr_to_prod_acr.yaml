@@ -64,9 +64,9 @@ stages:
 
           az account show -o table
 
-          echo "##[debug] Logging in to $SOURCEREGISTRY:"
-          echo "##[command]az acr login -n $SOURCEREGISTRY"
-          az acr login -n $SOURCEREGISTRY
+          echo "##[debug] Logging in to $SOURCE_REGISTRY:"
+          echo "##[command]az acr login -n $SOURCE_REGISTRY"
+          az acr login -n $SOURCE_REGISTRY
 
           # Fetch the list of repositories
           echo "Fetching repositories from ${{ parameters.sourceRegistry }}..."

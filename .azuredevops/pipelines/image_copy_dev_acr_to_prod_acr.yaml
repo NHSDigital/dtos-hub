@@ -49,21 +49,18 @@ stages:
     - group: DEV_hub_backend
     steps:
     - task: AzureCLI@2
+      name: pull_images
+      displayName: Pull Images from ${{ parameters.sourceRegistry }}
       env:
         SOURCE_REGISTRY: ${{ parameters.sourceRegistry }}
         SOURCE_TAG: ${{ parameters.sourceImageTag}}
-      name: pull_images
-      displayName: Pull Images from ${{ parameters.sourceRegistry }}
       inputs:
-        azureSubscription: $(SERVICE_CONNECTION)
+        azureSubscription: sc-dtos-hub-development
         addSpnToEnvironment: true
         failOnStandardError: true
         scriptType: bash
         scriptLocation: inlineScript
         inlineScript: |
-
-          set -e
-          set -x
 
           az account list -o table
 

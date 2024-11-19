@@ -81,7 +81,8 @@ stages:
           for repository in $(echo $repositories | jq -r '.[]')
           do
             echo "##[debug] Fetching tags for $repository..."
-            tags=$(az acr repository show-tags --name ${{ parameters.sourceRegistry }} --repository $repository --output json)
+            #tags=$(az acr repository show-tags --name ${{ parameters.sourceRegistry }} --repository $repository --output json)
+            tags=${{ parameters.sourceImageTag }}
             for tag in $(echo $tags | jq -r '.[]')
             do
               echo "##[debug] Pulling $repository:$tag..."

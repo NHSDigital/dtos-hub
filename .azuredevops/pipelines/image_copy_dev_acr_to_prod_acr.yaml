@@ -61,6 +61,7 @@ stages:
         inlineScript: |
 
           set -e
+          set -x
 
           az account list -o table
 

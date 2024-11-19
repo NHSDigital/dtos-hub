@@ -75,17 +75,17 @@ stages:
 
           # Fetch the list of repositories
           echo "Fetching repositories from ${{ parameters.sourceRegistry }}..."
-          repositories=$(az acr repository list --name $containerRegistry --output json)
+          repositories=$(az acr repository list --name ${{ parameters.sourceRegistry }} --output json)
 
           # Loop through the image names:
           for repository in $(echo $repositories | jq -r '.[]')
           do
             echo "##[debug] Fetching tags for $repository..."
-            tags=$(az acr repository show-tags --name $containerRegistry --repository $repository --output json)
+            tags=$(az acr repository show-tags --name ${{ parameters.sourceRegistry }} --repository $repository --output json)
             for tag in $(echo $tags | jq -r '.[]')
             do
               echo "##[debug] Pulling $repository:$tag..."
-              echo "##[command]docker pull $containerRegistry.azurecr.io/$repository:$tag"
-              # docker pull $containerRegistry.azurecr.io/$repository:$tag
+              echo "##[command]docker pull ${{ parameters.sourceRegistry }}.azurecr.io/$repository:$tag"
+              # docker pull ${{ parameters.sourceRegistry }}.azurecr.io/$repository:$tag
             done
           done

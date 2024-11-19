@@ -62,6 +62,8 @@ stages:
 
           set -e
 
+          az account list -o table
+
           az account set --subscription $(CORE_DEV_SUBSCRIPTION_ID)
           az account show -o table
 

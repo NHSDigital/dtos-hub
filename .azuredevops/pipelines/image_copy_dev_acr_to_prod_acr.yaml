@@ -55,9 +55,10 @@ stages:
       name: pull_images
       displayName: Pull Images from ${{ parameters.sourceRegistry }}
       inputs:
-        azureSubscription: sc-dtos-hub-development
+        azureSubscription: $(SERVICE_CONNECTION)
         scriptType: bash
         scriptLocation: inlineScript
+        addSpnToEnvironment: true
         inlineScript: |
 
           set -e

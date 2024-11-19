@@ -43,7 +43,7 @@ stages:
     # Job 1: Save image as artifact
   - job: job_pull_images
     pool:
-      vmImage: 'ubuntu-latest'
+      name: private-pool-dev-uks
     displayName: Grab image and save as artifact
     variables:
     - group: DEV_hub_backend
@@ -55,7 +55,7 @@ stages:
       name: pull_images
       displayName: Pull Images from ${{ parameters.sourceRegistry }}
       inputs:
-        azureSubscription: $(SERVICE_CONNECTION)
+        azureSubscription: sc-dtos-hub-development
         scriptType: bash
         scriptLocation: inlineScript
         inlineScript: |

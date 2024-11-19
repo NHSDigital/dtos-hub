@@ -56,15 +56,18 @@ stages:
       displayName: Pull Images from ${{ parameters.sourceRegistry }}
       inputs:
         azureSubscription: $(SERVICE_CONNECTION)
+        addSpnToEnvironment: true
+        failOnStandardError: true
         scriptType: bash
         scriptLocation: inlineScript
-        addSpnToEnvironment: true
         inlineScript: |
 
           set -e
           set -x
 
           az account list -o table
+
+          echo "##[debug] Using SERVICE_CONNECTION $(SERVICE_CONNECTION)..."
 
           az account set --subscription $(CORE_DEV_SUBSCRIPTION_ID)
           az account show -o table

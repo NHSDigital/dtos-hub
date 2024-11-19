@@ -62,6 +62,7 @@ stages:
 
           set -e
 
+          az account set --subscription $(CORE_DEV_SUBSCRIPTION_ID)
           az account show -o table
 
           echo "##[debug] Logging in to $SOURCE_REGISTRY:"

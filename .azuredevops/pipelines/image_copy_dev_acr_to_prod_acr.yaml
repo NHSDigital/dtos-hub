@@ -60,7 +60,7 @@ stages:
         scriptLocation: inlineScript
         inlineScript: |
 
-          az account show --o table
+          az account show -o table
 
           echo "##[debug] Logging in to ${{ parameters.sourceRegistry }}:"
           echo "##[command]az acr login -n ${{ parameters.sourceRegistry }}"

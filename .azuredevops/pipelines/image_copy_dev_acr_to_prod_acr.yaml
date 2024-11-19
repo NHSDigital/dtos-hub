@@ -63,8 +63,10 @@ stages:
           az account show -o table
 
           echo "##[debug] Logging in to ${{ parameters.sourceRegistry }}:"
-          echo "##[command]az acr login -n ${{ parameters.sourceRegistry }}"
-          az acr login -n ${{ parameters.sourceRegistry }}
+          #echo "##[command]az acr login -n ${{ parameters.sourceRegistry }}"
+          #az acr login -n ${{ parameters.sourceRegistry }}
+
+          docker login ${{ parameters.sourceRegistry }}.azurecr.io -u ${{ parameters.sourceRegistry }}
 
           # Fetch the list of repositories
           echo "Fetching repositories from ${{ parameters.sourceRegistry }}..."

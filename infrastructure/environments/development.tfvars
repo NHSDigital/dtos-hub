@@ -116,13 +116,6 @@ apim_config = {
   publisher_name       = "DToS - NHS Digital"
   gateway_disabled     = false
   zones                = []
-  aad = {
-    secrets = ["dtos-apim-object-id", "dtos-apim-secret"]
-  }
-
-
-  private_dns_a_records       = ["management", "portal", "scm", "gateway"]
-
   tags = {
     Project = "DToS Hub"
   }

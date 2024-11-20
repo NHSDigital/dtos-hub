@@ -125,7 +125,7 @@ stages:
             digest=$(az acr repository show --name ${{ parameters.sourceRegistry }} --image $repository:${{ parameters.sourceImageTag }} --query 'digest' --output tsv)
 
             # Get the tags of all images in the repository that match this digest
-            tags=$(az acr repository show --name ${{ parameters.sourceRegistry }} --image $repository@$digest --query "tags" --output json | jq '.[] | select(. | startswith("pr"))')
+            tags=$(az acr repository show --name ${{ parameters.sourceRegistry }} --image $repository@$digest --query "tags" --output json | jq -r '.[] | select(. | startswith("pr"))')
             echo "##[debug] Tags: $tags"
 
             # Loop through the tags and pull the images

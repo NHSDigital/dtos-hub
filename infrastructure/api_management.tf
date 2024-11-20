@@ -33,7 +33,7 @@ __________________________________*/
 __________________________________*/
 
 module "apim-public-ip" {
-  for_each = length(var.apim_config.zones) > 0 ? { for key, value in var.regions : key => value } : {}
+  for_each = length(var.apim_config.zones) > 0 ? var.regions  : {}
 
   source = "../../dtos-devops-templates/infrastructure/modules/public-ip"
 
@@ -74,7 +74,7 @@ module "apim-private-dns-a-records" {
 locals {
 
   custom_domains = flatten([
-    for region_key, region_val in var.regions : [
+    for region_key in var.regions : [
       for domain_obj in var.apim_config.custom_domains : [
         for type, value in domain_obj : {
           region = region_key

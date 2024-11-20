@@ -110,7 +110,7 @@ stages:
             echo "##[debug] Processing image $1:$2..."
 
             echo "##[debug] Pulling $repository:$tag..."
-            docker pull ${{ parameters.sourceRegistry }}.azurecr.io/$repository:$tag
+            docker pull ${{ parameters.sourceRegistry }}.azurecr.io/$1:$2
 
             # Delete the downloaded image:
             echo "##[debug] Deleting $repository"

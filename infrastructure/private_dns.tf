@@ -200,3 +200,19 @@ module "private_dns_zone_storage_queue" {
 
   tags = var.tags
 }
+
+
+module "private_dns_zone_private_nationalscreening_nhs_uk" {
+  for_each = {
+    for key, region in var.regions :
+    key => region if region.is_primary_region
+  }
+
+  source = "../../dtos-devops-templates/infrastructure/modules/private-dns-zone"
+
+  name                = "private.${lower(var.environment)}.nationalscreening.nhs.uk"
+  resource_group_name = azurerm_resource_group.private_dns_rg[each.key].name
+  vnet_id             = module.vnets_hub[each.key].vnet.id
+
+  tags = var.tags
+}

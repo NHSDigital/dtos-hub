@@ -116,11 +116,6 @@ apim_config = {
   publisher_name       = "DToS - NHS Digital"
   gateway_disabled     = false
   zones                = []
-
-  # ip address configuration
-  public_ip_allocation_method = "Static"
-  public_ip_sku               = "Standard"
-
   tags = {
     Project = "DToS Hub"
   }

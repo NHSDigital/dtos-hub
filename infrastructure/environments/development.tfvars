@@ -168,6 +168,12 @@ private_dns_zones = {
 
 }
 
+log_analytic_workspace = {
+  #name_suffix        = "cohman"
+  log_analytic_workspace_sku = "PerGB2018"
+  retention_days             = 30
+}
+
 network_security_group_rules = {
   api-mgmt = [ # subnet key from regions map above
     {

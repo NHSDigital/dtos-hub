@@ -5,6 +5,7 @@ parameters:
     displayName: Source Registry
     type: string
     default: acrukscohmandev
+
   - name: sourceImageTag
     displayName: Source Image Tag
     type: string
@@ -14,6 +15,7 @@ parameters:
     displayName: Destination Registry
     type: string
     default: acrukshubprodcohman
+
   - name: destImageTag
     displayName: Image Tag
     type: string
@@ -36,6 +38,47 @@ variables:
 name: $(Date:yyyyMMdd)$(Rev:.r)_$(SourceBranchName)_$(why)
 
 stages:
+- stage: stage_tag_integration
+  displayName: Tag image with integration Tag
+
+  jobs:
+    # Job 1: Tag image with integration Tag
+  - job: job_tag_integration
+    pool:
+      name: private-pool-dev-uks
+    displayName: Tag image with integration Tag
+    variables:
+    - group: DEV_hub_backend
+    steps:
+    - task: AzureCLI@2
+      name: tag_integration
+      displayName: Tag Image with integration Tag
+      inputs:
+        azureSubscription: sc-dtos-hub-development
+        addSpnToEnvironment: true
+        failOnStandardError: true
+        scriptType: bash
+        scriptLocation: inlineScript
+        inlineScript: |
+
+          az acr login -n ${{ parameters.sourceRegistry }}
+
+          # Fetch the list of repositories
+          echo "Fetching repositories from ${{ parameters.sourceRegistry }}..."
+          repositories=$(az acr repository list --name ${{ parameters.sourceRegistry }} --output json)
+
+          # Loop through the image names:
+          for repository in $(echo $repositories | jq -r '.[]')
+          do
+            # Get all images tagged with the source tag:
+            echo "##[debug] Pulling $repository:nft..."
+
+            az acr import --name ${{ parameters.sourceRegistry }} \
+            --source ${{ parameters.sourceRegistry }}.azurecr.io/$repository:nft \
+            --image $repository:integration \
+            --force
+
+
 - stage: stage_copy_images
   displayName: Copy images from Dev Registry to Prod Registry
 
@@ -51,9 +94,6 @@ stages:
     - task: AzureCLI@2
       name: pull_images
       displayName: Pull Images from ${{ parameters.sourceRegistry }}
-      env:
-        SOURCE_REGISTRY: ${{ parameters.sourceRegistry }}
-        SOURCE_TAG: ${{ parameters.sourceImageTag}}
       inputs:
         azureSubscription: sc-dtos-hub-development
         addSpnToEnvironment: true
@@ -69,9 +109,9 @@ stages:
           az account set --subscription $(CORE_DEV_SUBSCRIPTION_ID)
           az account show -o table
 
-          echo "##[debug] Logging in to $SOURCE_REGISTRY:"
-          echo "##[command]az acr login -n $SOURCE_REGISTRY"
-          az acr login -n $SOURCE_REGISTRY
+          echo "##[debug] Logging in to ${{ parameters.sourceRegistry }}:"
+          echo "##[command]az acr login -n ${{ parameters.sourceRegistry }}"
+          az acr login -n ${{ parameters.sourceRegistry }}
 
           # Fetch the list of repositories
           echo "Fetching repositories from ${{ parameters.sourceRegistry }}..."

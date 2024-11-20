@@ -109,13 +109,16 @@ regions = {
 }
 
 apim_config = {
-  sku_name             = "Developer"
-  sku_capacity         = 1
-  virtual_network_type = "Internal"
-  publisher_email      = "apim.dtos@hscic.gov.uk"
-  publisher_name       = "DToS - NHS Digital"
-  gateway_disabled     = false
-  zones                = []
+  sku_name                    = "Developer"
+  sku_capacity                = 1
+  virtual_network_type        = "Internal"
+  publisher_email             = "apim.dtos@hscic.gov.uk"
+  publisher_name              = "DToS - NHS Digital"
+  gateway_disabled            = false
+  zones                       = []
+  public_ip_allocation_method = "Static"
+  public_ip_sku               = "Standard"
+
   tags = {
     Project = "DToS Hub"
   }

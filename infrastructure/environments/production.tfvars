@@ -90,7 +90,6 @@ apim_config = {
   # ip address configuration
   public_ip_allocation_method = "Static"
   public_ip_sku               = "Standard"
-
   tags = {
     Project = "DToS Hub"
   }

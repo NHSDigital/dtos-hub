@@ -129,7 +129,7 @@ stages:
           for repository in $(echo $repositories | jq -r '.[]')
           do
             # Process all images tagged with the source tag:
-            process_image $repository $tag ${{ parameters.sourceImageTag }}
+            process_image $repository ${{ parameters.sourceImageTag }}
 
             # Get associated images tagged with PR number, by digest:
             digest=$(az acr repository show --name ${{ parameters.sourceRegistry }} --image $repository:${{ parameters.sourceImageTag }} --query 'digest' --output tsv)

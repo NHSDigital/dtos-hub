@@ -80,13 +80,18 @@ stages:
           # Loop through the image names:
           for repository in $(echo $repositories | jq -r '.[]')
           do
-            echo "##[debug] Fetching tags for $repository..."
-            #tags=$(az acr repository show-tags --name ${{ parameters.sourceRegistry }} --repository $repository --output json)
-            tags=${{ parameters.sourceImageTag }}
-            for tag in $(echo $tags | jq -r '.[]')
-            do
-              echo "##[debug] Pulling $repository:$tag..."
-              echo "##[command]docker pull ${{ parameters.sourceRegistry }}.azurecr.io/$repository:$tag"
-              # docker pull ${{ parameters.sourceRegistry }}.azurecr.io/$repository:$tag
-            done
+            # Get all images tagged with the source tag:
+            echo "##[debug] Pulling $repository:$tag..."
+            echo "##[command]docker pull ${{ parameters.sourceRegistry }}.azurecr.io/$repository:${{ parameters.sourceImageTag}}"
+            # docker pull ${{ parameters.sourceRegistry }}.azurecr.io/$repository:$tag
+
+            # Get associated images tagged with PR number, by digest:
+            # Get the digest of the image
+            digest=$(az acr repository show --name ${{ parameters.sourceRegistry }} --image $repository:${{ parameters.sourceImageTag }} --query 'digest' --output tsv)
+            echo "##[debug] Digest: $digest"
+
+            # Get the tags of all images in the repository that match this digest
+            tags=$(az acr repository show --name ${{ parameters.sourceRegistry }} --image $repository@$digest --query "tags" --output json | jq '.[] | select(. | startswith("pr"))')
+            echo "##[debug] Tags: $tags"
+
           done

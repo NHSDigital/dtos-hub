@@ -107,7 +107,15 @@ stages:
           # set -x
 
           function process_image {
-            echo "##[debug] Processing image $1..."
+            echo "##[debug] Processing image $1:$2..."
+
+            echo "##[debug] Pulling $repository:$tag..."
+            docker pull ${{ parameters.sourceRegistry }}.azurecr.io/$repository:$tag
+
+            # Delete the downloaded image:
+            echo "##[debug] Deleting $repository"
+            echo "##[command]docker rmi -f ${{ parameters.sourceRegistry }}.azurecr.io/$1:$2"
+            docker rmi -f ${{ parameters.sourceRegistry }}.azurecr.io/$1:$2
           }
 
           az account set --subscription $(CORE_DEV_SUBSCRIPTION_ID)
@@ -120,9 +128,8 @@ stages:
           # Loop through the image names:
           for repository in $(echo $repositories | jq -r '.[]')
           do
-            # Get all images tagged with the source tag:
-            echo "##[debug] Pulling $repository:${{ parameters.sourceImageTag }}..."
-            docker pull ${{ parameters.sourceRegistry }}.azurecr.io/$repository:${{ parameters.sourceImageTag }}
+            # Process all images tagged with the source tag:
+            process_image $repository $tag ${{ parameters.sourceImageTag }}
 
             # Get associated images tagged with PR number, by digest:
             digest=$(az acr repository show --name ${{ parameters.sourceRegistry }} --image $repository:${{ parameters.sourceImageTag }} --query 'digest' --output tsv)
@@ -135,16 +142,8 @@ stages:
             # Loop through the tags and pull the images:
             for tag in $tags
             do
-              echo "##[debug] Pulling $repository:$tag..."
-              docker pull ${{ parameters.sourceRegistry }}.azurecr.io/$repository:$tag
-
-              process_image $repository:$tag
+              process_image $repository $tag
             done
-
-            # Delete the downloaded image:
-            echo "##[debug] Deleting $repository"
-            echo "##[command]docker rmi -f ${{ parameters.sourceRegistry }}.azurecr.io/$repository"
-            docker rmi -f ${{ parameters.sourceRegistry }}.azurecr.io/$repository
 
           done
 

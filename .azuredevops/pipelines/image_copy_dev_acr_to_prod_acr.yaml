@@ -106,6 +106,10 @@ stages:
           # Output the commands being run:
           # set -x
 
+          function process_image {
+            echo "##[debug] Processing image $1..."
+          }
+
           az account set --subscription $(CORE_DEV_SUBSCRIPTION_ID)
           az acr login -n ${{ parameters.sourceRegistry }}
 
@@ -121,23 +125,26 @@ stages:
             docker pull ${{ parameters.sourceRegistry }}.azurecr.io/$repository:${{ parameters.sourceImageTag }}
 
             # Get associated images tagged with PR number, by digest:
-            # Get the digest of the image
             digest=$(az acr repository show --name ${{ parameters.sourceRegistry }} --image $repository:${{ parameters.sourceImageTag }} --query 'digest' --output tsv)
 
             # Get the tags of all images in the repository that match this digest
+            echo "##[debug] Fetching tags for $repository..."
             tags=$(az acr repository show --name ${{ parameters.sourceRegistry }} --image $repository@$digest --query "tags" --output json | jq -r '.[] | select(. | startswith("pr"))')
             echo "##[debug] Tags: $tags"
 
-            # Loop through the tags and pull the images
+            # Loop through the tags and pull the images:
             for tag in $tags
             do
               echo "##[debug] Pulling $repository:$tag..."
               docker pull ${{ parameters.sourceRegistry }}.azurecr.io/$repository:$tag
+
+              process_image $repository:$tag
             done
 
             # Delete the downloaded image:
-            echo "##[debug] Deleting image $repository:${{ parameters.sourceImageTag }}..."
-            #docker rmi -f ${{ parameters.sourceRegistry }}.azurecr.io/$repository
+            echo "##[debug] Deleting $repository"
+            echo "##[command]docker rmi -f ${{ parameters.sourceRegistry }}.azurecr.io/$repository"
+            docker rmi -f ${{ parameters.sourceRegistry }}.azurecr.io/$repository
 
           done
 

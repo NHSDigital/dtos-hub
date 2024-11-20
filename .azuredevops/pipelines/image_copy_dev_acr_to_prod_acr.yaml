@@ -142,6 +142,7 @@ stages:
             # Loop through the tags and pull the images:
             for tag in $tags
             do
+              echo "##[debug] Processing tag $tag for $repository..."
               process_image $repository $tag
             done
 

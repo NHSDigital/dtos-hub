@@ -104,14 +104,10 @@ stages:
         inlineScript: |
 
           # Output the commands being run:
-          set -x
+          # set -x
 
           az account set --subscription $(CORE_DEV_SUBSCRIPTION_ID)
           az acr login -n ${{ parameters.sourceRegistry }}
-
-          # Clear the docker cache
-          # docker system prune -a -f
-          docker rmi -f $(docker images -aq)
 
           # Fetch the list of repositories
           echo "##[debug] Fetching repositories from ${{ parameters.sourceRegistry }}..."
@@ -133,11 +129,15 @@ stages:
             echo "##[debug] Tags: $tags"
 
             # Loop through the tags and pull the images
-            for tag in $(echo $tags | jq -r '.[]')
+            for tag in $tags
             do
               echo "##[debug] Pulling $repository:$tag..."
               docker pull ${{ parameters.sourceRegistry }}.azurecr.io/$repository:$tag
             done
+
+            # Delete the downloaded image:
+            echo "##[debug] Deleting image $repository:${{ parameters.sourceImageTag }}..."
+            #docker rmi -f ${{ parameters.sourceRegistry }}.azurecr.io/$repository
 
           done
 
@@ -145,4 +145,3 @@ stages:
           echo "##[command]docker images"
           docker images
 
-          docker rmi -f $(docker images -aq)

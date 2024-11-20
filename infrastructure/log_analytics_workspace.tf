@@ -1,7 +1,7 @@
 module "log_analytics_workspace_hub" {
   for_each = { for key, val in var.regions : key => val if val.is_primary_region }
 
-  source = "../../../dtos-devops-templates/infrastructure/modules/log-analytics-workspace"
+  source = "../../dtos-devops-templates/infrastructure/modules/log-analytics-workspace"
 
   name     = module.regions_config[each.key].names.log-analytics-workspace
   location = each.key

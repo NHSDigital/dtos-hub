@@ -77,7 +77,7 @@ stages:
             --source ${{ parameters.sourceRegistry }}.azurecr.io/$repository:nft \
             --image $repository:integration \
             --force
-
+          done
 
 - stage: stage_copy_images
   displayName: Copy images from Dev Registry to Prod Registry

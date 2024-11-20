@@ -119,6 +119,27 @@ apim_config = {
   public_ip_allocation_method = "Static"
   public_ip_sku               = "Standard"
 
+  custom_domains = [
+    {
+      development = {
+        name         = "portal"
+        a_record_ttl = 300
+      },
+      management = {
+        name         = "management"
+        a_record_ttl = 300
+      },
+      gateway = {
+        name         = "gateway"
+        a_record_ttl = 300
+      },
+      scm = {
+        name         = "scm"
+        a_record_ttl = 300
+      }
+    }
+  ]
+
   tags = {
     Project = "DToS Hub"
   }

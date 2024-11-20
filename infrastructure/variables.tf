@@ -37,7 +37,25 @@ variable "apim_config" {
     public_ip_allocation_method = string
     public_ip_sku               = string
     zones                       = list(string)
-    tags                        = map(string)
+    custom_domains = list(object({
+      development = object({
+        name         = string
+        a_record_ttl = number
+      })
+      management = object({
+        name         = string
+        a_record_ttl = number
+      })
+      gateway = object({
+        name         = string
+        a_record_ttl = number
+      })
+      scm = object({
+        name         = string
+        a_record_ttl = number
+      })
+    }))
+    tags = map(string)
   })
 }
 

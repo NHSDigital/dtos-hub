@@ -103,36 +103,46 @@ stages:
         scriptLocation: inlineScript
         inlineScript: |
 
-          az account list -o table
-
-          echo "##[debug] Using SERVICE_CONNECTION $(SERVICE_CONNECTION)..."
+          # Output the commands being run:
+          set -x
 
           az account set --subscription $(CORE_DEV_SUBSCRIPTION_ID)
-          az account show -o table
-
-          echo "##[debug] Logging in to ${{ parameters.sourceRegistry }}:"
-          echo "##[command]az acr login -n ${{ parameters.sourceRegistry }}"
           az acr login -n ${{ parameters.sourceRegistry }}
 
+          # Clear the docker cache
+          # docker system prune -a -f
+          docker rmi -f $(docker images -aq)
+
           # Fetch the list of repositories
-          echo "Fetching repositories from ${{ parameters.sourceRegistry }}..."
+          echo "##[debug] Fetching repositories from ${{ parameters.sourceRegistry }}..."
           repositories=$(az acr repository list --name ${{ parameters.sourceRegistry }} --output json)
 
           # Loop through the image names:
           for repository in $(echo $repositories | jq -r '.[]')
           do
             # Get all images tagged with the source tag:
-            echo "##[debug] Pulling $repository:$tag..."
-            echo "##[command]docker pull ${{ parameters.sourceRegistry }}.azurecr.io/$repository:${{ parameters.sourceImageTag}}"
-            # docker pull ${{ parameters.sourceRegistry }}.azurecr.io/$repository:$tag
+            echo "##[debug] Pulling $repository:${{ parameters.sourceImageTag }}..."
+            docker pull ${{ parameters.sourceRegistry }}.azurecr.io/$repository:${{ parameters.sourceImageTag }}
 
             # Get associated images tagged with PR number, by digest:
             # Get the digest of the image
             digest=$(az acr repository show --name ${{ parameters.sourceRegistry }} --image $repository:${{ parameters.sourceImageTag }} --query 'digest' --output tsv)
-            echo "##[debug] Digest: $digest"
 
             # Get the tags of all images in the repository that match this digest
             tags=$(az acr repository show --name ${{ parameters.sourceRegistry }} --image $repository@$digest --query "tags" --output json | jq '.[] | select(. | startswith("pr"))')
             echo "##[debug] Tags: $tags"
 
+            # Loop through the tags and pull the images
+            for tag in $(echo $tags | jq -r '.[]')
+            do
+              echo "##[debug] Pulling $repository:$tag..."
+              docker pull ${{ parameters.sourceRegistry }}.azurecr.io/$repository:$tag
+            done
+
           done
+
+          echo "##[debug] Showing all images:"
+          echo "##[command]docker images"
+          docker images
+
+          docker rmi -f $(docker images -aq)

@@ -109,11 +109,11 @@ stages:
           function process_image {
             echo "##[debug] Processing image $1:$2..."
 
-            echo "##[debug] Pulling $repository:$tag..."
+            echo "##[debug] Pulling $1:$2..."
             docker pull ${{ parameters.sourceRegistry }}.azurecr.io/$1:$2
 
             # Delete the downloaded image:
-            echo "##[debug] Deleting $repository"
+            echo "##[debug] Deleting $1:$2"
             echo "##[command]docker rmi -f ${{ parameters.sourceRegistry }}.azurecr.io/$1:$2"
             docker rmi -f ${{ parameters.sourceRegistry }}.azurecr.io/$1:$2
           }
@@ -147,7 +147,7 @@ stages:
 
           done
 
-          echo "##[debug] Showing all images:"
+          echo "##[debug] Show all images currently downloaded:"
           echo "##[command]docker images"
           docker images
 

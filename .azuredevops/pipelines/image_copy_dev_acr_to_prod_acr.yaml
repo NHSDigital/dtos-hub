@@ -136,7 +136,15 @@ stages:
 
             # Get the tags of all images in the repository that match this digest
             echo "##[debug] Fetching tags for $repository..."
+            tags=''
             tags=$(az acr repository show --name ${{ parameters.sourceRegistry }} --image $repository@$digest --query "tags" --output json | jq -r '.[] | select(. | startswith("pr"))')
+
+            # Break if no tags are found::
+            if [ -z "$tags" ]; then
+              echo "##[debug] No tags found for $repository..."
+              continue
+            fi
+
             echo "##[debug] Tags: $tags"
 
             # Loop through the tags and pull the images:

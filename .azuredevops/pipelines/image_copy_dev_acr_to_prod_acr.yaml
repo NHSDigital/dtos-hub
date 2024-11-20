@@ -61,6 +61,7 @@ stages:
         scriptLocation: inlineScript
         inlineScript: |
 
+          az account set --subscription $(CORE_DEV_SUBSCRIPTION_ID)
           az acr login -n ${{ parameters.sourceRegistry }}
 
           # Fetch the list of repositories

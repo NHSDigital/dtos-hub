@@ -121,11 +121,11 @@ variable "key_vault" {
   })
 }
 
-variable "log_analytic_workspace" {
+variable "law" {
   description = "Configuration of the Log Analytics Workspace"
   type = object({
     name                       = optional(string, "cohman")
-    log_analytic_workspace_sku = optional(string, "PerGB2018")
+    law_sku = optional(string, "PerGB2018")
     retention_days             = optional(number, 30)
   })
 }

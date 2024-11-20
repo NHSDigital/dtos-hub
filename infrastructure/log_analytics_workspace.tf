@@ -1,4 +1,4 @@
-module "log_analytics_workspace_audit" {
+module "log_analytics_workspace_hub" {
   for_each = { for key, val in var.regions : key => val if val.is_primary_region }
 
   source = "../../../dtos-devops-templates/infrastructure/modules/log-analytics-workspace"
@@ -6,8 +6,8 @@ module "log_analytics_workspace_audit" {
   name     = module.regions_config[each.key].names.log-analytics-workspace
   location = each.key
 
-  log_analytic_workspace_sku                                      = var.log_analytic_workspace.log_analytic_workspace_sku
-  retention_days                                                  = var.log_analytic_workspace.retention_days
+  law_sku                                      = var.law.law_sku
+  retention_days                                                  = var.law.retention_days
   monitor_diagnostic_setting_log_analytics_workspace_enabled_logs = var.monitor_diagnostic_setting_log_analytics_workspace_enabled_logs
   monitor_diagnostic_setting_log_analytics_workspace_metrics      = var.monitor_diagnostic_setting_log_analytics_workspace_metrics
 

@@ -168,9 +168,9 @@ private_dns_zones = {
 
 }
 
-log_analytic_workspace = {
+law = {
   #name_suffix        = "cohman"
-  log_analytic_workspace_sku = "PerGB2018"
+  law_sku = "PerGB2018"
   retention_days             = 30
 }
 

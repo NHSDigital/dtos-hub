@@ -138,6 +138,15 @@ variable "key_vault" {
   })
 }
 
+variable "law" {
+  description = "Configuration of the Log Analytics Workspace"
+  type = object({
+    name           = optional(string, "hub")
+    law_sku        = optional(string, "PerGB2018")
+    retention_days = optional(number, 30)
+  })
+}
+
 variable "network_security_group_rules" {
   description = "The network security group rules."
   default     = {}

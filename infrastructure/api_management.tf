@@ -17,6 +17,39 @@ module "api-management" {
   virtual_network_configuration = [module.subnets_hub["${module.config[each.key].names.subnet}-api-mgmt"].id]
   zones                         = var.apim_config.zones
 
+  developer_portal_hostname_configuration = [
+    for domain in var.apim_config.custom_domains : {
+      host_name    = "${domain.development.name}.${module.private_dns_zone_private_nationalscreening_nhs_uk[each.key].name}"
+      key_vault_id = module.lets_encrypt_certificate.key_vault_certificates["wildcard_private-${each.key}"].versionless_secret_id
+    }
+  ]
+
+  management_hostname_configuration = [
+    for domain in var.apim_config.custom_domains : {
+      host_name    = "${domain.management.name}.${module.private_dns_zone_private_nationalscreening_nhs_uk[each.key].name}"
+      key_vault_id = module.lets_encrypt_certificate.key_vault_certificates["wildcard_private-${each.key}"].versionless_secret_id
+    }
+  ]
+
+  proxy_hostname_configuration = [
+    for domain in var.apim_config.custom_domains : {
+      host_name    = "${domain.gateway.name}.${module.private_dns_zone_private_nationalscreening_nhs_uk[each.key].name}"
+      key_vault_id = module.lets_encrypt_certificate.key_vault_certificates["wildcard_private-${each.key}"].versionless_secret_id
+      default_ssl_binding = domain.gateway.default_ssl_binding
+    }
+  ]
+
+  scm_hostname_configuration = [
+    for domain in var.apim_config.custom_domains : {
+      host_name    = "${domain.scm.name}.${module.private_dns_zone_private_nationalscreening_nhs_uk[each.key].name}"
+      key_vault_id = module.lets_encrypt_certificate.key_vault_certificates["wildcard_private-${each.key}"].versionless_secret_id
+    }
+  ]
+
+  sign_in_enabled = var.apim_config.sign_in_enabled
+
+  sign_up_enabled = var.apim_config.sign_up_enabled
+
   /*________________________________
 | API Management AAD Integration |
 __________________________________*/

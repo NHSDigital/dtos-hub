@@ -118,6 +118,13 @@ apim_config = {
   zones                       = []
   public_ip_allocation_method = "Static"
   public_ip_sku               = "Standard"
+  sign_in_enabled            = true
+  sign_up_enabled            = false
+  terms_of_service = {
+    enabled = true
+    consent_required = false
+    content = "By using this service you agree to the terms and conditions"
+  }
 
   custom_domains = [
     {
@@ -132,6 +139,7 @@ apim_config = {
       gateway = {
         name         = "gateway"
         a_record_ttl = 300
+        default_ssl_binding = true
       },
       scm = {
         name         = "scm"
@@ -139,6 +147,7 @@ apim_config = {
       }
     }
   ]
+
 
   tags = {
     Project = "DToS Hub"

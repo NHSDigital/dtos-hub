@@ -28,17 +28,34 @@ variable "application" {
 variable "apim_config" {
   description = "Configuration for API Management"
   type = object({
-    aad = object({
-      secrets = list(string)
-    })
-    sku_name             = string
-    sku_capacity         = number
-    virtual_network_type = string
-    publisher_email      = string
-    publisher_name       = string
-    gateway_disabled     = bool
-    zones                = list(string)
-    tags                 = map(string)
+    sku_name                    = string
+    sku_capacity                = number
+    virtual_network_type        = string
+    publisher_email             = string
+    publisher_name              = string
+    gateway_disabled            = bool
+    public_ip_allocation_method = string
+    public_ip_sku               = string
+    zones                       = list(string)
+    custom_domains = list(object({
+      development = object({
+        name         = string
+        a_record_ttl = number
+      })
+      management = object({
+        name         = string
+        a_record_ttl = number
+      })
+      gateway = object({
+        name         = string
+        a_record_ttl = number
+      })
+      scm = object({
+        name         = string
+        a_record_ttl = number
+      })
+    }))
+    tags = map(string)
   })
 }
 

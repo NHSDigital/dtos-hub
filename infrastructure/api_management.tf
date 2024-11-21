@@ -33,7 +33,7 @@ __________________________________*/
 __________________________________*/
 
 module "apim-public-ip" {
-  for_each = length(var.apim_config.zones) > 0 ? keys(var.regions)  : {}
+  for_each = length(var.apim_config.zones) > 0 ? var.regions  : {}
 
   source = "../../dtos-devops-templates/infrastructure/modules/public-ip"
 

@@ -87,10 +87,30 @@ apim_config = {
   gateway_disabled     = false
   zones                = ["1", "2", "3"]
 
+  custom_domains = [
+    {
+      development = {
+        name         = "portal"
+        a_record_ttl = 300
+      },
+      management = {
+        name         = "management"
+        a_record_ttl = 300
+      },
+      gateway = {
+        name         = "gateway"
+        a_record_ttl = 300
+      },
+      scm = {
+        name         = "scm"
+        a_record_ttl = 300
+      }
+    }
+  ]
+
   # ip address configuration
   public_ip_allocation_method = "Static"
   public_ip_sku               = "Standard"
-
   tags = {
     Project = "DToS Hub"
   }

@@ -210,9 +210,13 @@ module "private_dns_zone_private_nationalscreening_nhs_uk" {
 
   source = "../../dtos-devops-templates/infrastructure/modules/private-dns-zone"
 
-  name                = "private.${lower(var.environment)}.nationalscreening.nhs.uk"
+  name                = local.domain_name
   resource_group_name = azurerm_resource_group.private_dns_rg[each.key].name
   vnet_id             = module.vnets_hub[each.key].vnet.id
 
   tags = var.tags
+}
+
+locals {
+  domain_name = var.environment == "DEV" ? "private.${lower(var.environment)}.nationalscreening.nhs.uk" : "private.nationalscreening.nhs.uk"
 }

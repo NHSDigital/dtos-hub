@@ -107,15 +107,31 @@ stages:
           # set -x
 
           function process_image {
-            echo "##[debug] Processing image $1:$2..."
+            fnRepository=$1
+            fnTag=$2
 
-            echo "##[debug] Pulling $1:$2..."
-            docker pull ${{ parameters.sourceRegistry }}.azurecr.io/$1:$2
+            echo "##[debug] Processing image $fnRepository:$fnTag..."
+
+            echo "##[debug] Pulling $fnRepository:$fnTag..."
+            docker pull ${{ parameters.sourceRegistry }}.azurecr.io/$fnRepository:$fnTag
 
             # Delete the downloaded image:
-            echo "##[debug] Deleting $1:$2"
-            echo "##[command]docker rmi -f ${{ parameters.sourceRegistry }}.azurecr.io/$1:$2"
-            docker rmi -f ${{ parameters.sourceRegistry }}.azurecr.io/$1:$2
+            echo "##[debug] Deleting $fnRepository:$fnTag"
+            echo "##[command]docker rmi -f ${{ parameters.sourceRegistry }}.azurecr.io/$fnRepository:$fnTag"
+            docker rmi -f ${{ parameters.sourceRegistry }}.azurecr.io/$fnRepository:$fnTag
+
+            echo "##[debug] Saving docker image as a file:"
+            echo "##[command]docker image save ${{ parameters.sourceRegistry }}.azurecr.io/$fnRepository:$fnTag | gzip > $(Pipeline.Workspace)/$SOURCEREPONAME-$SOURCETAG.tar.gz"
+            docker image save ${{ parameters.sourceRegistry }}.azurecr.io/$fnRepository:$fnTag | gzip > $(Pipeline.Workspace)/$SOURCEREPONAME-$SOURCETAG.tar.gz
+
+            echo "##[debug] Confirming file was created..."
+            if [ ! -f $(Pipeline.Workspace)/$SOURCEREPONAME-$SOURCETAG.tar.gz ]; then
+              echo "##[error] Could not find $(Pipeline.Workspace)/$SOURCEREPONAME-$SOURCETAG.tar.gz."
+              echo "##vso[task.logissue type=error] Could not find $(Pipeline.Workspace)/$SOURCEREPONAME-$SOURCETAG.tar.gz."
+            else
+              echo "##[debug] File created successfully."
+            fi
+
           }
 
           az account set --subscription $(CORE_DEV_SUBSCRIPTION_ID)

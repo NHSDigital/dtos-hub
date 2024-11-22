@@ -13,6 +13,7 @@ module "key_vault" {
   sku_name                 = var.key_vault.sku_name
 
   enable_rbac_authorization = true
+  rbac_roles                = local.rbac_roles_key_vault
 
   # Private Endpoint Configuration if enabled
   private_endpoint_properties = var.features.private_endpoints_enabled ? {

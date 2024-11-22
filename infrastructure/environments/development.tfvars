@@ -202,7 +202,6 @@ private_dns_zones = {
 }
 
 law = {
-  #name_suffix        = "cohman"
   law_sku        = "PerGB2018"
   retention_days = 30
 }

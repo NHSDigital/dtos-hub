@@ -95,29 +95,6 @@ apim_config = {
     consent_required = false
     content          = "By using this service you agree to the terms and conditions"
   }
-
-  custom_domains = [
-    {
-      development = {
-        name         = "portal"
-        a_record_ttl = 300
-      },
-      management = {
-        name         = "management"
-        a_record_ttl = 300
-      },
-      gateway = {
-        name                = "gateway"
-        a_record_ttl        = 300
-        default_ssl_binding = false
-      },
-      scm = {
-        name         = "scm"
-        a_record_ttl = 300
-      }
-    }
-  ]
-
   # ip address configuration
   public_ip_allocation_method = "Static"
   public_ip_sku               = "Standard"
@@ -130,8 +107,9 @@ avd_vm_count          = 2
 avd_users_group_name  = "DToS-hub-prod-uks-hub-virtual-desktop-User-Login"
 avd_admins_group_name = "DToS-hub-prod-uks-hub-virtual-desktop-User-ADMIN-Login"
 
-dns_zone_name                = "nationalscreening.nhs.uk"
-dns_zone_resource_group_name = "rg-hub-prod-uks-public-dns-zones"
+dns_zone_name_private   = "private.nationalscreening.nhs.uk"
+dns_zone_name_public    = "nationalscreening.nhs.uk"
+dns_zone_rg_name_public = "rg-hub-prod-uks-public-dns-zones"
 
 lets_encrypt_certificates = {
   wildcard         = "*.nationalscreening.nhs.uk"
@@ -170,7 +148,6 @@ private_dns_zones = {
   is_app_insights_private_dns_zone_enabled = true
   is_apim_private_dns_zone_enabled         = true
   is_key_vault_private_dns_zone_enabled    = true
-
 }
 
 law = {

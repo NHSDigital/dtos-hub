@@ -33,8 +33,8 @@ module "api-management" {
 
   proxy_hostname_configuration = [
     for domain in var.apim_config.custom_domains : {
-      host_name    = "${domain.gateway.name}.${module.private_dns_zone_private_nationalscreening_nhs_uk[each.key].name}"
-      key_vault_id = module.lets_encrypt_certificate.key_vault_certificates["wildcard_private-${each.key}"].versionless_secret_id
+      host_name           = "${domain.gateway.name}.${module.private_dns_zone_private_nationalscreening_nhs_uk[each.key].name}"
+      key_vault_id        = module.lets_encrypt_certificate.key_vault_certificates["wildcard_private-${each.key}"].versionless_secret_id
       default_ssl_binding = domain.gateway.default_ssl_binding
     }
   ]
@@ -45,7 +45,7 @@ module "api-management" {
       key_vault_id = module.lets_encrypt_certificate.key_vault_certificates["wildcard_private-${each.key}"].versionless_secret_id
     }
   ]
-/*________________________________
+  /*________________________________
 | API Management Portal Settings |
 __________________________________*/
 
@@ -69,7 +69,7 @@ __________________________________*/
 __________________________________*/
 
 module "apim-public-ip" {
-  for_each = length(var.apim_config.zones) > 0 ? var.regions  : {}
+  for_each = length(var.apim_config.zones) > 0 ? var.regions : {}
 
   source = "../../dtos-devops-templates/infrastructure/modules/public-ip"
 

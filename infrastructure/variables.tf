@@ -40,9 +40,9 @@ variable "apim_config" {
     sign_in_enabled             = bool
     sign_up_enabled             = bool
     terms_of_service = object({
-      enabled           = bool
-      consent_required  = bool
-      content           = string
+      enabled          = bool
+      consent_required = bool
+      content          = string
     })
     custom_domains = list(object({
       development = object({
@@ -54,8 +54,8 @@ variable "apim_config" {
         a_record_ttl = number
       })
       gateway = object({
-        name         = string
-        a_record_ttl = number
+        name                = string
+        a_record_ttl        = number
         default_ssl_binding = bool
       })
       scm = object({

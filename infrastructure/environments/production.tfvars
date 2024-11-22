@@ -79,21 +79,21 @@ regions = {
 }
 
 apim_config = {
-  sku_name             = "Premium"
-  sku_capacity         = 3
-  virtual_network_type = "Internal"
-  publisher_email      = "apim.dtos@hscic.gov.uk"
-  publisher_name       = "DToS - NHS Digital"
-  gateway_disabled     = false
-  zones                = ["1", "2", "3"]
+  sku_name                    = "Premium"
+  sku_capacity                = 3
+  virtual_network_type        = "Internal"
+  publisher_email             = "apim.dtos@hscic.gov.uk"
+  publisher_name              = "DToS - NHS Digital"
+  gateway_disabled            = false
+  zones                       = ["1", "2", "3"]
   public_ip_allocation_method = "Static"
   public_ip_sku               = "Standard"
-  sign_in_enabled            = true
-  sign_up_enabled            = false
+  sign_in_enabled             = true
+  sign_up_enabled             = false
   terms_of_service = {
-    enabled = true
+    enabled          = true
     consent_required = false
-    content = "By using this service you agree to the terms and conditions"
+    content          = "By using this service you agree to the terms and conditions"
   }
 
   custom_domains = [
@@ -107,8 +107,8 @@ apim_config = {
         a_record_ttl = 300
       },
       gateway = {
-        name         = "gateway"
-        a_record_ttl = 300
+        name                = "gateway"
+        a_record_ttl        = 300
         default_ssl_binding = false
       },
       scm = {

@@ -37,6 +37,13 @@ variable "apim_config" {
     public_ip_allocation_method = string
     public_ip_sku               = string
     zones                       = list(string)
+    sign_in_enabled             = bool
+    sign_up_enabled             = bool
+    terms_of_service = object({
+      enabled          = bool
+      consent_required = bool
+      content          = string
+    })
     custom_domains = list(object({
       development = object({
         name         = string
@@ -47,8 +54,9 @@ variable "apim_config" {
         a_record_ttl = number
       })
       gateway = object({
-        name         = string
-        a_record_ttl = number
+        name                = string
+        a_record_ttl        = number
+        default_ssl_binding = bool
       })
       scm = object({
         name         = string

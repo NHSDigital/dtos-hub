@@ -45,6 +45,9 @@ module "api-management" {
       key_vault_id = module.lets_encrypt_certificate.key_vault_certificates["wildcard_private-${each.key}"].versionless_secret_id
     }
   ]
+/*________________________________
+| API Management Portal Settings |
+__________________________________*/
 
   sign_in_enabled = var.apim_config.sign_in_enabled
 

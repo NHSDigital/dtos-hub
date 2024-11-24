@@ -35,7 +35,7 @@ module "api-management" {
     for key, domain in local.custom_domains_map : {
       host_name           = "${domain.name}.${module.private_dns_zone_private_nationalscreening_nhs_uk[domain.region].name}"
       key_vault_id        = module.lets_encrypt_certificate.key_vault_certificates["wildcard_private-${domain.region}"].versionless_secret_id
-      default_ssl_binding = coalesce(domain.default_ssl_binding, false)
+      default_ssl_binding = domain.default_ssl_binding
     }
     if domain.type == "gateway" || domain.type == "gateway_internal" || domain.type == "gateway_external"
   ]

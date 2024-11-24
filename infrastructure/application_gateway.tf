@@ -146,7 +146,7 @@ module "application-gateway-pip" {
 }
 
 module "application-gateway" {
-  for_each = var.regions
+  for_each = local.appgw_config
 
   source = "../../dtos-devops-templates/infrastructure/modules/application-gateway"
 
@@ -154,18 +154,18 @@ module "application-gateway" {
   resource_group_name       = azurerm_resource_group.rg_hub[each.key].name
   autoscale_min             = 1
   autoscale_max             = 10
-  backend_address_pool      = local.appgw_config[each.key].backend_address_pool
-  backend_http_settings     = local.appgw_config[each.key].backend_http_settings
-  frontend_ip_configuration = local.appgw_config[each.key].frontend_ip_configuration
-  frontend_port             = local.appgw_config[each.key].frontend_port
-  http_listener             = local.appgw_config[each.key].http_listener
+  backend_address_pool      = each.value.backend_address_pool
+  backend_http_settings     = each.value.backend_http_settings
+  frontend_ip_configuration = each.value.frontend_ip_configuration
+  frontend_port             = each.value.frontend_port
+  http_listener             = each.value.http_listener
   key_vault_id              = module.key_vault[each.key].key_vault_id
   names                     = module.config[each.key].names.application-gateway
   gateway_subnet            = module.subnets_hub["${module.config[each.key].names.subnet}-app-gateway"]
-  probe                     = local.appgw_config[each.key].probe
-  request_routing_rule      = local.appgw_config[each.key].request_routing_rule
+  probe                     = each.value.probe
+  request_routing_rule      = each.value.request_routing_rule
   sku                       = "WAF_v2"
-  ssl_certificate           = local.appgw_config[each.key].ssl_certificate
+  ssl_certificate           = each.value.ssl_certificate
   zones                     = each.value.is_primary_region ? ["1", "2", "3"] : null
 
   tags = var.tags

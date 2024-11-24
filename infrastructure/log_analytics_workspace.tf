@@ -1,15 +1,15 @@
-module "log_analytics_workspace_hub" {
-  for_each = { for key, val in var.regions : key => val if val.is_primary_region }
+# module "log_analytics_workspace_hub" {
+#   for_each = { for key, val in var.regions : key => val if val.is_primary_region }
 
-  source = "../../dtos-devops-templates/infrastructure/modules/log-analytics-workspace"
+#   source = "../../dtos-devops-templates/infrastructure/modules/log-analytics-workspace"
 
-  name     = module.config[each.key].names.log-analytics-workspace
-  location = each.key
+#   name     = module.config[each.key].names.log-analytics-workspace
+#   location = each.key
 
-  law_sku        = var.law.law_sku
-  retention_days = var.law.retention_days
+#   law_sku        = var.law.law_sku
+#   retention_days = var.law.retention_days
 
-  resource_group_name = azurerm_resource_group.rg_base[each.key].name
+#   resource_group_name = azurerm_resource_group.rg_base[each.key].name
 
-  tags = var.tags
-}
+#   tags = var.tags
+# }

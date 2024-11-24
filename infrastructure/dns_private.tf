@@ -220,24 +220,9 @@ module "private_dns_zone_private_nationalscreening_nhs_uk" {
   API Management Private DNS A Records
 --------------------------------------------------------------------------------------------------*/
 
-locals {
-  apim_private_dns_a_records_obj_list = flatten([
-    for region in keys(var.regions) : [
-      for domain_obj in var.apim_config.custom_domains : [
-        for type, value in domain_obj : {
-          region = region
-          type   = type
-          name   = value.name
-          ttl    = value.a_record_ttl
-        }
-      ]
-    ]
-  ])
-  appim_private_dns_a_records_map = { for obj in local.apim_private_dns_a_records_obj_list : "${obj.region}-${obj.type}" => obj }
-}
-
 module "apim-private-dns-a-records" {
-  for_each = local.appim_private_dns_a_records_map
+  for_each = local.custom_domains_map
+
 
   source = "../../dtos-devops-templates/infrastructure/modules/private-dns-a-record"
 
@@ -255,11 +240,13 @@ module "apim-private-dns-a-records" {
 --------------------------------------------------------------------------------------------------*/
 
 locals {
+  appgw_private_listener_hostnames = ["api", "portal"]
+
   appgw_private_dns_a_records_obj_list = flatten([
     for region in keys(var.regions) : [
-      for record in ["api", "portal"] : {
+      for hostname in local.appgw_private_listener_hostnames : {
         region = region
-        name   = record  # Use 'record' here, not 'name'
+        name   = hostname
       }
     ]
   ])

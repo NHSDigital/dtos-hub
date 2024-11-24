@@ -74,7 +74,7 @@ locals {
     apim_portal_private = {
       frontend_ip_configuration_key = "private"
       frontend_port_key             = "https"
-      hostname                      = "portal${var.dns_zone_name_private}"
+      hostname                      = "portal.${var.dns_zone_name_private}"
       protocol                      = "Https"
       require_sni                   = true
       ssl_certificate_key           = "private"
@@ -153,11 +153,13 @@ module "application-gateway" {
   backend_http_settings     = local.backend_http_settings
   frontend_ip_configuration = local.frontend_ip_configuration
   frontend_port             = local.frontend_port
+  http_listener             = local.http_listener
   key_vault_id              = module.key_vault[each.key].key_vault_id
   names                     = module.config[each.key].names.application-gateway
   gateway_subnet            = module.subnets_hub["${module.config[each.key].names.subnet}-app-gateway"]
   probe                     = local.probe
   public_ip_address_id      = module.application-gateway-pip[each.key].id
+  request_routing_rule      = local.request_routing_rule
   sku                       = "WAF_v2"
   ssl_certificate           = local.ssl_certificate
   zones                     = each.value.is_primary_region ? ["1", "2", "3"] : null

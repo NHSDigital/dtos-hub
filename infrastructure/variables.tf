@@ -92,7 +92,7 @@ variable "dns_zone_name_private" {
   type = string
 }
 
-variable "dns_zone_resource_group_name_public" {
+variable "dns_zone_rg_name_public" {
   type = string
 }
 

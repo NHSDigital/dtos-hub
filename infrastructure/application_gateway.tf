@@ -77,7 +77,7 @@ locals {
         apim_portal_private = {
           frontend_ip_configuration_key = "private"
           frontend_port_key             = "https"
-          host_name                     = "portal.${var.dns_zone_name_private}"
+          host_names                    = ["portal.${var.dns_zone_name_private}"]
           protocol                      = "Https"
           require_sni                   = true
           ssl_certificate_key           = "private"
@@ -85,7 +85,7 @@ locals {
         apim_gateway_private = {
           frontend_ip_configuration_key = "private"
           frontend_port_key             = "https"
-          host_name                     = "api.${var.dns_zone_name_private}"
+          host_names                    = ["api.${var.dns_zone_name_private}"]
           protocol                      = "Https"
           require_sni                   = true
           ssl_certificate_key           = "private"
@@ -93,7 +93,7 @@ locals {
         apim_gateway_public = {
           frontend_ip_configuration_key = "public"
           frontend_port_key             = "https"
-          host_name                     = "api.${var.dns_zone_name_public}"
+          host_names                    = ["api.${var.dns_zone_name_public}"]
           protocol                      = "Https"
           require_sni                   = true
           ssl_certificate_key           = "public"

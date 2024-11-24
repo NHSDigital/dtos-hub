@@ -1,6 +1,6 @@
 locals {
   appgw_config = {
-    for region in keys(var.regions) : {
+    for region in keys(var.regions) : region => {
 
       frontend_port = {
         https = 443

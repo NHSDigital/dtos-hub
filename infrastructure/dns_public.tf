@@ -10,7 +10,7 @@ module "appgw-dns-a-records" {
   resource_group_name = var.dns_zone_rg_name_public
   zone_name           = var.dns_zone_name_public
   ttl                 = 300
-  target_resource_id  = module.application-gateway-pip.id
+  target_resource_id  = module.application-gateway-pip[local.primary_region].id
 
   tags = var.tags
 }

@@ -1,14 +1,8 @@
 ---
 
 name: $(Build.SourceBranchName)-$(Date:yyyyMMdd)_$(Rev:r)
-
-trigger:
-  branches:
-    include:
-      - main
-  paths:
-    include:
-      - infrastructure/*
+trigger: none
+pr: none
 
 pool:
   name: private-pool-dev-uks

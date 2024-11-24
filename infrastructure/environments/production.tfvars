@@ -120,8 +120,8 @@ avd_vm_count          = 2
 avd_users_group_name  = "DToS-hub-prod-uks-hub-virtual-desktop-User-Login"
 avd_admins_group_name = "DToS-hub-prod-uks-hub-virtual-desktop-User-ADMIN-Login"
 
-dns_zone_name_public    = "nationalscreening.nhs.uk"
 dns_zone_name_private   = "private.nationalscreening.nhs.uk"
+dns_zone_name_public    = "nationalscreening.nhs.uk"
 dns_zone_rg_name_public = "rg-hub-prod-uks-public-dns-zones"
 
 lets_encrypt_certificates = {

@@ -166,7 +166,7 @@ module "application-gateway" {
   request_routing_rule      = each.value.request_routing_rule
   sku                       = "WAF_v2"
   ssl_certificate           = each.value.ssl_certificate
-  zones                     = var.regions[each.value.region].is_primary_region ? ["1", "2", "3"] : null
+  zones                     = var.regions[each.key].is_primary_region ? ["1", "2", "3"] : null
 
   tags = var.tags
 }

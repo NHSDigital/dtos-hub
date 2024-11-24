@@ -122,7 +122,7 @@ apim_config = {
   custom_domains = [
     {
       development = {
-        name         = "portal"
+        name         = "developer-portal"
         a_record_ttl = 300
       },
       management = {
@@ -149,12 +149,13 @@ avd_vm_count          = 1
 avd_users_group_name  = "DToS-hub-dev-uks-hub-virtual-desktop-User-Login"
 avd_admins_group_name = "DToS-hub-dev-uks-hub-virtual-desktop-User-ADMIN-Login"
 
-dns_zone_name                = "dev.nationalscreening.nhs.uk"
-dns_zone_resource_group_name = "rg-hub-dev-uks-public-dns-zones"
+dns_zone_name_public    = "non-live.nationalscreening.nhs.uk"
+dns_zone_name_private   = "private.non-live.nationalscreening.nhs.uk"
+dns_zone_rg_name_public = "rg-hub-dev-uks-public-dns-zones"
 
 lets_encrypt_certificates = {
-  wildcard         = "*.dev.nationalscreening.nhs.uk"
-  wildcard_private = "*.private.dev.nationalscreening.nhs.uk"
+  wildcard         = "*.non-live.nationalscreening.nhs.uk"
+  wildcard_private = "*.private.non-live.nationalscreening.nhs.uk"
 }
 
 firewall_config = {

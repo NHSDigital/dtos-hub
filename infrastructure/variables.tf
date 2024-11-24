@@ -82,14 +82,17 @@ variable "dns_a_records" {
     ttl     = number
   })))
   default = {}
-
 }
 
-variable "dns_zone_name" {
+variable "dns_zone_name_public" {
   type = string
 }
 
-variable "dns_zone_resource_group_name" {
+variable "dns_zone_name_private" {
+  type = string
+}
+
+variable "dns_zone_resource_group_name_public" {
   type = string
 }
 

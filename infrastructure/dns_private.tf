@@ -201,7 +201,6 @@ module "private_dns_zone_storage_queue" {
   tags = var.tags
 }
 
-
 module "private_dns_zone_private_nationalscreening_nhs_uk" {
   for_each = {
     for key, region in var.regions :
@@ -210,13 +209,73 @@ module "private_dns_zone_private_nationalscreening_nhs_uk" {
 
   source = "../../dtos-devops-templates/infrastructure/modules/private-dns-zone"
 
-  name                = local.domain_name
+  name                = var.dns_zone_name_private
   resource_group_name = azurerm_resource_group.private_dns_rg[each.key].name
   vnet_id             = module.vnets_hub[each.key].vnet.id
 
   tags = var.tags
 }
 
+/*--------------------------------------------------------------------------------------------------
+  API Management Private DNS A Records
+--------------------------------------------------------------------------------------------------*/
+
 locals {
-  domain_name = var.environment == "DEV" ? "private.${lower(var.environment)}.nationalscreening.nhs.uk" : "private.nationalscreening.nhs.uk"
+  apim_private_dns_a_records_obj_list = flatten([
+    for region in keys(var.regions) : [
+      for domain_obj in var.apim_config.custom_domains : [
+        for type, value in domain_obj : {
+          region = region
+          type   = type
+          name   = value.name
+          ttl    = value.a_record_ttl
+        }
+      ]
+    ]
+  ])
+  appim_private_dns_a_records_map = { for obj in local.apim_private_dns_a_records_obj_list : "${obj.region}-${obj.type}" => obj }
+}
+
+module "apim-private-dns-a-records" {
+  for_each = local.appim_private_dns_a_records_map
+
+  source = "../../dtos-devops-templates/infrastructure/modules/private-dns-a-record"
+
+  name                = each.value.name
+  resource_group_name = resource.azurerm_resource_group.private_dns_rg[each.value.region].name
+  zone_name           = module.private_dns_zone_private_nationalscreening_nhs_uk[each.value.region].name
+  ttl                 = each.value.ttl
+  records             = [module.api-management[each.value.region].private_ip_address]
+
+  tags = var.tags
+}
+
+/*--------------------------------------------------------------------------------------------------
+  Application Gateway Private DNS A Records
+--------------------------------------------------------------------------------------------------*/
+
+locals {
+  appgw_private_dns_a_records_obj_list = flatten([
+    for region in keys(var.regions) : [
+      for record in ["api", "portal"] : {
+        region = region
+        name   = name
+      }
+    ]
+  }
+  appgw_private_dns_a_records_map = { for obj in local.appgw_private_dns_a_records_obj_list : "${obj.region}-${obj.name}" => obj }
+}
+
+module "appgw-private-dns-a-records" {
+  for_each = appgw_private_dns_a_records_map
+
+  source = "../../dtos-devops-templates/infrastructure/modules/private-dns-a-record"
+
+  name                = each.value.name
+  resource_group_name = resource.azurerm_resource_group.private_dns_rg[each.value.region].name
+  zone_name           = module.private_dns_zone_private_nationalscreening_nhs_uk[each.value.region].name
+  ttl                 = 300
+  records             = [module.application-gateway-pip.ip_address]
+
+  tags = var.tags
 }

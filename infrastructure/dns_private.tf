@@ -259,10 +259,10 @@ locals {
     for region in keys(var.regions) : [
       for record in ["api", "portal"] : {
         region = region
-        name   = name
+        name   = record  # Use 'record' here, not 'name'
       }
     ]
-  }
+  ])
   appgw_private_dns_a_records_map = { for obj in local.appgw_private_dns_a_records_obj_list : "${obj.region}-${obj.name}" => obj }
 }
 

@@ -148,6 +148,7 @@ locals {
         type   = type
         name   = value.name
         ttl    = value.a_record_ttl
+        default_ssl_binding = lookup(value, "default_ssl_binding", null)
       }
     ]
   ])

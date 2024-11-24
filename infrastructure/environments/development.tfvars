@@ -126,27 +126,32 @@ apim_config = {
     content          = "By using this service you agree to the terms and conditions"
   }
 
-  custom_domains = [
-    {
-      development = {
-        name         = "portal"
-        a_record_ttl = 300
-      },
-      management = {
-        name         = "management"
-        a_record_ttl = 300
-      },
-      gateway = {
-        name                = "gateway"
-        a_record_ttl        = 300
-        default_ssl_binding = true
-      },
-      scm = {
-        name         = "scm"
-        a_record_ttl = 300
-      }
+  custom_domains = {
+    development = {
+      name         = "developer-portal"
+      a_record_ttl = 300
     }
-  ]
+    management = {
+      name         = "management"
+      a_record_ttl = 300
+    }
+    gateway = {
+      name         = "gateway"
+      a_record_ttl = 300
+    }
+    gateway_internal = {
+      name         = "gateway-internal"
+      a_record_ttl = 300
+    }
+    gateway_external = {
+      name         = "gateway-external"
+      a_record_ttl = 300
+    }
+    scm = {
+      name         = "scm"
+      a_record_ttl = 300
+    }
+  }
 
 
   tags = {

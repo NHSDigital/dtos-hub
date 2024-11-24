@@ -18,33 +18,65 @@ module "api-management" {
   zones                         = var.apim_config.zones
 
   developer_portal_hostname_configuration = [
-    for domain in var.apim_config.custom_domains : {
-      host_name    = "${domain.development.name}.${module.private_dns_zone_private_nationalscreening_nhs_uk[each.key].name}"
-      key_vault_id = module.lets_encrypt_certificate.key_vault_certificates["wildcard_private-${each.key}"].versionless_secret_id
+    for key, domain in local.custom_domains_map : {
+      host_name    = "${domain.name}.${module.private_dns_zone_private_nationalscreening_nhs_uk[domain.region].name}"
+      key_vault_id = module.lets_encrypt_certificate.key_vault_certificates["wildcard_private-${domain.region}"].versionless_secret_id
     }
+    if domain.type == "development"
   ]
-
   management_hostname_configuration = [
-    for domain in var.apim_config.custom_domains : {
-      host_name    = "${domain.management.name}.${module.private_dns_zone_private_nationalscreening_nhs_uk[each.key].name}"
-      key_vault_id = module.lets_encrypt_certificate.key_vault_certificates["wildcard_private-${each.key}"].versionless_secret_id
+    for key, domain in local.custom_domains_map : {
+      host_name    = "${domain.name}.${module.private_dns_zone_private_nationalscreening_nhs_uk[domain.region].name}"
+      key_vault_id = module.lets_encrypt_certificate.key_vault_certificates["wildcard_private-${domain.region}"].versionless_secret_id
     }
+    if domain.type == "management"
   ]
-
   proxy_hostname_configuration = [
-    for domain in var.apim_config.custom_domains : {
-      host_name           = "${domain.gateway.name}.${module.private_dns_zone_private_nationalscreening_nhs_uk[each.key].name}"
-      key_vault_id        = module.lets_encrypt_certificate.key_vault_certificates["wildcard_private-${each.key}"].versionless_secret_id
-      default_ssl_binding = domain.gateway.default_ssl_binding
+    for key, domain in local.custom_domains_map : {
+      host_name           = "${domain.name}.${module.private_dns_zone_private_nationalscreening_nhs_uk[domain.region].name}"
+      key_vault_id        = module.lets_encrypt_certificate.key_vault_certificates["wildcard_private-${domain.region}"].versionless_secret_id
+      default_ssl_binding = coalesce(domain.default_ssl_binding, false)
     }
+    if domain.type == "gateway" || domain.type == "gateway_internal" || domain.type == "gateway_external"
+  ]
+  scm_hostname_configuration = [
+    for key, domain in local.custom_domains_map : {
+      host_name    = "${domain.name}.${module.private_dns_zone_private_nationalscreening_nhs_uk[domain.region].name}"
+      key_vault_id = module.lets_encrypt_certificate.key_vault_certificates["wildcard_private-${domain.region}"].versionless_secret_id
+    }
+    if domain.type == "scm"
   ]
 
-  scm_hostname_configuration = [
-    for domain in var.apim_config.custom_domains : {
-      host_name    = "${domain.scm.name}.${module.private_dns_zone_private_nationalscreening_nhs_uk[each.key].name}"
-      key_vault_id = module.lets_encrypt_certificate.key_vault_certificates["wildcard_private-${each.key}"].versionless_secret_id
-    }
-  ]
+
+
+  # developer_portal_hostname_configuration = [
+  #   for domain in var.apim_config.custom_domains : {
+  #     host_name    = "${domain.development.name}.${module.private_dns_zone_private_nationalscreening_nhs_uk[each.key].name}"
+  #     key_vault_id = module.lets_encrypt_certificate.key_vault_certificates["wildcard_private-${each.key}"].versionless_secret_id
+  #   }
+  # ]
+
+  # management_hostname_configuration = [
+  #   for domain in var.apim_config.custom_domains : {
+  #     host_name    = "${domain.management.name}.${module.private_dns_zone_private_nationalscreening_nhs_uk[each.key].name}"
+  #     key_vault_id = module.lets_encrypt_certificate.key_vault_certificates["wildcard_private-${each.key}"].versionless_secret_id
+  #   }
+  # ]
+
+  # proxy_hostname_configuration = [
+  #   for domain in var.apim_config.custom_domains : {
+  #     host_name           = "${domain.gateway.name}.${module.private_dns_zone_private_nationalscreening_nhs_uk[each.key].name}"
+  #     key_vault_id        = module.lets_encrypt_certificate.key_vault_certificates["wildcard_private-${each.key}"].versionless_secret_id
+  #     default_ssl_binding = domain.gateway.default_ssl_binding
+  #   }
+  # ]
+
+  # scm_hostname_configuration = [
+  #   for domain in var.apim_config.custom_domains : {
+  #     host_name    = "${domain.scm.name}.${module.private_dns_zone_private_nationalscreening_nhs_uk[each.key].name}"
+  #     key_vault_id = module.lets_encrypt_certificate.key_vault_certificates["wildcard_private-${each.key}"].versionless_secret_id
+  #   }
+  # ]
   /*________________________________
 | API Management Portal Settings |
 __________________________________*/
@@ -111,14 +143,12 @@ locals {
 
   custom_domains = flatten([
     for region_key in keys(var.regions) : [
-      for domain_obj in var.apim_config.custom_domains : [
-        for type, value in domain_obj : {
-          region = region_key
-          type   = type
-          name   = value.name
-          ttl    = value.a_record_ttl
-        }
-      ]
+      for type, value in var.apim_config.custom_domains : {
+        region = region_key
+        type   = type
+        name   = value.name
+        ttl    = value.a_record_ttl
+      }
     ]
   ])
   custom_domains_map = { for domain in local.custom_domains : "${domain.region}-${domain.type}" => domain

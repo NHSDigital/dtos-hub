@@ -44,24 +44,10 @@ variable "apim_config" {
       consent_required = bool
       content          = string
     })
-    custom_domains = list(object({
-      development = object({
-        name         = string
-        a_record_ttl = number
-      })
-      management = object({
-        name         = string
-        a_record_ttl = number
-      })
-      gateway = object({
-        name                = string
-        a_record_ttl        = number
-        default_ssl_binding = bool
-      })
-      scm = object({
-        name         = string
-        a_record_ttl = number
-      })
+    custom_domains = map(object({
+      name                = string
+      a_record_ttl        = number
+      default_ssl_binding = optional(bool, false)
     }))
     tags = map(string)
   })

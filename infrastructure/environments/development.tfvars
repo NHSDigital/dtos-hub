@@ -136,18 +136,18 @@ apim_config = {
       a_record_ttl = 300
     }
     gateway = {
-      name         = "gateway"
-      a_record_ttl = 300
-      default_ssl_binding = false
+      name                = "gateway"
+      a_record_ttl        = 300
+      default_ssl_binding = true
     }
     gateway_internal = {
-      name         = "gateway-internal"
-      a_record_ttl = 300
+      name                = "api"
+      a_record_ttl        = 300
       default_ssl_binding = false
     }
     gateway_external = {
-      name         = "gateway-external"
-      a_record_ttl = 300
+      name                = "api"
+      a_record_ttl        = 300
       default_ssl_binding = false
     }
     scm = {
@@ -166,7 +166,8 @@ avd_vm_count          = 1
 avd_users_group_name  = "DToS-hub-dev-uks-hub-virtual-desktop-User-Login"
 avd_admins_group_name = "DToS-hub-dev-uks-hub-virtual-desktop-User-ADMIN-Login"
 
-dns_zone_name                = "dev.nationalscreening.nhs.uk"
+dns_zone_name_private        = "private.non-live.nationalscreening.nhs.uk"
+dns_zone_name_public         = "non-live.nationalscreening.nhs.uk"
 dns_zone_resource_group_name = "rg-hub-dev-uks-public-dns-zones"
 
 lets_encrypt_certificates = {

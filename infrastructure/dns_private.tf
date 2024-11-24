@@ -267,7 +267,7 @@ locals {
 }
 
 module "appgw-private-dns-a-records" {
-  for_each = appgw_private_dns_a_records_map
+  for_each = local.appgw_private_dns_a_records_map
 
   source = "../../dtos-devops-templates/infrastructure/modules/private-dns-a-record"
 

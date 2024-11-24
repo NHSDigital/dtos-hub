@@ -56,7 +56,7 @@ locals {
 
       backend_http_settings = {
         apim_gateway = {
-          cookieBasedAffinity                 = "Disabled"
+          cookie_based_affinity               = "Disabled"
           pick_host_name_from_backend_address = true
           port                                = 443
           probe_key                           = "apim_gateway"
@@ -64,7 +64,7 @@ locals {
           request_timeout                     = 180
         }
         apim_portal = {
-          cookieBasedAffinity                 = "Disabled"
+          cookie_based_affinity               = "Disabled"
           pick_host_name_from_backend_address = true
           port                                = 443
           probe_key                           = "apim_portal"

@@ -7,9 +7,9 @@ locals {
 }
 
 module "appgw-dns-a-records" {
+  # No region loop since public DNS is global. Traffic Manager will be required if an additional region is added.
   for_each = toset(local.appgw_public_listener_hostnames)
 
-  # No region loop since DNS is global. Traffic Manager will be required if an additional region is added.
   source = "../../dtos-devops-templates/infrastructure/modules/dns-a-record"
 
   name                = each.key

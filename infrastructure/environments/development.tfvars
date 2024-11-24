@@ -138,14 +138,17 @@ apim_config = {
     gateway = {
       name         = "gateway"
       a_record_ttl = 300
+      default_ssl_binding = false
     }
     gateway_internal = {
       name         = "gateway-internal"
       a_record_ttl = 300
+      default_ssl_binding = false
     }
     gateway_external = {
       name         = "gateway-external"
       a_record_ttl = 300
+      default_ssl_binding = false
     }
     scm = {
       name         = "scm"

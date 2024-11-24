@@ -223,7 +223,6 @@ module "private_dns_zone_private_nationalscreening_nhs_uk" {
 module "apim-private-dns-a-records" {
   for_each = local.custom_domains_map
 
-
   source = "../../dtos-devops-templates/infrastructure/modules/private-dns-a-record"
 
   name                = each.value.name

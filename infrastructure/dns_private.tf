@@ -230,7 +230,7 @@ module "apim-private-dns-a-records" {
   resource_group_name = resource.azurerm_resource_group.private_dns_rg[each.value.region].name
   zone_name           = module.private_dns_zone_private_nationalscreening_nhs_uk[each.value.region].name
   ttl                 = each.value.ttl
-  records             = [module.api-management[each.value.region].private_ip_address]
+  records             = module.api-management[each.value.region].private_ip_addresses
 
   tags = var.tags
 }

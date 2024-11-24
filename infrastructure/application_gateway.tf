@@ -163,7 +163,6 @@ module "application-gateway" {
   names                     = module.config[each.key].names.application-gateway
   gateway_subnet            = module.subnets_hub["${module.config[each.key].names.subnet}-app-gateway"]
   probe                     = local.appgw_config[each.key].probe
-  public_ip_address_id      = module.application-gateway-pip[each.key].id
   request_routing_rule      = local.appgw_config[each.key].request_routing_rule
   sku                       = "WAF_v2"
   ssl_certificate           = local.appgw_config[each.key].ssl_certificate

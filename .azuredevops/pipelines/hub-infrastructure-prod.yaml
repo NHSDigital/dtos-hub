@@ -64,11 +64,11 @@ stages:
                 - checkout: self
                 - checkout: dtos-devops-templates
                 - template: .azuredevops/templates/steps/tf_apply.yaml@dtos-devops-templates
-                  parameters:
-                    # The Application Gateway Config null resource needs an authenticated PowerShell context, hence our shell is pscore
-                    # AzureCLI@2 task is used rather than AzurePowerShell@5 because Terraform is unable to use a PowerShell authentication context directly
-                    # tfApplyShell: pscore
-                    # tfApplyScript: |
-                    #   if (-not (Get-Module -ListAvailable -Name Az)) { Install-Module -Name Az -AllowClobber -Scope CurrentUser -Force -SkipPublisherCheck }
-                    #   $token = az account get-access-token --resource https://management.azure.com/ --query accessToken --output tsv
-                    #   Connect-AzAccount -AccessToken $token -AccountId $env:servicePrincipalId -Tenant $env:tenantId -Subscription $(TF_VAR_TARGET_SUBSCRIPTION_ID) -ErrorAction Stop
+                  # parameters:
+                  #   # The Application Gateway Config null resource needs an authenticated PowerShell context, hence our shell is pscore
+                  #   # AzureCLI@2 task is used rather than AzurePowerShell@5 because Terraform is unable to use a PowerShell authentication context directly
+                  #   tfApplyShell: pscore
+                  #   tfApplyScript: |
+                  #     if (-not (Get-Module -ListAvailable -Name Az)) { Install-Module -Name Az -AllowClobber -Scope CurrentUser -Force -SkipPublisherCheck }
+                  #     $token = az account get-access-token --resource https://management.azure.com/ --query accessToken --output tsv
+                  #     Connect-AzAccount -AccessToken $token -AccountId $env:servicePrincipalId -Tenant $env:tenantId -Subscription $(TF_VAR_TARGET_SUBSCRIPTION_ID) -ErrorAction Stop

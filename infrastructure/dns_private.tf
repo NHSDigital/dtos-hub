@@ -238,7 +238,7 @@ locals {
         for hostname in local.appgw_private_listener_hostnames : {
           region  = region
           name    = hostname
-          records = [module.application-gateway-pip[region].ip_address]
+          records = [local.appgw_config[region].frontend_ip_configuration.private.private_ip_address]
         }
       ]
     ]

@@ -7,11 +7,11 @@ locals {
       }
 
       frontend_ip_configuration = {
-        private = {
-          subnet_id                     = module.subnets_hub["${module.config[region].names.subnet}-app-gateway"].id
-          private_ip_address            = cidrhost(module.subnets_hub["${module.config[region].names.subnet}-app-gateway"].address_prefixes[0], 225)
-          private_ip_address_allocation = "Static"
-        }
+        # private = {
+        #   subnet_id                     = module.subnets_hub["${module.config[region].names.subnet}-app-gateway"].id
+        #   private_ip_address            = cidrhost(module.subnets_hub["${module.config[region].names.subnet}-app-gateway"].address_prefixes[0], 225)
+        #   private_ip_address_allocation = "Static"
+        # }
         public = {
           public_ip_address_id = module.application-gateway-pip[region].id
         }
@@ -21,9 +21,9 @@ locals {
         apim_gateway = {
           fqdns = ["gateway.${var.dns_zone_name_private}"]
         }
-        apim_portal = {
-          fqdns = ["developer-portal.${var.dns_zone_name_private}"]
-        }
+        # apim_portal = {
+        #   fqdns = ["developer-portal.${var.dns_zone_name_private}"]
+        # }
       }
 
       probe = {
@@ -35,20 +35,20 @@ locals {
           timeout                                   = 120
           unhealthy_threshold                       = 8
         }
-        apim_portal = {
-          interval                                  = 60
-          path                                      = "/signin"
-          pick_host_name_from_backend_http_settings = true
-          protocol                                  = "Https"
-          timeout                                   = 300
-          unhealthy_threshold                       = 8
-        }
+        # apim_portal = {
+        #   interval                                  = 60
+        #   path                                      = "/signin"
+        #   pick_host_name_from_backend_http_settings = true
+        #   protocol                                  = "Https"
+        #   timeout                                   = 300
+        #   unhealthy_threshold                       = 8
+        # }
       }
 
       ssl_certificate = {
-        private = {
-          key_vault_secret_id = module.lets_encrypt_certificate.key_vault_certificates["wildcard_private-${region}"].versionless_secret_id
-        }
+        # private = {
+        #   key_vault_secret_id = module.lets_encrypt_certificate.key_vault_certificates["wildcard_private-${region}"].versionless_secret_id
+        # }
         public = {
           key_vault_secret_id = module.lets_encrypt_certificate.key_vault_certificates["wildcard-${region}"].versionless_secret_id
         }
@@ -63,70 +63,67 @@ locals {
           protocol                            = "Https"
           request_timeout                     = 180
         }
-        apim_portal = {
-          cookie_based_affinity               = "Disabled"
-          pick_host_name_from_backend_address = true
-          port                                = 443
-          probe_key                           = "apim_portal"
-          protocol                            = "Https"
-          request_timeout                     = 180
+        # apim_portal = {
+        #   cookie_based_affinity               = "Disabled"
+        #   pick_host_name_from_backend_address = true
+        #   port                                = 443
+        #   probe_key                           = "apim_portal"
+        #   protocol                            = "Https"
+        #   request_timeout                     = 180
+        # }
+      }
+
+      http_listener = {
+        # apim_portal_private = {
+        #   frontend_ip_configuration_key = "private"
+        #   frontend_port_key             = "https"
+        #   host_names                    = ["portal.${var.dns_zone_name_private}"]
+        #   protocol                      = "Https"
+        #   require_sni                   = true
+        #   ssl_certificate_key           = "private"
+        # }
+        # apim_gateway_private = {
+        #   frontend_ip_configuration_key = "private"
+        #   frontend_port_key             = "https"
+        #   host_names                    = ["api.${var.dns_zone_name_private}"]
+        #   protocol                      = "Https"
+        #   require_sni                   = true
+        #   ssl_certificate_key           = "private"
+        # }
+        apim_gateway_public = {
+          frontend_ip_configuration_key = "public"
+          frontend_port_key             = "https"
+          host_names                    = ["api.${var.dns_zone_name_public}"]
+          protocol                      = "Https"
+          require_sni                   = true
+          ssl_certificate_key           = "public"
+          # firewall_policy_id            =
         }
       }
 
-      http_listener = {}
-      request_routing_rule = {}
-
-      # http_listener = {
-      #   apim_portal_private = {
-      #     frontend_ip_configuration_key = "private"
-      #     frontend_port_key             = "https"
-      #     host_names                    = ["portal.${var.dns_zone_name_private}"]
-      #     protocol                      = "Https"
-      #     require_sni                   = true
-      #     ssl_certificate_key           = "private"
-      #   }
-      #   apim_gateway_private = {
-      #     frontend_ip_configuration_key = "private"
-      #     frontend_port_key             = "https"
-      #     host_names                    = ["api.${var.dns_zone_name_private}"]
-      #     protocol                      = "Https"
-      #     require_sni                   = true
-      #     ssl_certificate_key           = "private"
-      #   }
-      #   apim_gateway_public = {
-      #     frontend_ip_configuration_key = "public"
-      #     frontend_port_key             = "https"
-      #     host_names                    = ["api.${var.dns_zone_name_public}"]
-      #     protocol                      = "Https"
-      #     require_sni                   = true
-      #     ssl_certificate_key           = "public"
-      #     # firewall_policy_id            =
-      #   }
-      # }
-
-      # request_routing_rule = {
-      #   apim_gateway_public = {
-      #     backend_address_pool_key  = "apim_gateway"
-      #     backend_http_settings_key = "apim_gateway"
-      #     http_listener_key         = "apim_gateway_public"
-      #     priority                  = 900
-      #     rule_type                 = "Basic"
-      #   }
-      #   apim_gateway_private = {
-      #     backend_address_pool_key  = "apim_gateway"
-      #     backend_http_settings_key = "apim_gateway"
-      #     http_listener_key         = "apim_gateway_private"
-      #     priority                  = 1000
-      #     rule_type                 = "Basic"
-      #   }
-      #   apim_portal_private = {
-      #     backend_address_pool_key  = "apim_portal"
-      #     backend_http_settings_key = "apim_portal"
-      #     http_listener_key         = "apim_portal_private"
-      #     priority                  = 1100
-      #     rule_type                 = "Basic"
-      #   }
-      # }
+      request_routing_rule = {
+        apim_gateway_public = {
+          backend_address_pool_key  = "apim_gateway"
+          backend_http_settings_key = "apim_gateway"
+          http_listener_key         = "apim_gateway_public"
+          priority                  = 900
+          rule_type                 = "Basic"
+        }
+        # apim_gateway_private = {
+        #   backend_address_pool_key  = "apim_gateway"
+        #   backend_http_settings_key = "apim_gateway"
+        #   http_listener_key         = "apim_gateway_private"
+        #   priority                  = 1000
+        #   rule_type                 = "Basic"
+        # }
+        # apim_portal_private = {
+        #   backend_address_pool_key  = "apim_portal"
+        #   backend_http_settings_key = "apim_portal"
+        #   http_listener_key         = "apim_portal_private"
+        #   priority                  = 1100
+        #   rule_type                 = "Basic"
+        # }
+      }
     }
   }
 }

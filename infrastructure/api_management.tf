@@ -18,34 +18,42 @@ module "api-management" {
   zones                         = var.apim_config.zones
 
   developer_portal_hostname_configuration = [
-    for key, domain in local.custom_domains_map : {
-      host_name    = "${domain.name}.${var.dns_zone_name_private}"
-      key_vault_id = module.lets_encrypt_certificate.key_vault_certificates["wildcard_private-${domain.region}"].versionless_secret_id
+    {
+      host_name    = "developer-portal.${var.dns_zone_name_private}"
+      key_vault_id = module.lets_encrypt_certificate.key_vault_certificates["wildcard_private-${each.key}"].versionless_secret_id
     }
-    if domain.type == "development"
   ]
+
   management_hostname_configuration = [
-    for key, domain in local.custom_domains_map : {
-      host_name    = "${domain.name}.${var.dns_zone_name_private}"
-      key_vault_id = module.lets_encrypt_certificate.key_vault_certificates["wildcard_private-${domain.region}"].versionless_secret_id
+    {
+      host_name    = "management.${var.dns_zone_name_private}"
+      key_vault_id = module.lets_encrypt_certificate.key_vault_certificates["wildcard_private-${each.key}"].versionless_secret_id
     }
-    if domain.type == "management"
   ]
+
   proxy_hostname_configuration = [
-    for key, domain in local.custom_domains_map : {
-      host_name           = domain.type == "gateway_external" ? "${domain.name}.${var.dns_zone_name_public}" : "${domain.name}.${var.dns_zone_name_private}"
-      key_vault_id        = domain.type == "gateway_external" ? module.lets_encrypt_certificate.key_vault_certificates["wildcard-${domain.region}"].versionless_secret_id : module.lets_encrypt_certificate.key_vault_certificates["wildcard_private-${domain.region}"].versionless_secret_id
-      default_ssl_binding = domain.default_ssl_binding
+    {
+      host_name           = "gateway.${var.dns_zone_name_private}"
+      key_vault_id        = module.lets_encrypt_certificate.key_vault_certificates["wildcard_private-${each.key}"].versionless_secret_id
+      default_ssl_binding = true
+    },
+    {
+      host_name    = "api.${var.dns_zone_name_private}"
+      key_vault_id = module.lets_encrypt_certificate.key_vault_certificates["wildcard_private-${each.key}"].versionless_secret_id
+    },
+    {
+      host_name    = "api.${var.dns_zone_name_public}"
+      key_vault_id = module.lets_encrypt_certificate.key_vault_certificates["wildcard-${each.key}"].versionless_secret_id
     }
-    if domain.type == "gateway" || domain.type == "gateway_internal" || domain.type == "gateway_external"
   ]
+
   scm_hostname_configuration = [
-    for key, domain in local.custom_domains_map : {
-      host_name    = "${domain.name}.${var.dns_zone_name_private}"
-      key_vault_id = module.lets_encrypt_certificate.key_vault_certificates["wildcard_private-${domain.region}"].versionless_secret_id
+    {
+      host_name    = "scm.${var.dns_zone_name_private}"
+      key_vault_id = module.lets_encrypt_certificate.key_vault_certificates["wildcard_private-${each.key}"].versionless_secret_id
     }
-    if domain.type == "scm"
   ]
+
 
   /*________________________________
 | API Management Portal Settings |
@@ -84,19 +92,4 @@ module "apim-public-ip" {
   zones               = var.apim_config.zones
 
   tags = var.tags
-}
-
-locals {
-  custom_domains = flatten([
-    for region_key in keys(var.regions) : [
-      for type, value in var.apim_config.custom_domains : {
-        region              = region_key
-        type                = type
-        name                = value.name
-        ttl                 = value.a_record_ttl
-        default_ssl_binding = lookup(value, "default_ssl_binding", null)
-      }
-    ]
-  ])
-  custom_domains_map = { for domain in local.custom_domains : "${domain.region}-${domain.type}" => domain }
 }

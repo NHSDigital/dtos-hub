@@ -125,37 +125,6 @@ apim_config = {
     consent_required = false
     content          = "By using this service you agree to the terms and conditions"
   }
-
-  custom_domains = {
-    development = {
-      name         = "developer-portal"
-      a_record_ttl = 300
-    }
-    management = {
-      name         = "management"
-      a_record_ttl = 300
-    }
-    gateway = {
-      name                = "gateway"
-      a_record_ttl        = 300
-      default_ssl_binding = true
-    }
-    gateway_internal = {
-      name                = "api"
-      a_record_ttl        = 300
-      default_ssl_binding = false
-    }
-    gateway_external = {
-      name                = "api"
-      a_record_ttl        = 300
-      default_ssl_binding = false
-    }
-    scm = {
-      name         = "scm"
-      a_record_ttl = 300
-    }
-  }
-
   tags = {
     Project = "DToS Hub"
   }

@@ -44,11 +44,6 @@ variable "apim_config" {
       consent_required = bool
       content          = string
     })
-    custom_domains = map(object({
-      name                = string
-      a_record_ttl        = number
-      default_ssl_binding = optional(bool, false)
-    }))
     tags = map(string)
   })
 }

@@ -168,7 +168,7 @@ module "application-gateway" {
   gateway_subnet            = module.subnets_hub["${module.config[each.key].names.subnet}-app-gateway"]
   probe                     = each.value.probe
   request_routing_rule      = each.value.request_routing_rule
-  sku                       = "WAF_v2"
+  sku                       = "Standard_v2"
   ssl_certificate           = each.value.ssl_certificate
   zones                     = var.regions[each.key].is_primary_region ? ["1", "2", "3"] : null
 

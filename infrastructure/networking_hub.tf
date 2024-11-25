@@ -17,6 +17,10 @@ module "vnets_hub" {
 
   source = "../../dtos-devops-templates/infrastructure/modules/vnet"
 
+  log_analytics_workspace_id                   = module.log_analytics_workspace_hub[local.primary_region].id
+  monitor_diagnostic_setting_vnet_enabled_logs = local.monitor_diagnostic_setting_vnet_hub_enabled_logs
+  monitor_diagnostic_setting_vnet_metrics      = local.monitor_diagnostic_setting_vnet_hub_metrics
+
   name                = module.config[each.key].names.virtual-network
   resource_group_name = azurerm_resource_group.rg_hub[each.key].name
   location            = each.key
@@ -51,6 +55,9 @@ module "subnets_hub" {
   for_each = local.subnets_map
 
   source = "../../dtos-devops-templates/infrastructure/modules/subnet"
+
+  log_analytics_workspace_id                                     = module.log_analytics_workspace_hub[local.primary_region].id
+  monitor_diagnostic_setting_network_security_group_enabled_logs = local.monitor_diagnostic_setting_network_security_group_enabled_logs
 
   name                              = each.value.subnet_name
   location                          = module.vnets_hub[each.value.vnet_key].vnet.location

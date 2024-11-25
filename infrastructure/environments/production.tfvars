@@ -173,6 +173,11 @@ private_dns_zones = {
 
 }
 
+law = {
+  law_sku        = "PerGB2018"
+  retention_days = 30
+}
+
 network_security_group_rules = {
   api-mgmt = [ # subnet key from regions map above
     {

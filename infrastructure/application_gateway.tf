@@ -19,10 +19,10 @@ locals {
 
       backend_address_pool = {
         apim_gateway = {
-          fqdns = [module.apim-private-dns-a-records["${region}-gateway"].fqdn]
+          fqdns = [module.private-dns-a-records["${region}-gateway"].fqdn]
         }
         apim_portal = {
-          fqdns = [module.apim-private-dns-a-records["${region}-development"].fqdn]
+          fqdns = [module.private-dns-a-records["${region}-development"].fqdn]
         }
       }
 

@@ -32,6 +32,7 @@ locals {
           host                                      = "gateway.${var.dns_zone_name_private}"
           path                                      = "/status-0123456789abcdef"
           #pick_host_name_from_backend_http_settings = true
+          port                                      = 443
           protocol                                  = "Https"
           timeout                                   = 120
           unhealthy_threshold                       = 8
@@ -40,6 +41,7 @@ locals {
           interval                                  = 60
           host                                      = "developer-portal.${var.dns_zone_name_private}"
           path                                      = "/signin"
+          port                                      = 443
           #pick_host_name_from_backend_http_settings = true
           protocol                                  = "Https"
           timeout                                   = 300

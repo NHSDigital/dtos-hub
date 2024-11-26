@@ -125,30 +125,6 @@ apim_config = {
     consent_required = false
     content          = "By using this service you agree to the terms and conditions"
   }
-
-  custom_domains = [
-    {
-      development = {
-        name         = "portal"
-        a_record_ttl = 300
-      },
-      management = {
-        name         = "management"
-        a_record_ttl = 300
-      },
-      gateway = {
-        name                = "gateway"
-        a_record_ttl        = 300
-        default_ssl_binding = true
-      },
-      scm = {
-        name         = "scm"
-        a_record_ttl = 300
-      }
-    }
-  ]
-
-
   tags = {
     Project = "DToS Hub"
   }
@@ -158,12 +134,13 @@ avd_vm_count          = 1
 avd_users_group_name  = "DToS-hub-dev-uks-hub-virtual-desktop-User-Login"
 avd_admins_group_name = "DToS-hub-dev-uks-hub-virtual-desktop-User-ADMIN-Login"
 
-dns_zone_name                = "dev.nationalscreening.nhs.uk"
-dns_zone_resource_group_name = "rg-hub-dev-uks-public-dns-zones"
+dns_zone_name_private   = "private.non-live.nationalscreening.nhs.uk"
+dns_zone_name_public    = "non-live.nationalscreening.nhs.uk"
+dns_zone_rg_name_public = "rg-hub-dev-uks-public-dns-zones"
 
 lets_encrypt_certificates = {
-  wildcard         = "*.dev.nationalscreening.nhs.uk"
-  wildcard_private = "*.private.dev.nationalscreening.nhs.uk"
+  wildcard         = "*.non-live.nationalscreening.nhs.uk"
+  wildcard_private = "*.private.non-live.nationalscreening.nhs.uk"
 }
 
 firewall_config = {
@@ -198,7 +175,6 @@ private_dns_zones = {
   is_app_insights_private_dns_zone_enabled = true
   is_apim_private_dns_zone_enabled         = true
   is_key_vault_private_dns_zone_enabled    = true
-
 }
 
 law = {
@@ -287,7 +263,19 @@ network_security_group_rules = {
       destination_port_range     = "65200-65535"
       source_address_prefix      = "GatewayManager"
       destination_address_prefix = "*"
+    },
+    {
+      name                       = "PublicAccess"
+      priority                   = 1000
+      direction                  = "Inbound"
+      access                     = "Allow"
+      protocol                   = "Tcp"
+      source_port_range          = "*"
+      destination_port_range     = "443"
+      source_address_prefix      = "86.184.173.164"
+      destination_address_prefix = "*"
     }
+
   ],
 
   virtual-desktop = [ # subnet key from regions map above

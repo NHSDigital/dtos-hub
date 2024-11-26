@@ -44,25 +44,6 @@ variable "apim_config" {
       consent_required = bool
       content          = string
     })
-    custom_domains = list(object({
-      development = object({
-        name         = string
-        a_record_ttl = number
-      })
-      management = object({
-        name         = string
-        a_record_ttl = number
-      })
-      gateway = object({
-        name                = string
-        a_record_ttl        = number
-        default_ssl_binding = bool
-      })
-      scm = object({
-        name         = string
-        a_record_ttl = number
-      })
-    }))
     tags = map(string)
   })
 }
@@ -82,22 +63,15 @@ variable "avd_vm_count" {
   default = 1
 }
 
-variable "dns_a_records" {
-  description = "A records to create in the DNS zone"
-  type = map(list(object({
-    name    = string
-    records = list(string)
-    ttl     = number
-  })))
-  default = {}
-
-}
-
-variable "dns_zone_name" {
+variable "dns_zone_name_public" {
   type = string
 }
 
-variable "dns_zone_resource_group_name" {
+variable "dns_zone_name_private" {
+  type = string
+}
+
+variable "dns_zone_rg_name_public" {
   type = string
 }
 

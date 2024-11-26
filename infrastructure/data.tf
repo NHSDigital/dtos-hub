@@ -8,8 +8,6 @@ data "azuread_group" "avd_admins" {
   display_name = var.avd_admins_group_name
 }
 
-
-
 data "azurerm_key_vault_secret" "object-id" {
   for_each     = var.regions
   name         = "dtos-apim-object-id"
@@ -21,5 +19,3 @@ data "azurerm_key_vault_secret" "secret" {
   name         = "dtos-apim-secret"
   key_vault_id = module.key_vault[each.key].key_vault_id
 }
-
-

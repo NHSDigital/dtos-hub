@@ -16,7 +16,7 @@ module "acr" {
 
   # Private Endpoint Configuration if enabled
   private_endpoint_properties = var.features.private_endpoints_enabled ? {
-    private_dns_zone_ids                 = [module.private_dns_zone_acr[each.value.region].private_dns_zone.id]
+    private_dns_zone_ids                 = [module.private_dns_zones["${each.value.region}-container_registry"].id]
     private_endpoint_enabled             = var.features.private_endpoints_enabled
     private_endpoint_subnet_id           = module.subnets_hub["${module.config[each.value.region].names.subnet}-acr"].id
     private_endpoint_resource_group_name = azurerm_resource_group.rg_project[each.value.project_key].name

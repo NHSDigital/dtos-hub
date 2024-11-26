@@ -150,28 +150,28 @@ module "application-gateway-pip" {
   tags = var.tags
 }
 
-# module "application-gateway" {
-#   for_each = local.appgw_config
+module "application-gateway" {
+  for_each = local.appgw_config
 
-#   source = "../../dtos-devops-templates/infrastructure/modules/application-gateway"
+  source = "../../dtos-devops-templates/infrastructure/modules/application-gateway"
 
-#   location                  = each.key
-#   resource_group_name       = azurerm_resource_group.rg_hub[each.key].name
-#   autoscale_min             = 1
-#   autoscale_max             = 10
-#   backend_address_pool      = each.value.backend_address_pool
-#   backend_http_settings     = each.value.backend_http_settings
-#   frontend_ip_configuration = each.value.frontend_ip_configuration
-#   frontend_port             = each.value.frontend_port
-#   http_listener             = each.value.http_listener
-#   key_vault_id              = module.key_vault[each.key].key_vault_id
-#   names                     = module.config[each.key].names.application-gateway
-#   gateway_subnet            = module.subnets_hub["${module.config[each.key].names.subnet}-app-gateway"]
-#   probe                     = each.value.probe
-#   request_routing_rule      = each.value.request_routing_rule
-#   sku                       = "Standard_v2"
-#   ssl_certificate           = each.value.ssl_certificate
-#   zones                     = var.regions[each.key].is_primary_region ? ["1", "2", "3"] : null
+  location                  = each.key
+  resource_group_name       = azurerm_resource_group.rg_hub[each.key].name
+  autoscale_min             = 1
+  autoscale_max             = 10
+  backend_address_pool      = each.value.backend_address_pool
+  backend_http_settings     = each.value.backend_http_settings
+  frontend_ip_configuration = each.value.frontend_ip_configuration
+  frontend_port             = each.value.frontend_port
+  http_listener             = each.value.http_listener
+  key_vault_id              = module.key_vault[each.key].key_vault_id
+  names                     = module.config[each.key].names.application-gateway
+  gateway_subnet            = module.subnets_hub["${module.config[each.key].names.subnet}-app-gateway"]
+  probe                     = each.value.probe
+  request_routing_rule      = each.value.request_routing_rule
+  sku                       = "Standard_v2"
+  ssl_certificate           = each.value.ssl_certificate
+  zones                     = var.regions[each.key].is_primary_region ? ["1", "2", "3"] : null
 
-#   tags = var.tags
-# }
+  tags = var.tags
+}

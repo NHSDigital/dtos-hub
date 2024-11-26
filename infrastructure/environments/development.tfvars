@@ -68,7 +68,6 @@ regions = {
       app-gateway = {
         cidr_newbits = 8
         cidr_offset  = 5
-        create_nsg   = false
       }
       pep = {
         cidr_newbits = 8

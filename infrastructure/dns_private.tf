@@ -43,6 +43,7 @@ locals {
     api_management              = var.private_dns_zones.is_apim_private_dns_zone_enabled ? "privatelink.azure-api.net" : null
     app_services                = var.private_dns_zones.is_app_services_enabled ? "privatelink.azurewebsites.net" : null
     azure_sql                   = var.private_dns_zones.is_azure_sql_private_dns_zone_enabled ? "privatelink.database.windows.net" : null
+    postgres_sql                = var.private_dns_zones.is_postgres_sql_private_dns_zone_enabled ? "privatelink.postgres.database.azure.com" : null
     key_vault                   = var.private_dns_zones.is_key_vault_private_dns_zone_enabled ? "privatelink.vaultcore.azure.net" : null
     storage_blob                = var.private_dns_zones.is_storage_private_dns_zone_enabled ? "privatelink.blob.core.windows.net" : null
     storage_queue               = var.private_dns_zones.is_storage_private_dns_zone_enabled ? "privatelink.queue.core.windows.net" : null

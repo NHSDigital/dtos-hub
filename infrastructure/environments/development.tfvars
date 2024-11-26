@@ -170,6 +170,7 @@ key_vault = {
 private_dns_zones = {
   is_app_services_enabled                  = true
   is_azure_sql_private_dns_zone_enabled    = true
+  is_postgres_sql_private_dns_zone_enabled = true
   is_storage_private_dns_zone_enabled      = true
   is_acr_private_dns_zone_enabled          = true
   is_app_insights_private_dns_zone_enabled = true

@@ -78,8 +78,8 @@ module "private_dns_zones" {
 --------------------------------------------------------------------------------------------------*/
 
 locals {
-  apim_private_custom_domains      = ["gateway", "developer-portal", "scm"]
-  appgw_private_listener_hostnames = ["api", "portal"]
+  apim_private_custom_domains      = ["gateway", "portal", "scm"]
+  appgw_private_listener_hostnames = ["api"]
 
   private_dns_a_records_obj_list = flatten([
     for region in keys(var.regions) : [

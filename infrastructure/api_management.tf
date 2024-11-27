@@ -19,7 +19,7 @@ module "api-management" {
 
   developer_portal_hostname_configuration = [
     {
-      host_name    = "developer-portal.${var.dns_zone_name_private}"
+      host_name    = "portal.${var.dns_zone_name_private}"
       key_vault_id = module.lets_encrypt_certificate.key_vault_certificates["wildcard_private-${each.key}"].versionless_secret_id
     }
   ]

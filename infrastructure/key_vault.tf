@@ -1,4 +1,6 @@
 module "key_vault" {
+  # This Key Vault is used to store the SSL certificates for Application Gateway and APIM
+
   for_each = var.regions
 
   source = "../../dtos-devops-templates/infrastructure/modules/key-vault"
@@ -16,8 +18,10 @@ module "key_vault" {
   purge_protection_enabled = var.key_vault.purge_prot
   sku_name                 = var.key_vault.sku_name
 
-  enable_rbac_authorization = true
-  rbac_roles                = local.rbac_roles_key_vault
+  # Application Gateway cannot use RBAC auth for Key Vault, unless by PowerShell. An Azure Policy exemption will be needed when this is forbidden by NHS
+  # https://learn.microsoft.com/azure/application-gateway/key-vault-certs?WT.mc_id=Portal-Microsoft_Azure_HybridNetworking#key-vault-azure-role-based-access-control-permission-model
+
+  # enable_rbac_authorization = true
 
   # Private Endpoint Configuration if enabled
   private_endpoint_properties = var.features.private_endpoints_enabled ? {
@@ -29,4 +33,66 @@ module "key_vault" {
   } : null
 
   tags = var.tags
+}
+
+resource "azurerm_key_vault_access_policy" "terraform-mi" {
+  for_each = var.regions
+
+  key_vault_id = module.key_vault[each.key].key_vault_id
+  tenant_id    = data.azurerm_client_config.current.tenant_id
+  object_id    = data.azurerm_client_config.current.object_id
+
+  key_permissions = [
+    "Create",
+    "Delete",
+    "Get",
+    "GetRotationPolicy",
+    "Import",
+    "List",
+    "Purge",
+    "Recover",
+    "Update"
+  ]
+
+  secret_permissions = [
+    "Delete",
+    "Get",
+    "List",
+    "Purge",
+    "Set"
+  ]
+
+  certificate_permissions = [
+    "Create",
+    "Delete",
+    "Get",
+    "Import",
+    "List",
+    "Purge",
+    "Recover",
+    "Update"
+  ]
+}
+
+resource "azurerm_key_vault_access_policy" "apim" {
+  for_each = var.regions
+
+  key_vault_id = module.key_vault[each.key].key_vault_id
+  tenant_id    = data.azurerm_client_config.current.tenant_id
+  object_id    = module.api-management[each.key].system_assigned_identity
+
+  key_permissions = [
+    "Get",
+    "List"
+  ]
+
+  secret_permissions = [
+    "Get",
+    "List"
+  ]
+
+  certificate_permissions = [
+    "Get",
+    "List"
+  ]
 }

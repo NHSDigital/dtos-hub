@@ -21,31 +21,20 @@ locals {
         apim_gateway = {
           fqdns = ["gateway.${var.dns_zone_name_private}"]
         }
-        apim_portal = {
-          fqdns = ["developer-portal.${var.dns_zone_name_private}"]
-        }
       }
 
       probe = {
         apim_gateway = {
-          interval = 30
-          host     = "gateway.${var.dns_zone_name_private}"
-          path     = "/status-0123456789abcdef"
-          #pick_host_name_from_backend_http_settings = true
-          port                = 443
-          protocol            = "Https"
-          timeout             = 120
-          unhealthy_threshold = 8
-        }
-        apim_portal = {
-          interval = 60
-          host     = "developer-portal.${var.dns_zone_name_private}"
-          path     = "/signin"
-          port     = 443
-          #pick_host_name_from_backend_http_settings = true
-          protocol            = "Https"
-          timeout             = 300
-          unhealthy_threshold = 8
+          interval                                  = 30
+          path                                      = "/status-0123456789abcdef"
+          pick_host_name_from_backend_http_settings = true
+          port                                      = 443
+          protocol                                  = "Https"
+          timeout                                   = 120
+          unhealthy_threshold                       = 8
+          match = {
+            status_code = ["200-399"] # not strictly needed, but this stops Terraform detecting a change every time
+          }
         }
       }
 
@@ -58,24 +47,17 @@ locals {
         }
       }
 
+      # Introducing more than one backend_http_settings block using https protocol will result in
+      # "unexpected status 400 (400 Bad Request) with error: InvalidRequestFormat: Cannot parse the request."
+      # despite that this is a valid configuration via Portal.
       backend_http_settings = {
         apim_gateway = {
-          cookie_based_affinity = "Disabled"
-          host_name             = "gateway.${var.dns_zone_name_private}"
-          #pick_host_name_from_backend_address = true
-          port            = 443
-          probe_key       = "apim_gateway"
-          protocol        = "Https"
-          request_timeout = 180
-        }
-        apim_portal = {
-          cookie_based_affinity = "Disabled"
-          host_name             = "developer-portal.${var.dns_zone_name_private}"
-          #pick_host_name_from_backend_address = true
-          port            = 443
-          probe_key       = "apim_portal"
-          protocol        = "Https"
-          request_timeout = 180
+          cookie_based_affinity               = "Disabled"
+          pick_host_name_from_backend_address = true # allows this backend_http_settings to be shared by multiple rules
+          port                                = 443
+          probe_key                           = "apim_gateway" # the probe however is gateway-specific (which is the most important APIM URL)
+          protocol                            = "Https"
+          request_timeout                     = 180
         }
       }
 
@@ -83,23 +65,16 @@ locals {
         apim_gateway_public = {
           frontend_ip_configuration_key = "public"
           frontend_port_key             = "https"
-          host_name                     = "api.${var.dns_zone_name_private}"
+          host_name                     = "api.${var.dns_zone_name_public}"
           protocol                      = "Https"
           require_sni                   = true
           ssl_certificate_key           = "public"
+          firewall_policy_id            = var.WAF_POLICY_ID_APIM_GATEWAY
         }
         apim_gateway_private = {
           frontend_ip_configuration_key = "private"
           frontend_port_key             = "https"
           host_name                     = "api.${var.dns_zone_name_private}"
-          protocol                      = "Https"
-          require_sni                   = true
-          ssl_certificate_key           = "private"
-        }
-        apim_portal_private = {
-          frontend_ip_configuration_key = "private"
-          frontend_port_key             = "https"
-          host_name                     = "portal.${var.dns_zone_name_private}"
           protocol                      = "Https"
           require_sni                   = true
           ssl_certificate_key           = "private"
@@ -119,13 +94,6 @@ locals {
           backend_http_settings_key = "apim_gateway"
           http_listener_key         = "apim_gateway_private"
           priority                  = 1000
-          rule_type                 = "Basic"
-        }
-        apim_portal_private = {
-          backend_address_pool_key  = "apim_portal"
-          backend_http_settings_key = "apim_portal"
-          http_listener_key         = "apim_portal_private"
-          priority                  = 1100
           rule_type                 = "Basic"
         }
       }
@@ -150,28 +118,28 @@ module "application-gateway-pip" {
   tags = var.tags
 }
 
-# module "application-gateway" {
-#   for_each = local.appgw_config
+module "application-gateway" {
+  for_each = local.appgw_config
 
-#   source = "../../dtos-devops-templates/infrastructure/modules/application-gateway"
+  source = "../../dtos-devops-templates/infrastructure/modules/application-gateway"
 
-#   location                  = each.key
-#   resource_group_name       = azurerm_resource_group.rg_hub[each.key].name
-#   autoscale_min             = 1
-#   autoscale_max             = 10
-#   backend_address_pool      = each.value.backend_address_pool
-#   backend_http_settings     = each.value.backend_http_settings
-#   frontend_ip_configuration = each.value.frontend_ip_configuration
-#   frontend_port             = each.value.frontend_port
-#   http_listener             = each.value.http_listener
-#   key_vault_id              = module.key_vault[each.key].key_vault_id
-#   names                     = module.config[each.key].names.application-gateway
-#   gateway_subnet            = module.subnets_hub["${module.config[each.key].names.subnet}-app-gateway"]
-#   probe                     = each.value.probe
-#   request_routing_rule      = each.value.request_routing_rule
-#   sku                       = "Standard_v2"
-#   ssl_certificate           = each.value.ssl_certificate
-#   zones                     = var.regions[each.key].is_primary_region ? ["1", "2", "3"] : null
+  location                  = each.key
+  resource_group_name       = azurerm_resource_group.rg_hub[each.key].name
+  autoscale_min             = 1
+  autoscale_max             = 10
+  backend_address_pool      = each.value.backend_address_pool
+  backend_http_settings     = each.value.backend_http_settings
+  frontend_ip_configuration = each.value.frontend_ip_configuration
+  frontend_port             = each.value.frontend_port
+  http_listener             = each.value.http_listener
+  key_vault_id              = module.key_vault[each.key].key_vault_id
+  names                     = module.config[each.key].names.application-gateway
+  gateway_subnet            = module.subnets_hub["${module.config[each.key].names.subnet}-app-gateway"]
+  probe                     = each.value.probe
+  request_routing_rule      = each.value.request_routing_rule
+  sku                       = "WAF_v2"
+  ssl_certificate           = each.value.ssl_certificate
+  zones                     = var.regions[each.key].is_primary_region ? ["1", "2", "3"] : null
 
-#   tags = var.tags
-# }
+  tags = var.tags
+}

@@ -130,7 +130,7 @@ apim_config = {
   }
 }
 
-avd_vm_count          = 1
+avd_vm_count          = 4
 avd_users_group_name  = "DToS-hub-dev-uks-hub-virtual-desktop-User-Login"
 avd_admins_group_name = "DToS-hub-dev-uks-hub-virtual-desktop-User-ADMIN-Login"
 
@@ -242,6 +242,9 @@ network_security_group_rules = {
     }
   ],
 
+  # When Application Gateway uses the same frontend port (443) for public and private frontend IP configurations, traffic for
+  # both interfaces will be filtered by the private subnet's NSG, so we must grant the public traffic here even though
+  # logically no Internet traffic can get routed to this private subnet.
   app-gateway = [
     {
       name                       = "Azure_Traffic_Manager_Probes"
@@ -273,10 +276,9 @@ network_security_group_rules = {
       protocol                   = "Tcp"
       source_port_range          = "*"
       destination_port_range     = "443"
-      source_address_prefix      = "86.184.173.164"
+      source_address_prefix      = "Internet"
       destination_address_prefix = "*"
     }
-
   ],
 
   virtual-desktop = [ # subnet key from regions map above

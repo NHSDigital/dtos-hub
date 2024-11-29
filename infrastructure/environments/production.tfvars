@@ -215,6 +215,45 @@ network_security_group_rules = {
     }
   ],
 
+  # When Application Gateway uses the same frontend port (443) for public and private frontend IP configurations, traffic for
+  # both interfaces will be filtered by the private subnet's NSG, so we must grant the public traffic here even though
+  # logically no Internet traffic can get routed to this private subnet.
+  app-gateway = [
+    {
+      name                       = "Azure_Traffic_Manager_Probes"
+      priority                   = 1400
+      direction                  = "Inbound"
+      access                     = "Allow"
+      protocol                   = "Tcp"
+      source_port_range          = "*"
+      destination_port_range     = "443"
+      source_address_prefix      = "AzureTrafficManager"
+      destination_address_prefix = "VirtualNetwork"
+    },
+    {
+      name                       = "Gateway_Manager_Ports"
+      priority                   = 1500
+      direction                  = "Inbound"
+      access                     = "Allow"
+      protocol                   = "*"
+      source_port_range          = "*"
+      destination_port_range     = "65200-65535"
+      source_address_prefix      = "GatewayManager"
+      destination_address_prefix = "*"
+    },
+    {
+      name                       = "PublicAccess"
+      priority                   = 1000
+      direction                  = "Inbound"
+      access                     = "Allow"
+      protocol                   = "Tcp"
+      source_port_range          = "*"
+      destination_port_range     = "443"
+      source_address_prefix      = "Internet"
+      destination_address_prefix = "*"
+    }
+  ],
+
   virtual-desktop = [ # subnet key from regions map above
     {
       name                       = "AllowRDPfromAVD"

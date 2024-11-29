@@ -19,6 +19,11 @@ variable "TARGET_SUBSCRIPTION_ID" {
   type        = string
 }
 
+variable "WAF_POLICY_ID_APIM_GATEWAY" {
+  description = "ID of the WAF policy which will be bound to the Application Gateway listener for APIM Gateway"
+  type        = string
+}
+
 variable "application" {
   description = "Project/Application code for deployment"
   type        = string

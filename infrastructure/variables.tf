@@ -68,6 +68,13 @@ variable "avd_vm_count" {
   default = 1
 }
 
+variable "diagnostic_settings" {
+  description = "Configuration for the diagnostic settings"
+  type = object({
+    metric_enabled = optional(bool, false)
+  })
+}
+
 variable "dns_zone_name_public" {
   type = string
 }

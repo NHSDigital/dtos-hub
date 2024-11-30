@@ -34,9 +34,10 @@ output "firewall_private_ip_addresses" {
   value = { for k, v in module.firewall : k => v.private_ip_address }
 }
 
-# Output the Event Hub ID for Log Analytics Data Exports so it can be used in the Audit Log Analytics Workspacs
+# Output the Event Hub Id for Log Analytics Data Exports so it can be used as a reference
+# by the Log Analytics workspace modules in Audit and Hub services
 output "eventhub_law_export_id" {
-  value = { for k, v in module.eventhub_law_export : k => v.event_hub_namespace_id }
+  value     = { for k, v in module.eventhub_law_export : k => v.id }
 }
 
 # Output the Tenant ID so it can be used APIM module

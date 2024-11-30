@@ -158,6 +158,10 @@ eventhub_namespaces = {
   }
 }
 
+diagnostic_settings = {
+  metric_enabled = true
+}
+
 lets_encrypt_certificates = {
   wildcard         = "*.non-live.nationalscreening.nhs.uk"
   wildcard_private = "*.private.non-live.nationalscreening.nhs.uk"

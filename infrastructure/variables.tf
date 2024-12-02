@@ -112,7 +112,7 @@ variable "eventhub_namespaces" {
 
     event_hubs = optional(map(object({
       name              = optional(string)
-      consumer_groups   = optional(list(string))
+      consumer_group    = optional(string)
       partition_count   = optional(number, 2)
       message_retention = optional(number, 1)
     })))

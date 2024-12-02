@@ -140,9 +140,9 @@ dns_zone_rg_name_public = "rg-hub-dev-uks-public-dns-zones"
 
 eventhub_namespaces = {
   dtos-hub = {
-    sku             = "Standard"
+    sku                      = "Standard"
     maximum_throughput_units = 1
-    minimum_tls_version = "1.2"
+    minimum_tls_version      = "1.2"
     auth_rule = {
       listen = true
       send   = false

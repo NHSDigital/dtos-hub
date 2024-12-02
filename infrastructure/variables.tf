@@ -68,6 +68,13 @@ variable "avd_vm_count" {
   default = 1
 }
 
+variable "diagnostic_settings" {
+  description = "Configuration for the diagnostic settings"
+  type = object({
+    metric_enabled = optional(bool, false)
+  })
+}
+
 variable "dns_zone_name_public" {
   type = string
 }
@@ -84,6 +91,32 @@ variable "environment" {
   description = "Environment code for deployments"
   type        = string
   default     = "DEV"
+}
+
+variable "eventhub_namespaces" {
+  description = "A map of Event Hub Namespaces and contained Event Hubs."
+  type = map(object({
+    auto_inflate             = optional(bool, false)
+    capacity                 = optional(number)
+    sku                      = optional(string, "Standard")
+    minimum_tls_version      = optional(string)
+    maximum_throughput_units = optional(number)
+
+    public_network_access_enabled = optional(bool, false)
+
+    auth_rule = object({
+      listen = optional(bool, true)
+      send   = optional(bool, false)
+      manage = optional(bool, false)
+    })
+
+    event_hubs = optional(map(object({
+      name              = optional(string)
+      partition_count   = optional(number, 2)
+      message_retention = optional(number, 1)
+    })))
+  }))
+  default = {}
 }
 
 variable "features" {
@@ -165,6 +198,7 @@ variable "private_dns_zones" {
     is_app_insights_private_dns_zone_enabled = optional(bool, false)
     is_apim_private_dns_zone_enabled         = optional(bool, false)
     is_key_vault_private_dns_zone_enabled    = optional(bool, false)
+    is_event_hub_private_dns_zone_enabled    = optional(bool, false)
   })
 }
 

@@ -9,12 +9,31 @@ projects = {
       sku                           = "Premium"
       admin_enabled                 = false
       uai_name                      = "dtos-cohort-manager-acr-push"
-      public_network_access_enabled = true
+      public_network_access_enabled = false
     }
     tags = {
       Project = "DToS Cohort Manager"
     }
   }
+
+  dtos-communication-management = {
+    full_name  = "communication-management"
+    short_name = "commgt"
+    acr = {
+      sku                           = "Premium"
+      admin_enabled                 = false
+      uai_name                      = "dtos-communication-management-acr-push"
+      public_network_access_enabled = false
+    }
+    tags = {
+      Project = "DToS Communication Management"
+    }
+  }
+
+}
+
+diagnostic_settings = {
+  metric_enabled = true
 }
 
 features = {
@@ -111,6 +130,26 @@ dns_zone_name_private   = "private.nationalscreening.nhs.uk"
 dns_zone_name_public    = "nationalscreening.nhs.uk"
 dns_zone_rg_name_public = "rg-hub-prod-uks-public-dns-zones"
 
+eventhub_namespaces = {
+  dtos-hub = {
+    sku                      = "Standard"
+    minimum_tls_version      = "1.2"
+    maximum_throughput_units = 1
+    auth_rule = {
+      listen = true
+      send   = false
+      manage = false
+    }
+    event_hubs = {
+      cohort-manager = {
+        name              = "ExportToSiem"
+        partition_count   = 2
+        message_retention = 1
+      }
+    }
+  }
+}
+
 lets_encrypt_certificates = {
   wildcard         = "*.nationalscreening.nhs.uk"
   wildcard_private = "*.private.nationalscreening.nhs.uk"
@@ -149,6 +188,7 @@ private_dns_zones = {
   is_app_insights_private_dns_zone_enabled = true
   is_apim_private_dns_zone_enabled         = true
   is_key_vault_private_dns_zone_enabled    = true
+  is_event_hub_private_dns_zone_enabled    = true
 }
 
 law = {

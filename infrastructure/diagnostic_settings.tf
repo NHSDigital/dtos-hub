@@ -1,4 +1,20 @@
 locals {
+  # EVENT HUB
+  monitor_diagnostic_setting_eventhub_enabled_logs = [
+    "ApplicationMetricsLogs",
+    "ArchiveLogs",
+    "AutoScaleLogs",
+    "CustomerManagedKeyUserLogs",
+    "DataDRLogs",
+    "DiagnosticErrorLogs",
+    "EventHubVNetConnectionEvent",
+    "KafkaCoordinatorLogs",
+    "KafkaUserErrorLogs",
+    "OperationalLogs",
+    "RuntimeAuditLogs"
+  ]
+  monitor_diagnostic_setting_eventhub_metrics = ["AllMetrics"]
+
   # KEYVAULT
   monitor_diagnostic_setting_keyvault_enabled_logs = ["AuditEvent", "AzurePolicyEvaluationDetails"]
   monitor_diagnostic_setting_keyvault_metrics      = ["AllMetrics"]

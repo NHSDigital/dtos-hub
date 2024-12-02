@@ -138,6 +138,30 @@ dns_zone_name_private   = "private.non-live.nationalscreening.nhs.uk"
 dns_zone_name_public    = "non-live.nationalscreening.nhs.uk"
 dns_zone_rg_name_public = "rg-hub-dev-uks-public-dns-zones"
 
+eventhub_namespaces = {
+  dtos-hub = {
+    sku                      = "Standard"
+    maximum_throughput_units = 1
+    minimum_tls_version      = "1.2"
+    auth_rule = {
+      listen = true
+      send   = false
+      manage = false
+    }
+    event_hubs = {
+      cohort-manager = {
+        name              = "ExportToSiem"
+        partition_count   = 2
+        message_retention = 1
+      }
+    }
+  }
+}
+
+diagnostic_settings = {
+  metric_enabled = true
+}
+
 lets_encrypt_certificates = {
   wildcard         = "*.non-live.nationalscreening.nhs.uk"
   wildcard_private = "*.private.non-live.nationalscreening.nhs.uk"
@@ -176,6 +200,7 @@ private_dns_zones = {
   is_app_insights_private_dns_zone_enabled = true
   is_apim_private_dns_zone_enabled         = true
   is_key_vault_private_dns_zone_enabled    = true
+  is_event_hub_private_dns_zone_enabled    = true
 }
 
 law = {

@@ -148,10 +148,10 @@ eventhub_namespaces = {
         message_retention = 1
       }
       communication-manager = {
-        name                = "commgtExport"
-        consumer_group      = "commgtExportGroup"
-        partition_count     = 2
-        message_retention   = 1
+        name              = "commgtExport"
+        consumer_group    = "commgtExportGroup"
+        partition_count   = 2
+        message_retention = 1
       }
       service-insights = {
         name              = "serinsExport"

@@ -59,7 +59,6 @@ regions = {
       app-gateway = {
         cidr_newbits = 8
         cidr_offset  = 5
-        create_nsg   = false
       }
       pep = {
         cidr_newbits = 8
@@ -89,10 +88,6 @@ regions = {
         cidr_offset  = 192
         create_nsg   = false
       }
-      pep = {
-        cidr_newbits = 8
-        cidr_offset  = 2
-      }
     }
   }
 }
@@ -114,9 +109,6 @@ apim_config = {
     consent_required = false
     content          = "By using this service you agree to the terms and conditions"
   }
-  # ip address configuration
-  public_ip_allocation_method = "Static"
-  public_ip_sku               = "Standard"
   tags = {
     Project = "DToS Hub"
   }
@@ -297,12 +289,12 @@ network_security_group_rules = {
   virtual-desktop = [ # subnet key from regions map above
     {
       name                       = "AllowRDPfromAVD"
-      priority                   = 100
+      priority                   = 600
       direction                  = "Inbound"
       access                     = "Allow"
       protocol                   = "Tcp"
       source_port_range          = "*"
-      destination_port_range     = "3389-3389"
+      destination_port_range     = "3389"
       source_address_prefix      = "WindowsVirtualDesktop"
       destination_address_prefix = "VirtualNetwork"
     }

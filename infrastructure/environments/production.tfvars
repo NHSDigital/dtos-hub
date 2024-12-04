@@ -134,7 +134,20 @@ eventhub_namespaces = {
     }
     event_hubs = {
       cohort-manager = {
-        name              = "ExportToSiem"
+        name              = "cohortExport"
+        consumer_group    = "cohortExportGroup"
+        partition_count   = 2
+        message_retention = 1
+      }
+      communication-manager = {
+        name              = "commgtExport"
+        consumer_group    = "commgtExportGroup"
+        partition_count   = 2
+        message_retention = 1
+      }
+      service-insights = {
+        name              = "serinsExport"
+        consumer_group    = "serinsExportGroup"
         partition_count   = 2
         message_retention = 1
       }

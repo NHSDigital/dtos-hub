@@ -40,6 +40,10 @@ output "eventhub_law_export_id" {
   value = { for k, v in module.eventhub_law_export : k => v.id }
 }
 
+output "eventhubs" {
+  value = { for k, v in module.eventhub_law_export : k => v.eventhubs }
+}
+
 # Output the Tenant ID so it can be used APIM module
 output "tenant_id" {
   value = data.azurerm_client_config.current.tenant_id

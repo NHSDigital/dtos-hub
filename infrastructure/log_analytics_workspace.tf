@@ -25,7 +25,7 @@ module "log_analytics_data_export_rule" {
   name                    = "${module.config[each.key].names.log-analytics-workspace}-export-rule"
   resource_group_name     = azurerm_resource_group.rg_base[each.key].name
   workspace_resource_id   = module.log_analytics_workspace_hub[each.key].id
-  destination_resource_id = module.eventhub_law_export.eventhubs["dtos-hub-${each.key}"]["dtos-hub"].id
+  destination_resource_id = module.eventhub_law_export["dtos-hub-${each.key}"].event_hubs["dtos-hub"].id
   table_names             = var.law.export_table_names
   enabled                 = var.law.export_enabled
 }
@@ -35,7 +35,7 @@ module "log_analytics_data_export_rule" {
 --------------------------------------------------------------------------------------------------*/
 /*
 For sending events to the Event Hub:
-* Azure Event Hubs Data Sender: Grants permissions to send events to the Event Hub.  
+* Azure Event Hubs Data Sender: Grants permissions to send events to the Event Hub.
 * For receiving events from the Event Hub:
 
 For receiving events from the Event Hub (i.e. remote resource):

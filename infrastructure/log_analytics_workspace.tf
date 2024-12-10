@@ -20,7 +20,7 @@ module "log_analytics_workspace_hub" {
 module "log_analytics_data_export_rule" {
   for_each = { for key, val in var.regions : key => val if var.law.export_enabled }
 
-  source = "../..dtos-devops-templates/infrastructure/modules/log-analytics-data-export-rule"
+  source = "../../dtos-devops-templates/infrastructure/modules/log-analytics-data-export-rule"
 
   name                    = "${module.config[each.key].names.log-analytics-workspace}-export-rule"
   resource_group_name     = azurerm_resource_group.rg_base[each.key].name

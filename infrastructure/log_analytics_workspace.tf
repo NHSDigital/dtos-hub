@@ -25,7 +25,7 @@ module "log_analytics_data_export_rule" {
   name                    = "${module.config[each.key].names.log-analytics-workspace}-export-rule"
   resource_group_name     = azurerm_resource_group.rg_base[each.key].name
   workspace_resource_id   = module.log_analytics_workspace_hub[each.key].id
-  destination_resource_id = module.eventhub_law_export.event_hubs["dtos-hub-${each.key}"]["dtos-hub"].id
+  destination_resource_id = module.eventhub_law_export.eventhubs["dtos-hub-${each.key}"]["dtos-hub"].id
   table_names             = var.law.export_table_names
   enabled                 = var.law.export_enabled
 }

@@ -162,9 +162,10 @@ variable "key_vault" {
 variable "law" {
   description = "Configuration of the Log Analytics Workspace"
   type = object({
-    name           = optional(string, "hub")
-    law_sku        = optional(string, "PerGB2018")
-    retention_days = optional(number, 30)
+    name               = optional(string, "hub")
+    law_sku            = optional(string, "PerGB2018")
+    retention_days     = optional(number, 30)
+    export_table_names = optional(list(string))
   })
 }
 

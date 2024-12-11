@@ -1,0 +1,66 @@
+---
+
+name: $(Date:yyyyMMdd)$(Rev:.r)_$(SourceBranchName)_$(why)
+trigger: none
+pr: none
+
+parameters:
+  - name: sourceRegistry
+    displayName: Source Registry
+    type: string
+    default: acrukshubdevcommgt
+
+  - name: sourceImageTag
+    displayName: Source Image Tag
+    type: string
+    default: development
+
+  - name: destRegistry
+    displayName: Destination Registry
+    type: string
+    default: acrukshubdevcommgt
+
+  - name: destImageTag
+    displayName: Destination Image Tag
+    type: string
+    default: integration
+
+stages:
+- stage: re_tag_stage
+  displayName: Add new tag to images
+  jobs:
+  - job: re_tag
+    pool:
+      name: private-pool-dev-uks
+    displayName: Tag image with new tag
+    variables:
+    - group: DEV_hub_backend
+    steps:
+    - task: AzureCLI@2
+      name: tag_integration
+      displayName: Tag Image with integration Tag
+      inputs:
+        azureSubscription: sc-dtos-hub-development
+        addSpnToEnvironment: true
+        failOnStandardError: true
+        scriptType: bash
+        scriptLocation: inlineScript
+        inlineScript: |
+          az acr login -n ${{ parameters.sourceRegistry }}
+
+          # Fetch the list of repositories
+          echo "Fetching repositories from ${{ parameters.sourceRegistry }}..."
+          repositories=$(az acr repository list --name ${{ parameters.sourceRegistry }} --output json)
+
+          # Loop through the image names:
+          for repository in $(echo $repositories | jq -r '.[]')
+          do
+            # Get all images tagged with the source tag:
+            echo "##[debug] Pulling $repository:${{ parameters.sourceImageTag }}..."
+
+            az acr import --name ${{ parameters.sourceRegistry }} \
+            --source ${{ parameters.sourceRegistry }}.azurecr.io/$repository:${{ parameters.sourceImageTag }} \
+            --image $repository:${{ parameters.destImageTag }} \
+            --force
+          done
+

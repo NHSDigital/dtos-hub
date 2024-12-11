@@ -184,6 +184,7 @@ private_dns_zones = {
 }
 
 law = {
+  export_enabled = false
   law_sku        = "PerGB2018"
   retention_days = 30
 }

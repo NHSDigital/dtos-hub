@@ -37,10 +37,11 @@ diagnostic_settings = {
 }
 
 features = {
-  private_endpoints_enabled            = true
-  private_service_connection_is_manual = false
-  public_network_access_enabled        = true
-  github_actions_enabled               = false
+  private_endpoints_enabled              = true
+  private_service_connection_is_manual   = false
+  public_network_access_enabled          = true
+  github_actions_enabled                 = false
+  log_analytics_data_export_rule_enabled = true
 }
 
 regions = {
@@ -133,21 +134,46 @@ eventhub_namespaces = {
       manage = false
     }
     event_hubs = {
-      cohort-manager = {
-        name              = "cohortExport"
-        consumer_group    = "cohortExportGroup"
+      # Log events from the Hub itself as well as from individual applications
+      dtos-hub = {
+        name              = "dtosHubProd"
+        consumer_group    = "dtosHubConsumerGroupProd"
         partition_count   = 2
         message_retention = 1
       }
-      communication-manager = {
-        name              = "commgtExport"
-        consumer_group    = "commgtExportGroup"
+      cohort-manager-pre = {
+        name              = "cohortExportPreProd"
+        consumer_group    = "cohortConsumerGroupPreProd"
         partition_count   = 2
         message_retention = 1
       }
-      service-insights = {
-        name              = "serinsExport"
-        consumer_group    = "serinsExportGroup"
+      cohort-manager-prod = {
+        name              = "cohortExportProd"
+        consumer_group    = "cohortConsumerGroupProd"
+        partition_count   = 2
+        message_retention = 1
+      }
+      communication-manager-pre = {
+        name              = "commgtExportPreProd"
+        consumer_group    = "commgtConsumerGroupPreProd"
+        partition_count   = 2
+        message_retention = 1
+      }
+      communication-manager-prod = {
+        name              = "commgtExportProd"
+        consumer_group    = "commgtConsumerGroupProd"
+        partition_count   = 2
+        message_retention = 1
+      }
+      service-insights-pre = {
+        name              = "serinsExportPreProd"
+        consumer_group    = "serinsConsumerGroupPreProd"
+        partition_count   = 2
+        message_retention = 1
+      }
+      service-insights-prod = {
+        name              = "serinsExportProd"
+        consumer_group    = "serinsConsumerGroupProd"
         partition_count   = 2
         message_retention = 1
       }
@@ -197,8 +223,23 @@ private_dns_zones = {
 }
 
 law = {
-  law_sku        = "PerGB2018"
-  retention_days = 30
+  export_enabled     = true
+  law_sku            = "PerGB2018"
+  retention_days     = 30
+  export_table_names = [
+    "Alert",
+    "AppDependencies",
+    "AppExceptions",
+    "AppMetrics",
+    "AppPerformanceCounters",
+    "AppRequests",
+    "AppSystemEvents",
+    "AppTraces",
+    "AzureDiagnostics",
+    "AzureMetrics",
+    "LAQueryLogs",
+    "Usage"
+  ]
 }
 
 network_security_group_rules = {

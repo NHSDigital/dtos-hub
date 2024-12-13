@@ -223,9 +223,9 @@ private_dns_zones = {
 }
 
 law = {
-  export_enabled     = true
-  law_sku            = "PerGB2018"
-  retention_days     = 30
+  export_enabled = true
+  law_sku        = "PerGB2018"
+  retention_days = 30
   export_table_names = [
     "Alert",
     "AppDependencies",

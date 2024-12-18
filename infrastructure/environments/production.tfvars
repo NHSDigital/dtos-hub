@@ -30,6 +30,20 @@ projects = {
     }
   }
 
+  dtos-service-insights = {
+    full_name  = "service-insights"
+    short_name = "serins"
+    acr = {
+      sku                           = "Premium"
+      admin_enabled                 = false
+      uai_name                      = "dtos-service-insights-acr-push"
+      public_network_access_enabled = false
+    }
+    tags = {
+      Project = "DToS Service Insights"
+    }
+  }
+
 }
 
 diagnostic_settings = {

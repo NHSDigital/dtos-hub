@@ -202,6 +202,7 @@ variable "private_dns_zones" {
     is_apim_private_dns_zone_enabled         = optional(bool, false)
     is_key_vault_private_dns_zone_enabled    = optional(bool, false)
     is_event_hub_private_dns_zone_enabled    = optional(bool, false)
+    is_event_grid_enabled_dns_zone_enabled   = optional(bool, false)
   })
 }
 

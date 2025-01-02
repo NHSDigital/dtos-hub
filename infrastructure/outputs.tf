@@ -1,3 +1,11 @@
+output "azure_monitor_private_link_scope_name" {
+  value = azurerm_monitor_private_link_scope.ampls.name
+}
+
+output "private_endpoint_rg_name" {
+  value = { for k, v in azurerm_resource_group.rg_private_endpoints : k => v.name }
+}
+
 # Output the hub virtual network so it can be used in a remote_state lookup by the spoke networks
 output "vnets_hub" {
   value = module.vnets_hub

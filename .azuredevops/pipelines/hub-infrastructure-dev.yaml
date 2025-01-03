@@ -13,7 +13,7 @@ resources:
     - repository: dtos-devops-templates
       type: github
       name: NHSDigital/dtos-devops-templates
-      ref: fix/log-analytics-private-DNS
+      ref: 4f2d9314f25cca6c3bf7661d09521ebb8d0bf531
       endpoint: NHSDigital
 
 variables:

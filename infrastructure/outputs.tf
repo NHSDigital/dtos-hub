@@ -23,6 +23,10 @@ output "certificates" {
   value = module.lets_encrypt_certificate
 }
 
+output "private_dns_rg_name" {
+  value = { for k, v in azurerm_resource_group.private_dns_rg : k => v.name }
+}
+
 # Output the DNS resolver inbound private ip addresses so they can be used in the private endpoint modules
 output "private_dns_resolver_inbound_ips" {
   value = module.private_dns_resolver

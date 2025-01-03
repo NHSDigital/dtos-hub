@@ -33,6 +33,10 @@ output "private_dns_zones" {
   value = module.private_dns_zones
 }
 
+output "private_dns_zones_map" {
+  value = local.private_dns_zones_map
+}
+
 # Output the Firewall details so they can be used in the spoke networks
 output "firewall_policy_id" {
   value = { for k, v in module.firewall : k => v.firewall_policy_id }

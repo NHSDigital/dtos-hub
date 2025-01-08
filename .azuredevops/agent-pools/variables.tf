@@ -33,9 +33,10 @@ variable "agent_profile_kind" {
   default = "Stateful" # "Stateless"
 }
 
+# This duration has been chosen since even with a 1 day value, agents often filled their storage
 variable "agent_profile_max_agent_lifetime" {
   type    = string
-  default = "1.00:00:00"
+  default = "00.04:00:00"
 }
 
 variable "agent_profile_resource_prediction_profile" {

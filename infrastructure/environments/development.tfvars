@@ -131,9 +131,16 @@ apim_config = {
   }
 }
 
-avd_vm_count          = 4
-avd_users_group_name  = "DToS-hub-dev-uks-hub-virtual-desktop-User-Login"
-avd_admins_group_name = "DToS-hub-dev-uks-hub-virtual-desktop-User-ADMIN-Login"
+avd_vm_count                 = 6
+avd_vm_size                  = "Standard_D4as_v5"
+avd_users_group_name         = "DToS-hub-dev-uks-hub-virtual-desktop-User-Login"
+avd_admins_group_name        = "DToS-hub-dev-uks-hub-virtual-desktop-User-ADMIN-Login"
+avd_maximum_sessions_allowed = 32
+avd_source_image_from_gallery = {
+  image_name      = "gi_wvd"
+  gallery_name    = "rg_hub_dev_uks_compute_gallery"
+  gallery_rg_name = "rg-hub-dev-uks-hub-virtual-desktop"
+}
 
 dns_zone_name_private   = "private.non-live.nationalscreening.nhs.uk"
 dns_zone_name_public    = "non-live.nationalscreening.nhs.uk"

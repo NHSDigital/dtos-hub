@@ -13,7 +13,7 @@ resources:
     - repository: dtos-devops-templates
       type: github
       name: NHSDigital/dtos-devops-templates
-      ref: 5cc76394801ad0556d4a8e09edb520527d1e23df
+      ref: e2bd5f561f5959f234a780073c02597a4c84bb06
       endpoint: NHSDigital
 
 variables:

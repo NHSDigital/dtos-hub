@@ -63,9 +63,41 @@ variable "avd_admins_group_name" {
   type        = string
 }
 
+variable "avd_maximum_sessions_allowed" {
+  description = "The maximum number of sessions allowed by the host pool"
+  type        = number
+  default     = 16
+}
+
+variable "avd_source_image_reference" {
+  description = "Specifies a standard Azure Virtual Machine OS image, replaces var.avd_source_image_from_gallery"
+  type = object({
+    offer     = string
+    publisher = string
+    sku       = string
+    version   = string
+  })
+  default = null
+}
+
+variable "avd_source_image_from_gallery" {
+  description = "Specifies a shared OS image from an Azure Compute Gallery, replaces var.avd_source_image_reference"
+  type = object({
+    image_name      = string
+    gallery_name    = string
+    gallery_rg_name = string
+  })
+  default = null
+}
+
 variable "avd_vm_count" {
   type    = number
   default = 1
+}
+
+variable "avd_vm_size" {
+  type    = string
+  default = "Standard_D2as_v5"
 }
 
 variable "diagnostic_settings" {

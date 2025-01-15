@@ -64,9 +64,8 @@ variable "avd_admins_group_name" {
 }
 
 variable "avd_maximum_sessions_allowed" {
-  description = "The maximum number of sessions allowed by the host pool"
+  description = "The maximum number of sessions per host, in this host pool"
   type        = number
-  default     = 16
 }
 
 variable "avd_source_image_reference" {

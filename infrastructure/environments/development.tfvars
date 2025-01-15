@@ -1,5 +1,6 @@
 application = "hub"
 environment = "DEV"
+env_type    = "nonlive"
 
 projects = {
   dtos-cohort-manager = {

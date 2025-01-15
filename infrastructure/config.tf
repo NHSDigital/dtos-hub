@@ -6,5 +6,6 @@ module "config" {
   location    = each.key
   application = var.application
   env         = var.environment
+  env_type    = var.env_type
   tags        = var.tags
 }

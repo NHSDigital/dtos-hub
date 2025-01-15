@@ -122,7 +122,11 @@ variable "dns_zone_rg_name_public" {
 variable "environment" {
   description = "Environment code for deployments"
   type        = string
-  default     = "DEV"
+}
+
+variable "env_type" {
+  description = "Environment grouping for shared hub (live/non-live)"
+  type        = string
 }
 
 variable "eventhub_namespaces" {

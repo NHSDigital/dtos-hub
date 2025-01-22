@@ -20,6 +20,7 @@ module "virtual-desktop" {
   maximum_sessions_allowed  = var.avd_maximum_sessions_allowed
   resource_group_name       = azurerm_resource_group.avd[each.key].name
   resource_group_id         = azurerm_resource_group.avd[each.key].id
+  scaling_plan_name         = module.config[each.key].names.avd-scaling-plan
   source_image_reference    = var.avd_source_image_reference
   source_image_from_gallery = var.avd_source_image_from_gallery
   subnet_id                 = module.subnets_hub["${module.config[each.key].names.subnet}-virtual-desktop"].id

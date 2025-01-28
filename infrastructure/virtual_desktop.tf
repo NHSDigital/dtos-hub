@@ -11,6 +11,7 @@ module "virtual-desktop" {
   source = "../../dtos-devops-templates/infrastructure/modules/virtual-desktop"
 
   custom_rdp_properties     = "drivestoredirect:s:*;audiomode:i:0;videoplaybackmode:i:1;redirectclipboard:i:1;redirectprinters:i:1;devicestoredirect:s:*;redirectcomports:i:1;redirectsmartcards:i:1;usbdevicestoredirect:s:*;enablecredsspsupport:i:1;redirectwebauthn:i:1;use multimon:i:1;enablerdsaadauth:i:1;"
+  computer_name_prefix      = "avd${var.env_type}"
   dag_name                  = module.config[each.key].names.avd-dag
   host_pool_name            = module.config[each.key].names.avd-host-pool
   location                  = each.key
@@ -19,6 +20,7 @@ module "virtual-desktop" {
   maximum_sessions_allowed  = var.avd_maximum_sessions_allowed
   resource_group_name       = azurerm_resource_group.avd[each.key].name
   resource_group_id         = azurerm_resource_group.avd[each.key].id
+  scaling_plan_name         = module.config[each.key].names.avd-scaling-plan
   source_image_reference    = var.avd_source_image_reference
   source_image_from_gallery = var.avd_source_image_from_gallery
   subnet_id                 = module.subnets_hub["${module.config[each.key].names.subnet}-virtual-desktop"].id

@@ -1,5 +1,6 @@
 application = "hub"
 environment = "PROD"
+env_type    = "live"
 
 projects = {
   dtos-cohort-manager = {
@@ -115,15 +116,22 @@ apim_config = {
   }
 }
 
-avd_vm_count          = 2
-avd_users_group_name  = "DToS-hub-prod-uks-hub-virtual-desktop-User-Login"
-avd_admins_group_name = "DToS-hub-prod-uks-hub-virtual-desktop-User-ADMIN-Login"
-avd_source_image_reference = {
-  offer     = "windows-11"
-  publisher = "microsoftwindowsdesktop"
-  sku       = "win11-23h2-avd"
-  version   = "latest"
+avd_vm_count                 = 2
+avd_maximum_sessions_allowed = 6 # per session host
+avd_vm_size                  = "Standard_D4as_v5"
+avd_users_group_name         = "DToS-hub-prod-uks-hub-virtual-desktop-User-Login"
+avd_admins_group_name        = "DToS-hub-prod-uks-hub-virtual-desktop-User-ADMIN-Login"
+avd_source_image_from_gallery = {
+  image_name      = "gi_wvd"
+  gallery_name    = "rg_hub_prod_uks_compute_gallery"
+  gallery_rg_name = "rg-hub-prod-uks-hub-virtual-desktop"
 }
+# avd_source_image_reference = {
+#   offer     = "windows-11"
+#   publisher = "microsoftwindowsdesktop"
+#   sku       = "win11-23h2-avd"
+#   version   = "latest"
+# }
 
 dns_zone_name_private   = "private.nationalscreening.nhs.uk"
 dns_zone_name_public    = "nationalscreening.nhs.uk"

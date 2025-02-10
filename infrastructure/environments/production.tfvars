@@ -243,7 +243,11 @@ law = {
   law_sku        = "PerGB2018"
   retention_days = 30
   export_table_names = [
+    "AGWAccessLogs",
+    "AGWFirewallLogs",
     "Alert",
+    "ApiManagementGatewayLogs",
+    "APIMDevPortalAuditDiagnosticLog",
     "AppDependencies",
     "AppExceptions",
     "AppMetrics",

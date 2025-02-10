@@ -1,4 +1,8 @@
 locals {
+  # APIM
+  monitor_diagnostic_setting_apim_enabled_logs = ["GatewayLogs", "WebSocketConnectionLogs", "DeveloperPortalAuditLogs"]
+  monitor_diagnostic_setting_apim_metrics      = ["AllMetrics"]
+
   # EVENT HUB
   monitor_diagnostic_setting_eventhub_enabled_logs = [
     "ApplicationMetricsLogs",

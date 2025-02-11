@@ -17,6 +17,11 @@ module "api-management" {
   virtual_network_configuration = [module.subnets_hub["${module.config[each.key].names.subnet}-api-mgmt"].id]
   zones                         = var.apim_config.zones
 
+  log_analytics_workspace_id                   = module.log_analytics_workspace_hub[local.primary_region].id
+  monitor_diagnostic_setting_apim_enabled_logs = local.monitor_diagnostic_setting_apim_enabled_logs
+  monitor_diagnostic_setting_apim_metrics      = local.monitor_diagnostic_setting_apim_metrics
+  metric_enabled                               = var.diagnostic_settings.metric_enabled
+
   developer_portal_hostname_configuration = [
     {
       host_name    = "portal.${var.dns_zone_name_private}"

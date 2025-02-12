@@ -44,6 +44,20 @@ projects = {
       Project = "DToS Service Insights"
     }
   }
+
+  dtos-participant-manager = {
+    full_name  = "participant-manager"
+    short_name = "parman"
+    acr = {
+      sku                           = "Premium"
+      admin_enabled                 = false
+      uai_name                      = "dtos-participant-manager-acr-push"
+      public_network_access_enabled = true
+    }
+    tags = {
+      Project = "DToS Participant Manager"
+    }
+  }
 }
 
 features = {

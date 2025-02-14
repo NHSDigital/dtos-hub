@@ -343,3 +343,34 @@ network_security_group_rules = {
 tags = {
   Project = "DToS Hub"
 }
+
+
+event_grid_configs = {
+  event-grid-topic-1 = {
+    identity_type                = "SystemAssigned"
+    subscription_name            = "dev1234"
+    subscriber_functionName_list = ["CreateParticipantScreeningEpisode"]
+  }
+  # event-grid-topic-2 = {
+  #   identity_type                = "SystemAssigned"
+  #   subscription_name            = "sub2"
+  #   subscriber_list_functionName = []
+  #   publisher_list               = []
+  # }
+}
+
+
+storage_accounts = {
+
+  eventgrid = {
+    name_suffix                   = "eventgrid"
+    account_tier                  = "Standard"
+    replication_type              = "LRS"
+    public_network_access_enabled = false
+    containers = {
+      config = {
+        container_name = "deadletterqueue"
+      }
+    }
+  }
+}

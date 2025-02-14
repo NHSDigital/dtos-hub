@@ -1,3 +1,8 @@
+variable "attached_environments" {
+  description = "Configuration of the Log Analytics Workspace"
+  type        = list(string)
+}
+
 variable "HUB_BACKEND_AZURE_STORAGE_ACCOUNT_NAME" {
   description = "Storage account for certbot state"
   type        = string
@@ -184,6 +189,8 @@ variable "lets_encrypt_certificates" {
   type = map(string)
 }
 
+
+
 variable "key_vault" {
   description = "Configuration for the key vault"
   type = object({
@@ -269,6 +276,39 @@ variable "regions" {
       service_delegation_name    = optional(string)
       service_delegation_actions = optional(list(string))
     }))
+  }))
+}
+
+variable "event_grid_configs" {
+  type = map(any) # needs to be a loose type definition to allow merging of var.event_grid_configs
+}
+
+variable "event_grid_defaults" {
+  description = "Default configuration for the Event Grid resource"
+  type = object({
+    identity_ids  = list(string)
+    identity_type = string
+    inbound_ip_rules = list(object({
+      ip_mask = string
+      action  = string
+    }))
+    input_schema                  = map(string)
+    local_auth_enabled            = bool
+    public_network_access_enabled = bool
+  })
+}
+
+variable "storage_accounts" {
+  description = "Configuration for the Storage Account, currently used for Function Apps"
+  type = map(object({
+    name_suffix                   = string
+    account_tier                  = optional(string, "Standard")
+    replication_type              = optional(string, "LRS")
+    public_network_access_enabled = optional(bool, false)
+    containers = optional(map(object({
+      container_name        = string
+      container_access_type = optional(string, "private")
+    })), {})
   }))
 }
 

@@ -1,4 +1,8 @@
 locals {
+  #ACR
+  monitor_diagnostic_setting_acr_enabled_logs = ["ContainerRegistryRepositoryEvents", "ContainerRegistryLoginEvents"]
+  monitor_diagnostic_setting_acr_metrics      = ["AllMetrics"]
+
   # APIM
   monitor_diagnostic_setting_apim_enabled_logs = ["GatewayLogs", "WebSocketConnectionLogs", "DeveloperPortalAuditLogs"]
   monitor_diagnostic_setting_apim_metrics      = ["AllMetrics"]

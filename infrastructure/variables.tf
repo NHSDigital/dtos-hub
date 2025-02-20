@@ -272,6 +272,24 @@ variable "regions" {
   }))
 }
 
+variable "event_grid_configs" {
+  type = map(any) # needs to be a loose type definition to allow merging of var.event_grid_configs
+}
+
+variable "storage_accounts" {
+  description = "Configuration for the Storage Account, currently used for Function Apps"
+  type = map(object({
+    name_suffix                   = string
+    account_tier                  = optional(string, "Standard")
+    replication_type              = optional(string, "LRS")
+    public_network_access_enabled = optional(bool, false)
+    containers = optional(map(object({
+      container_name        = string
+      container_access_type = optional(string, "private")
+    })), {})
+  }))
+}
+
 variable "tags" {
   description = "Tags to be applied to resources"
   type        = map(string)

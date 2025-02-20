@@ -21,28 +21,6 @@ module "event_grid_topic" {
   tags = var.tags
 }
 
-module "event_grid_subscription" {
-  for_each = local.event_grid_map
-
-  source = "../../../dtos-devops-templates/infrastructure/modules/event-grid-subscription"
-
-  subscription_name    = each.value.subscription_name
-  resource_group_name  = azurerm_resource_group.core[each.value.region].name
-  azurerm_eventgrid_id = module.event_grid_topic["${each.value.event_grid_key}-${each.value.region}"].id
-
-  subscriber_function_details = flatten([
-    for functionName in each.value.subscriber_functionName_list : {
-      function_endpoint = format("%s/functions/%s", module.functionapp["${functionName}-${each.value.region}"].id, functionName)
-      principal_id      = module.functionapp["${functionName}-${each.value.region}"].function_app_sami_id
-    }
-  ])
-
-  dead_letter_storage_account_container_name = "deadletterqueue"
-  dead_letter_storage_account_id             = module.storage["eventgrid-${each.value.region}"].storage_account_id
-
-  tags = var.tags
-}
-
 locals {
 
   event_grids = {

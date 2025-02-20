@@ -9,7 +9,7 @@ module "storage" {
 
   containers = each.value.containers
 
-  log_analytics_workspace_id                              = module.log_analytics_workspace_hub[local.primary_region]
+  log_analytics_workspace_id                              = module.log_analytics_workspace_hub[local.primary_region].id
   monitor_diagnostic_setting_storage_account_enabled_logs = local.monitor_diagnostic_setting_storage_account_enabled_logs
   monitor_diagnostic_setting_storage_account_metrics      = local.monitor_diagnostic_setting_storage_account_metrics
 

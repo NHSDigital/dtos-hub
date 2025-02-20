@@ -37,6 +37,10 @@ locals {
   #SUBNET
   monitor_diagnostic_setting_network_security_group_enabled_logs = ["NetworkSecurityGroupEvent", "NetworkSecurityGroupRuleCounter"]
 
+  #STORAGE ACCOUNT
+  monitor_diagnostic_setting_storage_account_enabled_logs = ["StorageWrite", "StorageRead", "StorageDelete"]
+  monitor_diagnostic_setting_storage_account_metrics      = ["Capacity", "Transaction"]
+
   #VNET
   monitor_diagnostic_setting_vnet_hub_enabled_logs = ["VMProtectionAlerts"]
   monitor_diagnostic_setting_vnet_hub_metrics      = ["AllMetrics"]

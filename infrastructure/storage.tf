@@ -4,12 +4,12 @@ module "storage" {
   source = "../../dtos-devops-templates/infrastructure/modules/storage"
 
   name                = substr("${module.config[each.value.region_key].names.storage-account}${lower(each.value.name_suffix)}", 0, 24)
-  resource_group_name = azurerm_resource_group.dev_center_rg[each.value.region_key].name
+  resource_group_name = azurerm_resource_group.rg_hub[each.value.region_key].name
   location            = each.value.region_key
 
   containers = each.value.containers
 
-  log_analytics_workspace_id                              = module.log_analytics_workspace_id[local.primary_region]
+  log_analytics_workspace_id                              = module.log_analytics_workspace_hub[local.primary_region]
   monitor_diagnostic_setting_storage_account_enabled_logs = local.monitor_diagnostic_setting_storage_account_enabled_logs
   monitor_diagnostic_setting_storage_account_metrics      = local.monitor_diagnostic_setting_storage_account_metrics
 

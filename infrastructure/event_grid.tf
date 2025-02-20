@@ -1,7 +1,7 @@
 module "event_grid_topic" {
   for_each = local.event_grid_map
 
-  source = "../../../dtos-devops-templates/infrastructure/modules/event-grid-topic"
+  source = "../../dtos-devops-templates/infrastructure/modules/event-grid-topic"
 
   topic_name          = each.value.event_topic_name
   resource_group_name = azurerm_resource_group.core[each.value.region].name

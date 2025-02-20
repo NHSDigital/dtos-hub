@@ -4,16 +4,16 @@ module "event_grid_topic" {
   source = "../../dtos-devops-templates/infrastructure/modules/event-grid-topic"
 
   topic_name          = each.value.event_topic_name
-  resource_group_name = azurerm_resource_group.core[each.value.region].name
+  resource_group_name = azurerm_resource_group.dev_center_rg[each.value.region].name
   location            = each.value.region
   identity_type       = each.value.identity_type
   inbound_ip_rules    = each.value.inbound_ip_rules
 
   # Private Endpoint Configuration if enabled
   private_endpoint_properties = var.features.private_endpoints_enabled ? {
-    private_dns_zone_ids                 = [data.terraform_remote_state.hub.outputs.private_dns_zones["${each.value.region}-event_grid"].id]
+    private_dns_zone_ids                 = [module.private_dns_zones["${each.value.region}-event_grid"].id]
     private_endpoint_enabled             = var.features.private_endpoints_enabled
-    private_endpoint_subnet_id           = module.subnets["${module.regions_config[each.value.region].names.subnet}-pep"].id
+    private_endpoint_subnet_id           = module.subnets_hub["${module.regions_config[each.value.region].names.subnet}-pep"].id
     private_endpoint_resource_group_name = azurerm_resource_group.rg_private_endpoints[each.value.region].name
     private_service_connection_is_manual = var.features.private_service_connection_is_manual
   } : null

@@ -346,27 +346,27 @@ tags = {
 
 event_grid_configs = {
   # CreateEpisode writes to this topic
-  create-ps-episode-dev = {
+  create-ps-episode-hub = {
     identity_type                = "SystemAssigned"
-    subscription_name            = "create-ps-episode-dev"
+    subscription_name            = "create-ps-episode-hub"
   }
   # UpdateEpisode writes to this topic
-  update-ps-episode-dev = {
+  update-ps-episode-hub = {
     identity_type                = "SystemAssigned"
-    subscription_name            = "update-ps-episode-dev"
+    subscription_name            = "update-ps-episode-hub"
   }
   #  writes to this topic
-  create-ps-profile-dev = {
+  create-ps-profile-hub = {
     identity_type                = "SystemAssigned"
-    subscription_name            = "create-ps-profile-dev"
+    subscription_name            = "create-ps-profile-hub"
   }
   #  writes to this topic
-  receive-data-to-episode-dev = {
+  receive-data-to-episode-hub = {
     identity_type                = "SystemAssigned"
     subscription_name            = "create-ps-episode"
   }
   #  writes to this topic
-  receive-data-to-profile-dev = {
+  receive-data-to-profile-hub = {
     identity_type                = "SystemAssigned"
     subscription_name            = "create-ps-profile"
   }

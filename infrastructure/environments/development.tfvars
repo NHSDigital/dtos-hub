@@ -344,21 +344,33 @@ tags = {
   Project = "DToS Hub"
 }
 
-
 event_grid_configs = {
-  event-grid-topic-1 = {
+  # CreateEpisode writes to this topic
+  create-ps-episode-dev = {
     identity_type                = "SystemAssigned"
-    subscription_name            = "dev1234"
-    subscriber_functionName_list = ["CreateParticipantScreeningEpisode"]
+    subscription_name            = "create-ps-episode-dev"
   }
-  # event-grid-topic-2 = {
-  #   identity_type                = "SystemAssigned"
-  #   subscription_name            = "sub2"
-  #   subscriber_list_functionName = []
-  #   publisher_list               = []
-  # }
+  # UpdateEpisode writes to this topic
+  update-ps-episode-dev = {
+    identity_type                = "SystemAssigned"
+    subscription_name            = "update-ps-episode-dev"
+  }
+  #  writes to this topic
+  create-ps-profile-dev = {
+    identity_type                = "SystemAssigned"
+    subscription_name            = "create-ps-profile-dev"
+  }
+  #  writes to this topic
+  receive-data-to-episode-dev = {
+    identity_type                = "SystemAssigned"
+    subscription_name            = "create-ps-episode"
+  }
+  #  writes to this topic
+  receive-data-to-profile-dev = {
+    identity_type                = "SystemAssigned"
+    subscription_name            = "create-ps-profile"
+  }
 }
-
 
 storage_accounts = {
 

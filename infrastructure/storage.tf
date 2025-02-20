@@ -1,7 +1,7 @@
 module "storage" {
   for_each = local.storage_accounts_map
 
-  source = "../../../dtos-devops-templates/infrastructure/modules/storage"
+  source = "../../dtos-devops-templates/infrastructure/modules/storage"
 
   name                = substr("${module.regions_config[each.value.region_key].names.storage-account}${lower(each.value.name_suffix)}", 0, 24)
   resource_group_name = azurerm_resource_group.core[each.value.region_key].name

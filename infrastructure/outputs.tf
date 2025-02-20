@@ -64,3 +64,7 @@ output "event_hubs" {
 output "tenant_id" {
   value = data.azurerm_client_config.current.tenant_id
 }
+
+output "event_grid_topic" {
+  value =  module.event_grid_topic
+}

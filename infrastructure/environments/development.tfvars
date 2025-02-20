@@ -372,6 +372,15 @@ event_grid_configs = {
   }
 }
 
+event_grid_defaults = {
+  identity_ids                  = []
+  identity_type                 = "SystemAssigned"
+  inbound_ip_rules              = []
+  input_schema                  = {}
+  local_auth_enabled            = true
+  public_network_access_enabled = false
+}
+
 storage_accounts = {
 
   eventgrid = {

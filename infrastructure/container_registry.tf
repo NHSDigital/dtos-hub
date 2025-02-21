@@ -9,7 +9,12 @@ module "acr" {
   resource_group_name = azurerm_resource_group.rg_project[each.value.project_key].name
   location            = each.value.region
 
-  admin_enabled                 = each.value.admin_enabled
+  admin_enabled = each.value.admin_enabled
+
+  log_analytics_workspace_id                  = module.log_analytics_workspace_hub[local.primary_region].id
+  monitor_diagnostic_setting_acr_enabled_logs = local.monitor_diagnostic_setting_acr_enabled_logs
+  monitor_diagnostic_setting_acr_metrics      = local.monitor_diagnostic_setting_acr_metrics
+
   uai_name                      = each.value.uai_name
   sku                           = each.value.sku
   public_network_access_enabled = var.features.public_network_access_enabled

@@ -68,3 +68,8 @@ output "tenant_id" {
 output "event_grid_topic" {
   value = module.event_grid_topic
 }
+
+output "storage" {
+  value = module.storage
+  sensitive = true
+}

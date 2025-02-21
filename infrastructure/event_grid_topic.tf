@@ -1,10 +1,18 @@
+resource "azurerm_resource_group" "event_grid_topic" {
+  for_each = var.regions
+
+  name     = "${module.config[each.key].names.resource-group}-${var.application}-event-grid-rg"
+  location = each.key
+}
+
+
 module "event_grid_topic" {
   for_each = local.event_grid_map
 
   source = "../../dtos-devops-templates/infrastructure/modules/event-grid-topic"
 
   topic_name          = each.value.event_topic_name
-  resource_group_name = azurerm_resource_group.rg_hub[each.value.region].name
+  resource_group_name = azurerm_resource_group.event_grid_topic[each.value.region].name
   location            = each.value.region
   identity_type       = each.value.identity_type
   inbound_ip_rules    = each.value.inbound_ip_rules

@@ -353,16 +353,33 @@ event_grid_configs = {
   update-episode-hub-nft = {
     identity_type = "SystemAssigned"
   }
-  #  NOT SURE what writes to this one yet
-  create-ps-profile-hub-nft = {
-    identity_type = "SystemAssigned"
-  }
+  # #  NOT SURE what writes to this one yet
+  # create-ps-profile-hub-nft = {
+  #   identity_type = "SystemAssigned"
+  # }
   # ReceiveData writes to this topic
   receive-data-to-episode-hub-nft = {
     identity_type = "SystemAssigned"
   }
   # ReceiveData writes to this topic
   receive-data-to-profile-hub-nft = {
+    identity_type = "SystemAssigned"
+  }
+    # CreateEpisode writes to this topic
+  create-episode-hub-dev = {
+    identity_type = "SystemAssigned"
+  }
+
+  # UpdateEpisode writes to this topic
+  update-episode-hub-dev = {
+    identity_type = "SystemAssigned"
+  }
+  # ReceiveData writes to this topic
+  receive-data-to-episode-hub-dev = {
+    identity_type = "SystemAssigned"
+  }
+  # ReceiveData writes to this topic
+  receive-data-to-profile-hub-dev = {
     identity_type = "SystemAssigned"
   }
 }

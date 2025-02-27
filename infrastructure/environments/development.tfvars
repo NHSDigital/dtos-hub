@@ -345,37 +345,54 @@ tags = {
 }
 
 event_grid_configs = {
+  # evgt-<env_name>-<project_id_source>-<api_name>-<theme>
+
   # CreateEpisode writes to this topic
-  evgt-dev-si-create-episode-01 = {
+  evgt-dev-si-create-episode-ep = {
     identity_type = "SystemAssigned"
   }
   # UpdateEpisode writes to this topic
-  evgt-dev-si-update-episode-01 = {
+  evgt-dev-si-update-episode-ep = {
     identity_type = "SystemAssigned"
   }
   # ReceiveData writes to this topic
-  evgt-dev-si-receive-data-01 = {
+  evgt-dev-si-receive-data-ep = {
     identity_type = "SystemAssigned"
   }
   # ReceiveData writes to this topic
-  evgt-dev-si-receive-data-02 = {
+  evgt-dev-si-receive-data-pr = {
     identity_type = "SystemAssigned"
   }
-  evgt-nft-si-create-episode-01 = {
+  evgt-nft-si-create-episode-ep = {
     identity_type = "SystemAssigned"
   }
   # UpdateEpisode writes to this topic
-  evgt-nft-si-update-episode-01 = {
+  evgt-nft-si-update-episode-ep = {
     identity_type = "SystemAssigned"
   }
   # ReceiveData writes to this topic
-  evgt-nft-si-receive-data-01 = {
+  evgt-nft-si-receive-data-ep = {
     identity_type = "SystemAssigned"
   }
   # ReceiveData writes to this topic
-  evgt-nft-si-receive-data-02 = {
+  evgt-nft-si-receive-data-pr = {
     identity_type = "SystemAssigned"
   }
+  # evgt-int-si-create-episode-01 = {
+  #   identity_type = "SystemAssigned"
+  # }
+  # # UpdateEpisode writes to this topic
+  # evgt-int-si-update-episode-01 = {
+  #   identity_type = "SystemAssigned"
+  # }
+  # # ReceiveData writes to this topic
+  # evgt-int-si-receive-data-01 = {
+  #   identity_type = "SystemAssigned"
+  # }
+  # # ReceiveData writes to this topic
+  # evgt-int-si-receive-data-02 = {
+  #   identity_type = "SystemAssigned"
+  # }
 }
 
 event_grid_defaults = {

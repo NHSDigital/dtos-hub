@@ -346,40 +346,34 @@ tags = {
 
 event_grid_configs = {
   # CreateEpisode writes to this topic
-  create-episode-hub-nft = {
+  evgt-dev-si-create-episode-01 = {
     identity_type = "SystemAssigned"
   }
   # UpdateEpisode writes to this topic
-  update-episode-hub-nft = {
-    identity_type = "SystemAssigned"
-  }
-  # #  NOT SURE what writes to this one yet
-  # create-ps-profile-hub-nft = {
-  #   identity_type = "SystemAssigned"
-  # }
-  # ReceiveData writes to this topic
-  receive-data-to-episode-hub-nft = {
+  evgt-dev-si-update-episode-01 = {
     identity_type = "SystemAssigned"
   }
   # ReceiveData writes to this topic
-  receive-data-to-profile-hub-nft = {
+  evgt-dev-si-receive-data-01 = {
     identity_type = "SystemAssigned"
   }
-    # CreateEpisode writes to this topic
-  create-episode-hub-dev = {
+  # ReceiveData writes to this topic
+  evgt-dev-si-receive-data-02 = {
     identity_type = "SystemAssigned"
   }
-
+  evgt-nft-si-create-episode-01 = {
+    identity_type = "SystemAssigned"
+  }
   # UpdateEpisode writes to this topic
-  update-episode-hub-dev = {
+  evgt-nft-si-update-episode-01 = {
     identity_type = "SystemAssigned"
   }
   # ReceiveData writes to this topic
-  receive-data-to-episode-hub-dev = {
+  evgt-nft-si-receive-data-01 = {
     identity_type = "SystemAssigned"
   }
   # ReceiveData writes to this topic
-  receive-data-to-profile-hub-dev = {
+  evgt-nft-si-receive-data-02 = {
     identity_type = "SystemAssigned"
   }
 }

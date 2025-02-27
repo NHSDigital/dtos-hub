@@ -1,10 +1,23 @@
 resource "azurerm_resource_group" "event_grid_topic" {
   for_each = var.regions
 
-  name     = "${module.config[each.key].names.resource-group}-${var.application}-event-grid-rg"
+  name     = "${module.config[each.key].names.resource-group}-dev-evgt"
   location = each.key
 }
 
+# resource "azurerm_resource_group" "event_grid_topic_int" {
+#   for_each = var.regions
+
+#   name     = "${module.config[each.key].names.resource-group}-int-evgt"
+#   location = each.key
+# }
+
+# resource "azurerm_resource_group" "event_grid_topic_nft" {
+#   for_each = var.regions
+
+#   name     = "${module.config[each.key].names.resource-group}-nft-evgt"
+#   location = each.key
+# }
 
 module "event_grid_topic" {
   for_each = local.event_grid_map

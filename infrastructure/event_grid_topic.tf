@@ -12,7 +12,7 @@ module "event_grid_topic" {
 
   topic_name = each.value.event_topic_name
   # resource_group_name = azurerm_resource_group.event_grid_topic[each.value.region].name
-  resource_group_name = azurerm_resource_group.event_grid_topic["${each.value.environment}-${each.value.key}"].name
+  resource_group_name = azurerm_resource_group.event_grid_topic["${each.value.key}"].name
   location            = each.value.region
   identity_type       = each.value.identity_type
   inbound_ip_rules    = each.value.inbound_ip_rules

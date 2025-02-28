@@ -10,7 +10,7 @@ module "event_grid_topic" {
 
   source = "../../dtos-devops-templates/infrastructure/modules/event-grid-topic"
 
-  topic_name          = each.value.event_topic_name
+  topic_name = each.value.event_topic_name
   # resource_group_name = azurerm_resource_group.event_grid_topic[each.value.region].name
   resource_group_name = azurerm_resource_group.event_grid_topic["${each.value.environment}-${each.value.key}"].name
   location            = each.value.region
@@ -34,9 +34,9 @@ locals {
   # Expand a flattened list of objects for all subnets (allows nested for loops)
   event_grid_resource_groups_object_list = flatten([
     for key in keys(var.regions) : [
-      for environment in var.attached_environments : merge({
+      for environment in var.attached_environments : merge(
         {
-          region      = region         # 1st iterator
+          region      = region      # 1st iterator
           environment = environment # 2nd iterator
         }
       )

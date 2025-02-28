@@ -1,3 +1,8 @@
+variable "attached_environments" {
+  description = "Configuration of the Log Analytics Workspace"
+  type        = list(string)
+}
+
 variable "HUB_BACKEND_AZURE_STORAGE_ACCOUNT_NAME" {
   description = "Storage account for certbot state"
   type        = string
@@ -183,6 +188,8 @@ variable "firewall_config" {
 variable "lets_encrypt_certificates" {
   type = map(string)
 }
+
+
 
 variable "key_vault" {
   description = "Configuration for the key vault"

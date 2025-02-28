@@ -1,5 +1,5 @@
 resource "azurerm_resource_group" "event_grid_topic" {
-  for_each = var.event_grid_resource_groups_map
+  for_each = local.event_grid_resource_groups_map
 
   name     = "${module.config[each.key].names.resource-group}-${each.value.environment}-evgt"
   location = each.key
@@ -31,17 +31,19 @@ module "event_grid_topic" {
 
 locals {
 
-  # Expand a flattened list of objects for all subnets (allows nested for loops)
+  # Expand a flattened list of objects for all resource groups (allows nested for loops)
   event_grid_resource_groups_object_list = flatten([
     for key in keys(var.regions) : [
       for environment in var.attached_environments : merge(
         {
-          region      = region      # 1st iterator
+          region      = key         # 1st iterator
           environment = environment # 2nd iterator
         }
       )
     ]
   ])
+
+
 
   # ...then project the list of objects into a map with unique keys (combining the iterators), for consumption by a for_each meta argument
   event_grid_resource_groups_map = {

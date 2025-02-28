@@ -1,7 +1,7 @@
 resource "azurerm_resource_group" "event_grid_topic" {
   for_each = local.event_grid_resource_groups_map
 
-  name     = "${module.config[each.key].names.resource-group}-${each.value.environment}-evgt"
+  name     = "${module.config[each.value.region].names.resource-group}-${each.value.environment}-evgt"
   location = each.key
 }
 

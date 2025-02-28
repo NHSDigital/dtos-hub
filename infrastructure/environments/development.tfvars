@@ -2,6 +2,8 @@ application = "hub"
 environment = "DEV"
 env_type    = "nonlive"
 
+attached_environments = ["dev", "nft", "int"]
+
 projects = {
   dtos-cohort-manager = {
     full_name  = "cohort-manager"

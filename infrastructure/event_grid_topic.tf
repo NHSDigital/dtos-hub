@@ -1,23 +1,9 @@
 resource "azurerm_resource_group" "event_grid_topic" {
-  for_each = var.regions
+  for_each = var.event_grid_resource_groups_map
 
-  name     = "${module.config[each.key].names.resource-group}-dev-evgt"
+  name     = "${module.config[each.key].names.resource-group}-${each.value.environment}-evgt"
   location = each.key
 }
-
-# resource "azurerm_resource_group" "event_grid_topic_int" {
-#   for_each = var.regions
-
-#   name     = "${module.config[each.key].names.resource-group}-int-evgt"
-#   location = each.key
-# }
-
-# resource "azurerm_resource_group" "event_grid_topic_nft" {
-#   for_each = var.regions
-
-#   name     = "${module.config[each.key].names.resource-group}-nft-evgt"
-#   location = each.key
-# }
 
 module "event_grid_topic" {
   for_each = local.event_grid_map
@@ -25,7 +11,8 @@ module "event_grid_topic" {
   source = "../../dtos-devops-templates/infrastructure/modules/event-grid-topic"
 
   topic_name          = each.value.event_topic_name
-  resource_group_name = azurerm_resource_group.event_grid_topic[each.value.region].name
+  # resource_group_name = azurerm_resource_group.event_grid_topic[each.value.region].name
+  resource_group_name = azurerm_resource_group.event_grid_topic["${each.value.environment}-${each.value.key}"].name
   location            = each.value.region
   identity_type       = each.value.identity_type
   inbound_ip_rules    = each.value.inbound_ip_rules
@@ -43,6 +30,23 @@ module "event_grid_topic" {
 }
 
 locals {
+
+  # Expand a flattened list of objects for all subnets (allows nested for loops)
+  event_grid_resource_groups_object_list = flatten([
+    for key in keys(var.regions) : [
+      for environment in var.attached_environments : merge({
+        {
+          region      = region         # 1st iterator
+          environment = environment # 2nd iterator
+        }
+      )
+    ]
+  ])
+
+  # ...then project the list of objects into a map with unique keys (combining the iterators), for consumption by a for_each meta argument
+  event_grid_resource_groups_map = {
+    for object in local.event_grid_resource_groups_object_list : "${object.environment}-${object.key}" => object
+  }
 
   event_grids = {
     for event_grid_key, event_grid_details in var.event_grid_configs :

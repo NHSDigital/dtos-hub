@@ -34,6 +34,12 @@ locals {
   #STORAGE ACCOUNT
   monitor_diagnostic_setting_storage_account_enabled_logs = ["StorageWrite", "StorageRead", "StorageDelete"]
 
+  #SUBSCRIPTION ACTIVITY LOG
+  monitor_diagnostic_setting_subscriptions_enabled_logs = ["Administrative", "Security", "ServiceHealth", "Alert", "Recommendation", "Policy", "Autoscale", "ResourceHealth"]
+
+  # #SUBSCRIPTION NAME
+  # monitor_diagnostic_setting_log_analytics_workspace_enabled_logs = ["SummaryLogs", "Audit"]
+
   #SUBNET
   monitor_diagnostic_setting_network_security_group_enabled_logs = ["NetworkSecurityGroupEvent", "NetworkSecurityGroupRuleCounter"]
 

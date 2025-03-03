@@ -2,6 +2,8 @@ application = "hub"
 environment = "DEV"
 env_type    = "nonlive"
 
+attached_environments = ["dev", "nft", "int"]
+
 projects = {
   dtos-cohort-manager = {
     full_name  = "cohort-manager"
@@ -342,4 +344,91 @@ network_security_group_rules = {
 
 tags = {
   Project = "DToS Hub"
+}
+
+event_grid_configs = {
+  # evgt-<env_name>-<project_id_source>-<api_name>-<theme>
+
+  # CreateEpisode writes to this topic
+  evgt-dev-si-create-episode-ep = {
+    identity_type = "SystemAssigned"
+    environment   = "dev"
+  }
+  # UpdateEpisode writes to this topic
+  evgt-dev-si-update-episode-ep = {
+    identity_type = "SystemAssigned"
+    environment   = "dev"
+  }
+  # ReceiveData writes to this topic
+  evgt-dev-si-receive-data-ep = {
+    identity_type = "SystemAssigned"
+    environment   = "dev"
+  }
+  # ReceiveData writes to this topic
+  evgt-dev-si-receive-data-pr = {
+    identity_type = "SystemAssigned"
+    environment   = "dev"
+  }
+  evgt-nft-si-create-episode-ep = {
+    identity_type = "SystemAssigned"
+    environment   = "nft"
+  }
+  # UpdateEpisode writes to this topic
+  evgt-nft-si-update-episode-ep = {
+    identity_type = "SystemAssigned"
+    environment   = "nft"
+  }
+  # ReceiveData writes to this topic
+  evgt-nft-si-receive-data-ep = {
+    identity_type = "SystemAssigned"
+    environment   = "nft"
+  }
+  # ReceiveData writes to this topic
+  evgt-nft-si-receive-data-pr = {
+    identity_type = "SystemAssigned"
+    environment   = "nft"
+  }
+  evgt-int-si-create-episode-01 = {
+    identity_type = "SystemAssigned"
+    environment   = "int"
+  }
+  # UpdateEpisode writes to this topic
+  evgt-int-si-update-episode-01 = {
+    identity_type = "SystemAssigned"
+    environment   = "int"
+  }
+  # ReceiveData writes to this topic
+  evgt-int-si-receive-data-01 = {
+    identity_type = "SystemAssigned"
+    environment   = "int"
+  }
+  # ReceiveData writes to this topic
+  evgt-int-si-receive-data-02 = {
+    identity_type = "SystemAssigned"
+    environment   = "int"
+  }
+}
+
+event_grid_defaults = {
+  identity_ids                  = []
+  identity_type                 = "SystemAssigned"
+  inbound_ip_rules              = []
+  input_schema                  = {}
+  local_auth_enabled            = true
+  public_network_access_enabled = false
+}
+
+storage_accounts = {
+
+  eventgrid = {
+    name_suffix                   = "eventgrid"
+    account_tier                  = "Standard"
+    replication_type              = "LRS"
+    public_network_access_enabled = false
+    containers = {
+      config = {
+        container_name = "deadletterqueue"
+      }
+    }
+  }
 }

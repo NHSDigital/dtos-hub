@@ -23,5 +23,5 @@ module "diagnostic-settings" {
   name                                                  = "${each.key}-diagnostic-setting"
   target_resource_id                                    = data.azurerm_subscription.subscriptions[each.key].id
   log_analytics_workspace_id                            = module.log_analytics_workspace_hub[local.primary_region].id
-  monitor_diagnostic_setting_subscriptions_enabled_logs = var.monitor_diagnostic_setting_subscriptions_enabled_logs
+  monitor_diagnostic_setting_subscriptions_enabled_logs = local.monitor_diagnostic_setting_subscriptions_enabled_logs
 }

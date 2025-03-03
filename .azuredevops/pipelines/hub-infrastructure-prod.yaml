@@ -20,6 +20,7 @@ variables:
   - group: PRD_hub_backend
   - group: PRD_hub_backend_remote_state # to get storage account name for certbot state
   - group: PRD_hub_config
+  - group: PROD_spoke_subscription_ids
   - name: TF_DIRECTORY
     value: $(System.DefaultWorkingDirectory)/$(System.TeamProject)/infrastructure
   - name: TF_VERSION

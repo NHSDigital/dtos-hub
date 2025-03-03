@@ -2,6 +2,17 @@ application = "hub"
 environment = "PROD"
 env_type    = "live"
 
+subscriptions = {
+  preprod = {
+    full_name  = "Digital Screening DToS - Core Services PreProd"
+    short_name = "preprod"
+  }
+  prod = {
+    full_name  = "Digital Screening DToS - Core Services Prod"
+    short_name = "prod"
+  }
+}
+
 projects = {
   dtos-cohort-manager = {
     full_name  = "cohort-manager"

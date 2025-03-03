@@ -212,6 +212,10 @@ variable "law" {
   })
 }
 
+# variable "monitor_diagnostic_setting_subscriptions_enabled_logs" {
+#   type = list(string)
+# }
+
 variable "network_security_group_rules" {
   description = "The network security group rules."
   default     = {}
@@ -312,8 +316,46 @@ variable "storage_accounts" {
   }))
 }
 
+variable "subscriptions" {
+  description = "Map of subscriptions with full_name and short_name"
+  type = map(object({
+    full_name  = string
+    short_name = string
+  }))
+}
+
 variable "tags" {
   description = "Tags to be applied to resources"
   type        = map(string)
   default     = {}
+}
+
+variable "SUBSCRIPTION_ID_DEV" {
+  type        = string
+  description = "Subscription ID for Dev environment"
+  default     = ""
+}
+
+variable "SUBSCRIPTION_ID_NFT" {
+  type        = string
+  description = "Subscription ID for NFT environment"
+  default     = ""
+}
+
+variable "SUBSCRIPTION_ID_INT" {
+  type        = string
+  description = "Subscription ID for Int environment"
+  default     = ""
+}
+
+variable "SUBSCRIPTION_ID_PRE" {
+  type        = string
+  description = "Subscription ID for PreProd environment"
+  default     = ""
+}
+
+variable "SUBSCRIPTION_ID_PRD" {
+  type        = string
+  description = "Subscription ID for Prod environment"
+  default     = ""
 }

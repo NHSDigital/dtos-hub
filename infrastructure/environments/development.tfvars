@@ -4,6 +4,28 @@ env_type    = "nonlive"
 
 attached_environments = ["dev", "nft", "int"]
 
+# subscription_name{
+#   development = "Digital Screening DToS - Core Services Dev"
+#   nft = "Digital Screening DToS - Core Services NFT"
+#   integration = "Digital Screening DToS - Core Services Int"
+# }
+
+subscriptions = {
+  development = {
+    full_name  = "Digital Screening DToS - Core Services Dev"
+    short_name = "dev"
+  }
+  nft = {
+    full_name  = "Digital Screening DToS - Core Services NFT"
+    short_name = "nft"
+  }
+  integration = {
+    full_name  = "Digital Screening DToS - Core Services Int"
+    short_name = "int"
+  }
+}
+
+
 projects = {
   dtos-cohort-manager = {
     full_name  = "cohort-manager"

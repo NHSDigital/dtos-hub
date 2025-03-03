@@ -43,8 +43,6 @@ locals {
     ]
   ])
 
-
-
   # ...then project the list of objects into a map with unique keys (combining the iterators), for consumption by a for_each meta argument
   event_grid_resource_groups_map = {
     for object in local.event_grid_resource_groups_object_list : "${object.environment}-${object.region}" => object

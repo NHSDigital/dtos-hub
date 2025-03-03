@@ -20,6 +20,7 @@ variables:
   - group: DEV_hub_backend
   - group: DEV_hub_backend_remote_state # to get storage account name for certbot state
   - group: DEV_hub_config
+  - group: DEV_spoke_subscription_ids
   - name: TF_DIRECTORY
     value: $(System.DefaultWorkingDirectory)/$(System.TeamProject)/infrastructure
   - name: TF_VERSION

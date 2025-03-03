@@ -205,6 +205,10 @@ variable "law" {
   })
 }
 
+variable "monitor_diagnostic_setting_subscriptions_enabled_logs" {
+  type = list(string)
+}
+
 variable "network_security_group_rules" {
   description = "The network security group rules."
   default     = {}

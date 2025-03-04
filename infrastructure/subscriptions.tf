@@ -45,6 +45,6 @@ module "diagnostic-settings" {
   enabled_log                = local.monitor_diagnostic_setting_subscriptions_enabled_logs
 
   providers = {
-    azurerm = lookup(local.alias_map, var.provider_alias, azurerm.dev)
+    azurerm = lookup(local.alias_map, each.value.short_name, azurerm.dev)
   }
 }

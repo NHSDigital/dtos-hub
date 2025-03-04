@@ -44,6 +44,7 @@ module "diagnostic-settings" {
   log_analytics_workspace_id = module.log_analytics_workspace_hub[local.primary_region].id
   enabled_log                = local.monitor_diagnostic_setting_subscriptions_enabled_logs
 
+  # I dont think this works because Terraform does not allow a single for_each block with switching of provider aliases in the providers argument.
   providers = {
     azurerm = lookup(local.alias_map, each.value.short_name, azurerm.dev)
   }

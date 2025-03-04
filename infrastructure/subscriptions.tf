@@ -26,6 +26,13 @@ locals {
     preprod = "/subscriptions/${var.SUBSCRIPTION_ID_PRE}"
     prod    = "/subscriptions/${var.SUBSCRIPTION_ID_PRD}"
   }
+
+  alias_map = {
+    dev = azurerm.dev
+    nft = azurerm.nft
+    int = azurerm.int
+  }
+
 }
 
 module "diagnostic-settings" {
@@ -36,4 +43,8 @@ module "diagnostic-settings" {
   # target_resource_id         = data.azurerm_subscription.subscriptions[each.key].id
   log_analytics_workspace_id = module.log_analytics_workspace_hub[local.primary_region].id
   enabled_log                = local.monitor_diagnostic_setting_subscriptions_enabled_logs
+
+  providers = {
+    azurerm = lookup(local.alias_map, var.provider_alias, azurerm.dev)
+  }
 }

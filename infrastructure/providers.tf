@@ -22,6 +22,27 @@ terraform {
 }
 
 provider "azurerm" {
+  alias = "dev"
+
+  features {}
+  subscription_id = var.SUBSCRIPTION_ID_DEV
+}
+
+provider "azurerm" {
+  alias = "nft"
+
+  features {}
+  subscription_id = var.SUBSCRIPTION_ID_NFT
+}
+
+provider "azurerm" {
+  alias = "int"
+
+  features {}
+  subscription_id = var.SUBSCRIPTION_ID_INT
+}
+
+provider "azurerm" {
   features {}
   subscription_id = var.TARGET_SUBSCRIPTION_ID
 }

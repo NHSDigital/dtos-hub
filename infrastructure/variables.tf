@@ -359,3 +359,8 @@ variable "SUBSCRIPTION_ID_PRD" {
   description = "Subscription ID for Prod environment"
   default     = ""
 }
+
+variable "provider_alias" {
+  type    = string
+  default = "dev"
+}

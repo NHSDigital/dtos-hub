@@ -388,22 +388,22 @@ event_grid_configs = {
     identity_type = "SystemAssigned"
     environment   = "nft"
   }
-  evgt-int-si-create-episode-01 = {
+  evgt-int-si-create-episode-ep = {
     identity_type = "SystemAssigned"
     environment   = "int"
   }
   # UpdateEpisode writes to this topic
-  evgt-int-si-update-episode-01 = {
+  evgt-int-si-update-episode-ep = {
     identity_type = "SystemAssigned"
     environment   = "int"
   }
   # ReceiveData writes to this topic
-  evgt-int-si-receive-data-01 = {
+  evgt-int-si-receive-data-ep = {
     identity_type = "SystemAssigned"
     environment   = "int"
   }
   # ReceiveData writes to this topic
-  evgt-int-si-receive-data-02 = {
+  evgt-int-si-receive-data-pr = {
     identity_type = "SystemAssigned"
     environment   = "int"
   }

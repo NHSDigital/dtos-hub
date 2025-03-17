@@ -5,8 +5,8 @@ trigger: none
 pr: none
 
 schedules:
-  - cron: "0 * * * 1-5"
-    displayName: "Hourly on weekdays"
+  - cron: "0 8-19 * * 1-5"
+    displayName: "Hourly from 08:00 to 19:00 on weekdays"
     branches:
       include:
         - main

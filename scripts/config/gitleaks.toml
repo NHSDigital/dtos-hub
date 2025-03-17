@@ -20,5 +20,6 @@ paths = [
   '''.terraform.lock.hcl''',
   '''poetry.lock''',
   '''yarn.lock''',
-  '''infrastructure/environments/'''
+  '''infrastructure/environments/''',
+  '''.azuredevops/pipelines/update-acr-public-ips.yaml'''
 ]

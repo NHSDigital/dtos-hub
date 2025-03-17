@@ -60,6 +60,20 @@ projects = {
       Project = "DToS Participant Manager"
     }
   }
+
+  dtos-tooling = {
+    full_name  = "dtos-tooling"
+    short_name = "tooling"
+    acr = {
+      sku                           = "Premium"
+      admin_enabled                 = false
+      uai_name                      = "dtos-tooling-push"
+      public_network_access_enabled = true
+    }
+    tags = {
+      Project = "DToS Tooling"
+    }
+  }
 }
 
 features = {

@@ -1,0 +1,119 @@
+---
+
+name: $(Build.SourceBranchName)-$(Date:yyyyMMdd)_$(Rev:r)
+trigger: none
+pr: none
+
+schedules:
+  - cron: "0 * * * 1-5"
+    displayName: "Hourly on weekdays"
+    branches:
+      include:
+        - main
+    always: true
+
+resources:
+  repositories:
+    - repository: dtos-devops-templates
+      type: github
+      name: NHSDigital/dtos-devops-templates
+      ref: aa87e2c36c4c3c88d4aeadcef6813e464d68621d
+      endpoint: NHSDigital
+
+variables:
+  - group: DEV_hub_backend
+  - name: TF_DIRECTORY
+    value: $(System.DefaultWorkingDirectory)/$(System.TeamProject)/infrastructure
+  - name: TF_VERSION
+    value: 1.9.2
+
+stages:
+  - stage: update_acr_private_dns
+    displayName: Update Prod private DNS with Dev ACR Public IPs
+    jobs:
+      - job: get_acr_names
+        displayName: Get Dev ACR names
+        pool:
+          name: private-pool-dev-uks
+        variables:
+          - name: tfVarsFile
+            value: environments/development.tfvars
+        steps:
+          - checkout: self
+          - checkout: dtos-devops-templates
+          - template: .azuredevops/templates/steps/tf_init.yaml@dtos-devops-templates
+          - task: Bash@3
+            name: tfstate
+            displayName: Read Terraform state
+            inputs:
+              targetType: inline
+              script: |
+                set -eo pipefail
+                acr_names="$(terraform -chdir=$(TF_DIRECTORY) show -json | jq -r '[.values.root_module.child_modules[] | .resources[]? | select(.type == "azurerm_container_registry") | .values.name] | join(" ")')"
+                [[ -n "${acr_names}" ]] && echo "Found the following Azure Container Registries: ${acr_names}"
+                echo "##vso[task.setvariable variable=acrNames;isoutput=true]${acr_names}"
+
+      - job: resolve_public_dns
+        displayName: Resolve public DNS
+        dependsOn: get_acr_names
+        pool:
+          vmImage: ubuntu-latest
+        condition: and(succeeded(), ne(dependencies.get_acr_names.outputs['tfstate.acrNames'], ''))
+        variables:
+          ACR_NAMES: $[ dependencies.get_acr_names.outputs['tfstate.acrNames'] ]
+        steps:
+          - task: Bash@3
+            name: dig
+            displayName: Dig ACR public IPs
+            inputs:
+              targetType: inline
+              script: |
+                set -eo pipefail
+                json="{}"
+                for acr in ${ACR_NAMES}; do
+                  ip="$(dig +short "${acr}.azurecr.io" A | tail -n 1)"
+                  if [[ -n "${ip}" ]]; then
+                    json="$(jq --arg key "${acr}" --arg value "${ip}" '. + {($key): $value}' <<< "${json}")"
+                  else
+                    echo "⚠️ Warning: Could not resolve IP for ${acr}" >&2
+                  fi
+                done
+                [[ "${json}" != "{}" ]] && echo "${json}"
+                json="$(jq -c '.' <<< "${json}")"
+                echo "##vso[task.setvariable variable=acrPublicDNS;isoutput=true]${json}"
+
+      - job: update_private_dns
+        displayName: Update private DNS
+        dependsOn: resolve_public_dns
+        pool:
+          name: private-pool-prod-uks
+        variables:
+          ACR_DNS_JSON: $[ dependencies.resolve_public_dns.outputs['dig.acrPublicDNS'] ]
+          DNS_RG_NAME: rg-hub-prod-uks-private-dns-zones
+          ZONE_NAME: privatelink.azurecr.io
+        condition: and(succeeded(), ne(dependencies.resolve_public_dns.outputs['dig.acrPublicDNS'], '{}'))
+        steps:
+          - task: AzureCLI@2
+            name: set_dns_a_records
+            displayName: Set DNS A records
+            inputs:
+              azureSubscription: sc-dtos-hub-production
+              addSpnToEnvironment: false
+              failOnStandardError: false
+              scriptType: bash
+              scriptLocation: inlineScript
+              inlineScript: |
+                set -eo pipefail
+                for row in $(echo "${ACR_DNS_JSON}" | jq -r 'to_entries|map("\(.key)=\(.value)")|.[]'); do
+                  key="$(echo ${row} | cut -d'=' -f1)"
+                  value="$(echo ${row} | cut -d'=' -f2)"
+                  existing_record="$(az network private-dns record-set a show -g ${DNS_RG_NAME} -z ${ZONE_NAME} --name "${key}" --query "aRecords[?ipv4Address=='${value}']" -o tsv 2>/dev/null || echo '')"
+                  if [[ -n "${existing_record}" ]]; then
+                    echo "✅ A record for ${key} with IP ${value} already exists in Private DNS. Skipping update."
+                  else
+                    echo "🔄 Setting A record for ${key} with IP ${value}"
+                    az network private-dns record-set a delete -g ${DNS_RG_NAME} -z ${ZONE_NAME} --name "${key}" --yes > /dev/null
+                    az network private-dns record-set a create -g ${DNS_RG_NAME} -z ${ZONE_NAME} --name "${key}" --ttl 10 > /dev/null
+                    az network private-dns record-set a add-record -g ${DNS_RG_NAME} -z ${ZONE_NAME} --record-set-name "${key}" --ipv4-address "${value}" > /dev/null
+                  fi
+                done

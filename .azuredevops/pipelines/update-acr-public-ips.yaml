@@ -5,8 +5,8 @@ trigger: none
 pr: none
 
 schedules:
-  - cron: "0 8-19 * * 1-5"
-    displayName: "Hourly from 08:00 to 19:00 on weekdays"
+  - cron: 0 8-19 * * 1-5
+    displayName: Hourly from 08:00 to 19:00 on weekdays
     branches:
       include:
         - main
@@ -17,7 +17,7 @@ resources:
     - repository: dtos-devops-templates
       type: github
       name: NHSDigital/dtos-devops-templates
-      ref: aa87e2c36c4c3c88d4aeadcef6813e464d68621d
+      ref: 9a7d058c1e6bad2b8aeb2ebb0ece7faf967a2413
       endpoint: NHSDigital
 
 variables:
@@ -36,8 +36,7 @@ stages:
         pool:
           name: private-pool-dev-uks
         variables:
-          - name: tfVarsFile
-            value: environments/development.tfvars
+          tfVarsFile: environments/development.tfvars
         steps:
           - checkout: self
           - checkout: dtos-devops-templates
@@ -49,7 +48,7 @@ stages:
               targetType: inline
               script: |
                 set -eo pipefail
-                acr_names="$(terraform -chdir=$(TF_DIRECTORY) show -json | jq -r '[.values.root_module.child_modules[] | .resources[]? | select(.type == "azurerm_container_registry") | .values.name] | join(" ")')"
+                acr_names="$(terraform -chdir="$(TF_DIRECTORY)" show -json | jq -r '[.values.root_module.child_modules[] | .resources[]? | select(.type == "azurerm_container_registry") | .values.name] | join(" ")')"
                 [[ -n "${acr_names}" ]] && echo "Found the following Azure Container Registries: ${acr_names}"
                 echo "##vso[task.setvariable variable=acrNames;isoutput=true]${acr_names}"
 

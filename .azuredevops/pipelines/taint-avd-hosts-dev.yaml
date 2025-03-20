@@ -1,0 +1,93 @@
+---
+
+name: $(Build.SourceBranchName)-$(Date:yyyyMMdd)_$(Rev:r)
+trigger: none
+pr: none
+
+resources:
+  repositories:
+    - repository: dtos-devops-templates
+      type: github
+      name: NHSDigital/dtos-devops-templates
+      ref: 9a7d058c1e6bad2b8aeb2ebb0ece7faf967a2413
+      endpoint: NHSDigital
+
+variables:
+  - group: DEV_hub_backend
+  - name: TF_DIRECTORY
+    value: $(System.DefaultWorkingDirectory)/$(System.TeamProject)/infrastructure
+  - name: TF_VERSION
+    value: 1.9.2
+  - name: MANAGED_DEVOPS_POOL
+    value: private-pool-dev-uks
+  - name: ENVIRONMENT
+    value: development
+
+stages:
+  - stage: taint_avd_hosts
+    displayName: Taint AVD Session Hosts for replacement
+    jobs:
+      - job: get_session_hosts
+        displayName: Get session hosts
+        pool:
+          name: $(MANAGED_DEVOPS_POOL)
+        variables:
+          tfVarsFile: environments/$(ENVIRONMENT).tfvars
+        steps:
+          - checkout: self
+          - checkout: dtos-devops-templates
+          - template: .azuredevops/templates/steps/tf_init.yaml@dtos-devops-templates
+          - task: Bash@3
+            name: tfstate
+            displayName: Read Terraform state
+            inputs:
+              targetType: inline
+              script: |
+                set -eo pipefail
+                num_session_hosts=$(terraform -chdir="$(TF_DIRECTORY)" state list | grep "random_string\.suffix" | wc -l)
+                num_session_hosts=${num_session_hosts// /}
+                echo -e "\nFound ${num_session_hosts} AVD Session Hosts in Terraform state."
+                echo "##vso[task.setvariable variable=NUM_SESSION_HOSTS;isOutput=true]${num_session_hosts}"
+
+      - job: manual_approval
+        displayName: Manual approval
+        dependsOn: get_session_hosts
+        condition: and(succeeded(), gt(dependencies.get_session_hosts.outputs['tfstate.NUM_SESSION_HOSTS'], 0))
+        pool: server  # Agentless job
+        variables:
+          NUM_SESSION_HOSTS: $[ dependencies.get_session_hosts.outputs['tfstate.NUM_SESSION_HOSTS'] ]
+        steps:
+          - task: ManualValidation@0
+            displayName: Confirm tainting
+            timeoutInMinutes: 10
+            inputs:
+              instructions: |
+                Please confirm to Terraform taint $(NUM_SESSION_HOSTS) AVD Session Hosts.
+
+                They will be rebuilt from their OS image on next deployment pipeline run. The hosts must be running to be destroyed, so disable the scaling plan and power them up before running the pipeline.
+              notifyUsers: ''
+
+      - job: taint_resources
+        displayName: Taint resources
+        dependsOn:
+          - get_session_hosts
+          - manual_approval
+        condition: and(succeeded(), gt(dependencies.get_session_hosts.outputs['tfstate.NUM_SESSION_HOSTS'], 0))
+        pool:
+          name: $(MANAGED_DEVOPS_POOL)
+        variables:
+          NUM_SESSION_HOSTS: $[ dependencies.get_session_hosts.outputs['tfstate.NUM_SESSION_HOSTS'] ]
+        steps:
+          - checkout: self
+          - checkout: dtos-devops-templates
+          - template: .azuredevops/templates/steps/tf_init.yaml@dtos-devops-templates
+          - task: Bash@3
+            name: taint
+            displayName: Terraform taint
+            inputs:
+              targetType: inline
+              script: |
+                set -eo pipefail
+                for i in $(seq 0 $(( $(NUM_SESSION_HOSTS) - 1 ))); do
+                  terraform -chdir="$(TF_DIRECTORY)" taint "module.virtual-desktop[\"uksouth\"].random_string.suffix[$i]"
+                done

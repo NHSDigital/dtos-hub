@@ -2,6 +2,8 @@ application = "hub"
 environment = "PROD"
 env_type    = "live"
 
+attached_environments = ["pre", "prd"]
+
 projects = {
   dtos-cohort-manager = {
     full_name  = "cohort-manager"
@@ -148,11 +150,13 @@ avd_maximum_sessions_allowed = 6 # per session host
 avd_vm_size                  = "Standard_D4as_v5"
 avd_users_group_name         = "DToS-hub-prod-uks-hub-virtual-desktop-User-Login"
 avd_admins_group_name        = "DToS-hub-prod-uks-hub-virtual-desktop-User-ADMIN-Login"
-avd_source_image_from_gallery = {
-  image_name      = "gi_wvd"
-  gallery_name    = "rg_hub_prod_uks_compute_gallery"
-  gallery_rg_name = "rg-hub-prod-uks-hub-virtual-desktop"
-}
+# AVD_SOURCE_IMAGE_ID will be set by ADO variable group to allow deployment from another subscription
+#
+# avd_source_image_from_gallery = {
+#   image_name      = "gi_wvd"
+#   gallery_name    = "rg_hub_prod_uks_compute_gallery"
+#   gallery_rg_name = "rg-hub-prod-uks-hub-virtual-desktop"
+# }
 # avd_source_image_reference = {
 #   offer     = "windows-11"
 #   publisher = "microsoftwindowsdesktop"
@@ -414,6 +418,15 @@ network_security_group_rules = {
       destination_address_prefix = "Storage"
     }
   ]
+}
+
+event_grid_defaults = {
+  identity_ids                  = []
+  identity_type                 = "SystemAssigned"
+  inbound_ip_rules              = []
+  input_schema                  = {}
+  local_auth_enabled            = true
+  public_network_access_enabled = false
 }
 
 tags = {

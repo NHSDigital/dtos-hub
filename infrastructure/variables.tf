@@ -1,6 +1,7 @@
-variable "attached_environments" {
-  description = "Configuration of the Log Analytics Workspace"
-  type        = list(string)
+variable "AVD_SOURCE_IMAGE_ID" {
+  description = "Source OS image for AVD Session Hosts, allows deployment from an Azure Compute Gallery in a remote subscription. Remember to grant 'Compute Gallery Image Reader' RBAC role."
+  type        = string
+  default     = null
 }
 
 variable "HUB_BACKEND_AZURE_STORAGE_ACCOUNT_NAME" {
@@ -56,6 +57,11 @@ variable "apim_config" {
     })
     tags = map(string)
   })
+}
+
+variable "attached_environments" {
+  description = "Configuration of the Log Analytics Workspace"
+  type        = list(string)
 }
 
 variable "avd_users_group_name" {
@@ -131,6 +137,26 @@ variable "environment" {
 variable "env_type" {
   description = "Environment grouping for shared hub (live/non-live)"
   type        = string
+}
+
+variable "event_grid_configs" {
+  type    = map(any) # needs to be a loose type definition to allow merging of var.event_grid_configs
+  default = {}
+}
+
+variable "event_grid_defaults" {
+  description = "Default configuration for the Event Grid resource"
+  type = object({
+    identity_ids  = list(string)
+    identity_type = string
+    inbound_ip_rules = list(object({
+      ip_mask = string
+      action  = string
+    }))
+    input_schema                  = map(string)
+    local_auth_enabled            = bool
+    public_network_access_enabled = bool
+  })
 }
 
 variable "eventhub_namespaces" {
@@ -279,25 +305,6 @@ variable "regions" {
   }))
 }
 
-variable "event_grid_configs" {
-  type = map(any) # needs to be a loose type definition to allow merging of var.event_grid_configs
-}
-
-variable "event_grid_defaults" {
-  description = "Default configuration for the Event Grid resource"
-  type = object({
-    identity_ids  = list(string)
-    identity_type = string
-    inbound_ip_rules = list(object({
-      ip_mask = string
-      action  = string
-    }))
-    input_schema                  = map(string)
-    local_auth_enabled            = bool
-    public_network_access_enabled = bool
-  })
-}
-
 variable "storage_accounts" {
   description = "Configuration for the Storage Account, currently used for Function Apps"
   type = map(object({
@@ -310,6 +317,7 @@ variable "storage_accounts" {
       container_access_type = optional(string, "private")
     })), {})
   }))
+  default = {}
 }
 
 variable "tags" {

@@ -47,6 +47,20 @@ projects = {
     }
   }
 
+  dtos-service-insights-temp = {
+    full_name  = "service-insights"
+    short_name = "serinstemp"
+    acr = {
+      sku                           = "Standard"
+      admin_enabled                 = false
+      uai_name                      = "dtos-service-insights-acr-temp-push"
+      public_network_access_enabled = true
+    }
+    tags = {
+      Project = "DToS Service Insights"
+    }
+  }
+
   dtos-participant-manager = {
     full_name  = "participant-manager"
     short_name = "parman"

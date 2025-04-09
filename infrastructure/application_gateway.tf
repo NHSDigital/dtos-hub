@@ -21,6 +21,9 @@ locals {
         apim_gateway = {
           fqdns = ["gateway.${var.dns_zone_name_private}"]
         }
+        parman_www_dev = {
+          fqdns = ["dev-${module.config[region].names.location_code}-nextjs-frontend.azurewebsites.net"]
+        }
       }
 
       probe = {
@@ -47,15 +50,19 @@ locals {
         }
       }
 
-      # Introducing more than one backend_http_settings block using https protocol will result in
-      # "unexpected status 400 (400 Bad Request) with error: InvalidRequestFormat: Cannot parse the request."
-      # despite that this is a valid configuration via Portal.
       backend_http_settings = {
         apim_gateway = {
           cookie_based_affinity               = "Disabled"
           pick_host_name_from_backend_address = true # allows this backend_http_settings to be shared by multiple rules
           port                                = 443
           probe_key                           = "apim_gateway" # the probe however is gateway-specific (which is the most important APIM URL)
+          protocol                            = "Https"
+          request_timeout                     = 180
+        }
+        parman_www_dev = {
+          cookie_based_affinity               = "Disabled"
+          pick_host_name_from_backend_address = true # allows this backend_http_settings to be shared by multiple rules
+          port                                = 443
           protocol                            = "Https"
           request_timeout                     = 180
         }
@@ -79,6 +86,15 @@ locals {
           require_sni                   = true
           ssl_certificate_key           = "private"
         }
+        parman_www_dev_public = {
+          frontend_ip_configuration_key = "public"
+          frontend_port_key             = "https"
+          host_name                     = "www-dev.${var.dns_zone_name_public}"
+          protocol                      = "Https"
+          require_sni                   = true
+          ssl_certificate_key           = "public"
+          firewall_policy_id            = var.WAF_POLICY_ID_PARMAN_WEB
+        }
       }
 
       request_routing_rule = {
@@ -87,6 +103,13 @@ locals {
           backend_http_settings_key = "apim_gateway"
           http_listener_key         = "apim_gateway_public"
           priority                  = 900
+          rule_type                 = "Basic"
+        }
+        parman_www_dev_public = {
+          backend_address_pool_key  = "parman_www_dev"
+          backend_http_settings_key = "parman_www_dev"
+          http_listener_key         = "parman_www_dev_public"
+          priority                  = 950
           rule_type                 = "Basic"
         }
         apim_gateway_private = {

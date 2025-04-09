@@ -30,6 +30,11 @@ variable "WAF_POLICY_ID_APIM_GATEWAY" {
   type        = string
 }
 
+variable "WAF_POLICY_ID_PARMAN_WEB" {
+  description = "ID of the WAF policy which will be bound to the Application Gateway listener for Participant Manager Frontend"
+  type        = string
+}
+
 variable "application" {
   description = "Project/Application code for deployment"
   type        = string

@@ -53,15 +53,15 @@ locals {
       backend_http_settings = {
         apim_gateway = {
           cookie_based_affinity               = "Disabled"
-          pick_host_name_from_backend_address = true # allows this backend_http_settings to be shared by multiple rules
+          pick_host_name_from_backend_address = true
           port                                = 443
-          probe_key                           = "apim_gateway" # the probe however is gateway-specific (which is the most important APIM URL)
+          probe_key                           = "apim_gateway"
           protocol                            = "Https"
           request_timeout                     = 180
         }
         parman_www_dev = {
           cookie_based_affinity               = "Disabled"
-          pick_host_name_from_backend_address = true # allows this backend_http_settings to be shared by multiple rules
+          pick_host_name_from_backend_address = false
           port                                = 443
           protocol                            = "Https"
           request_timeout                     = 180

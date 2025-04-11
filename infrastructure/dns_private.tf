@@ -34,7 +34,7 @@ module "private_dns_resolver" {
 
 locals {
   private_dns_zones = {
-    national_screening          = var.dns_zone_name_private
+    national_screening          = var.dns_zone_name_private.nationalscreening
     container_registry          = "privatelink.azurecr.io"
     app_insights                = var.private_dns_zones.is_app_insights_private_dns_zone_enabled ? "privatelink.monitor.azure.com" : null
     automation                  = var.private_dns_zones.is_app_insights_private_dns_zone_enabled ? "privatelink.agentsvc.azure-automation.net" : null
@@ -111,7 +111,7 @@ module "private-dns-a-records" {
 
   name                = each.value.name
   resource_group_name = resource.azurerm_resource_group.private_dns_rg[each.value.region].name
-  zone_name           = var.dns_zone_name_private
+  zone_name           = var.dns_zone_name_private.nationalscreening
   ttl                 = 300
   records             = each.value.records
 

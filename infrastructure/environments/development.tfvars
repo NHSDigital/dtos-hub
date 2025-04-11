@@ -140,6 +140,46 @@ regions = {
   }
 }
 
+application_gateway_additional = {
+  backend_http_settings = {
+    parman_www_dev = {
+      cookie_based_affinity               = "Disabled"
+      pick_host_name_from_backend_address = false
+      port                                = 443
+      protocol                            = "Https"
+      request_timeout                     = 180
+    }
+  }
+  http_listener = {
+    parman_www_dev_public = {
+      frontend_ip_configuration_key = "public"
+      frontend_port_key             = "https"
+      host_name                     = "www-dev.non-live.screening.nhs.uk"
+      protocol                      = "Https"
+      require_sni                   = true
+      ssl_certificate_key           = "screening_public"
+      firewall_policy_id            = "/subscriptions/ecef17e1-613b-40b6-83d8-b93e8b5556bf/resourceGroups/rg-hub-dev-uks-hub-networking/providers/Microsoft.Network/applicationGatewayWebApplicationFirewallPolicies/waf-hub-nonlive-uks-agw-parman-www"
+    }
+  }
+  request_routing_rule = {
+    parman_www_dev_public = {
+      backend_address_pool_key  = "parman_www_dev"
+      backend_http_settings_key = "parman_www_dev"
+      http_listener_key         = "parman_www_dev_public"
+      priority                  = 950
+      rule_type                 = "Basic"
+    }
+  }
+}
+
+application_gateway_additional_backend_address_pool_by_region = {
+  uksouth = {
+    parman_www_dev = {
+      fqdns = ["dev-uks-nextjs-frontend.azurewebsites.net"]
+    }
+  }
+}
+
 apim_config = {
   sku_name                    = "Developer"
   sku_capacity                = 1
@@ -173,8 +213,14 @@ avd_source_image_from_gallery = {
   gallery_rg_name = "rg-hub-dev-uks-hub-virtual-desktop"
 }
 
-dns_zone_name_private   = "private.non-live.nationalscreening.nhs.uk"
-dns_zone_name_public    = "non-live.nationalscreening.nhs.uk"
+dns_zone_name_private = {
+  nationalscreening = "private.non-live.nationalscreening.nhs.uk"
+  screening         = "private.non-live.screening.nhs.uk"
+}
+dns_zone_name_public = {
+  nationalscreening = "non-live.nationalscreening.nhs.uk"
+  screening         = "non-live.screening.nhs.uk"
+}
 dns_zone_rg_name_public = "rg-hub-dev-uks-public-dns-zones"
 
 diagnostic_settings = {
@@ -182,8 +228,10 @@ diagnostic_settings = {
 }
 
 lets_encrypt_certificates = {
-  wildcard         = "*.non-live.nationalscreening.nhs.uk"
-  wildcard_private = "*.private.non-live.nationalscreening.nhs.uk"
+  nationalscreening_wildcard         = "*.non-live.nationalscreening.nhs.uk"
+  nationalscreening_wildcard_private = "*.private.non-live.nationalscreening.nhs.uk"
+  screening_wildcard                 = "test1.non-live.screening.nhs.uk"
+  screening_wildcard_private         = "test1.private.non-live.screening.nhs.uk"
 }
 
 firewall_config = {

@@ -164,8 +164,14 @@ avd_admins_group_name        = "DToS-hub-prod-uks-hub-virtual-desktop-User-ADMIN
 #   version   = "latest"
 # }
 
-dns_zone_name_private   = "private.nationalscreening.nhs.uk"
-dns_zone_name_public    = "nationalscreening.nhs.uk"
+dns_zone_name_private = {
+  nationalscreening = "private.nationalscreening.nhs.uk"
+  screening         = "private.screening.nhs.uk"
+}
+dns_zone_name_public = {
+  nationalscreening = "nationalscreening.nhs.uk"
+  screening         = "screening.nhs.uk"
+}
 dns_zone_rg_name_public = "rg-hub-prod-uks-public-dns-zones"
 
 eventhub_namespaces = {
@@ -228,8 +234,10 @@ eventhub_namespaces = {
 }
 
 lets_encrypt_certificates = {
-  wildcard         = "*.nationalscreening.nhs.uk"
-  wildcard_private = "*.private.nationalscreening.nhs.uk"
+  nationalscreening_wildcard         = "*.nationalscreening.nhs.uk"
+  nationalscreening_wildcard_private = "*.private.nationalscreening.nhs.uk"
+  screening_wildcard                 = "*.screening.nhs.uk"
+  screening_wildcard_private         = "*.private.screening.nhs.uk"
 }
 
 firewall_config = {

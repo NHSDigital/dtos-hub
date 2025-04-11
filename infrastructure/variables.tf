@@ -35,12 +35,6 @@ variable "WAF_POLICY_ID_PARMAN_WEB" {
   type        = string
 }
 
-variable "application" {
-  description = "Project/Application code for deployment"
-  type        = string
-  default     = "hub"
-}
-
 variable "apim_config" {
   description = "Configuration for API Management"
   type = object({
@@ -62,6 +56,22 @@ variable "apim_config" {
     })
     tags = map(string)
   })
+}
+
+variable "application" {
+  description = "Project/Application code for deployment"
+  type        = string
+  default     = "hub"
+}
+
+variable "application_gateway_additional" {
+  type    = map(any)
+  default = {}
+}
+
+variable "application_gateway_additional_backend_address_pool_by_region" {
+  type    = map(any)
+  default = {}
 }
 
 variable "attached_environments" {
@@ -122,12 +132,14 @@ variable "diagnostic_settings" {
   })
 }
 
-variable "dns_zone_name_public" {
-  type = string
+variable "dns_zone_name_private" {
+  type        = map(string)
+  description = "Map of zone identifiers to their full private DNS zone names"
 }
 
-variable "dns_zone_name_private" {
-  type = string
+variable "dns_zone_name_public" {
+  type        = map(string)
+  description = "Map of zone identifiers to their full public DNS zone names"
 }
 
 variable "dns_zone_rg_name_public" {

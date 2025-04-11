@@ -14,7 +14,7 @@ module "appgw-dns-a-records" {
 
   name                = each.key
   resource_group_name = var.dns_zone_rg_name_public
-  zone_name           = var.dns_zone_name_public
+  zone_name           = var.dns_zone_name_public.nationalscreening
   ttl                 = 300
   target_resource_id  = module.application-gateway-pip[local.primary_region].id
 

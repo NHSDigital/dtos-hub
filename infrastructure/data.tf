@@ -8,6 +8,10 @@ data "azuread_group" "avd_admins" {
   display_name = var.avd_admins_group_name
 }
 
+data "azuread_service_principal" "MicrosoftWebApp" {
+  application_id = "abfa0a7c-a6b6-4736-8310-5855508787cd"
+}
+
 data "azurerm_key_vault_secret" "object-id" {
   for_each     = var.regions
   name         = "dtos-apim-object-id"

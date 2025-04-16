@@ -97,3 +97,22 @@ resource "azurerm_key_vault_access_policy" "apim" {
     "List"
   ]
 }
+
+# For App Services Custom Domain certificate bindings
+resource "azurerm_key_vault_access_policy" "app_services" {
+  for_each = var.regions
+
+  key_vault_id = module.key_vault[each.key].key_vault_id
+  tenant_id    = data.azurerm_client_config.current.tenant_id
+  object_id    = data.azuread_service_principal.MicrosoftWebApp.object_id
+
+  secret_permissions = [
+    "Get",
+    "List"
+  ]
+
+  certificate_permissions = [
+    "Get",
+    "List"
+  ]
+}

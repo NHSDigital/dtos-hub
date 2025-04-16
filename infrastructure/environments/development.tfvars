@@ -141,23 +141,35 @@ regions = {
 }
 
 application_gateway_additional = {
+  probe = {
+    parman_www_dev = {
+      host                = "www-dev.non-live.nationalscreening.nhs.uk" # the hostname which will be passed to the backend pool, not used for connectivity
+      interval            = 30
+      path                = "/"
+      protocol            = "Https"
+      timeout             = 30
+      unhealthy_threshold = 3
+      match = {
+        status_code = ["200-399"] # not strictly needed, but this stops Terraform detecting a change every time
+      }
+    }
+  }
   backend_http_settings = {
     parman_www_dev = {
-      cookie_based_affinity               = "Disabled"
-      pick_host_name_from_backend_address = false
-      port                                = 443
-      protocol                            = "Https"
-      request_timeout                     = 180
+      cookie_based_affinity = "Disabled"
+      port                  = 443
+      protocol              = "Https"
+      request_timeout       = 20
     }
   }
   http_listener = {
     parman_www_dev_public = {
       frontend_ip_configuration_key = "public"
       frontend_port_key             = "https"
-      host_name                     = "www-dev.non-live.screening.nhs.uk"
+      host_name                     = "www-dev.non-live.nationalscreening.nhs.uk"
       protocol                      = "Https"
       require_sni                   = true
-      ssl_certificate_key           = "screening_public"
+      ssl_certificate_key           = "nationalscreening_public"
       firewall_policy_id            = "/subscriptions/ecef17e1-613b-40b6-83d8-b93e8b5556bf/resourceGroups/rg-hub-dev-uks-hub-networking/providers/Microsoft.Network/applicationGatewayWebApplicationFirewallPolicies/waf-hub-nonlive-uks-agw-parman-www"
     }
   }
@@ -215,11 +227,11 @@ avd_source_image_from_gallery = {
 
 dns_zone_name_private = {
   nationalscreening = "private.non-live.nationalscreening.nhs.uk"
-  screening         = "private.non-live.screening.nhs.uk"
+  screening         = "private.pamo16test.screening.nhs.uk"
 }
 dns_zone_name_public = {
   nationalscreening = "non-live.nationalscreening.nhs.uk"
-  screening         = "non-live.screening.nhs.uk"
+  screening         = "pamo16test.screening.nhs.uk"
 }
 dns_zone_rg_name_public = "rg-hub-dev-uks-public-dns-zones"
 
@@ -230,8 +242,8 @@ diagnostic_settings = {
 lets_encrypt_certificates = {
   nationalscreening_wildcard         = "*.non-live.nationalscreening.nhs.uk"
   nationalscreening_wildcard_private = "*.private.non-live.nationalscreening.nhs.uk"
-  screening_wildcard                 = "test1.non-live.screening.nhs.uk"
-  screening_wildcard_private         = "test1.private.non-live.screening.nhs.uk"
+  screening_wildcard                 = "*.pamo16test.screening.nhs.uk"
+  screening_wildcard_private         = "*.private.pamo16test.screening.nhs.uk"
 }
 
 firewall_config = {

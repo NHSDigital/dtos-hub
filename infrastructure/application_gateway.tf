@@ -26,20 +26,22 @@ locals {
         try(var.application_gateway_additional_backend_address_pool_by_region[region], null)
       )
 
-      probe = {
-        apim_gateway = {
-          interval                                  = 30
-          path                                      = "/status-0123456789abcdef"
-          pick_host_name_from_backend_http_settings = true
-          port                                      = 443
-          protocol                                  = "Https"
-          timeout                                   = 120
-          unhealthy_threshold                       = 8
-          match = {
-            status_code = ["200-399"] # not strictly needed, but this stops Terraform detecting a change every time
+      probe = merge(
+        {
+          apim_gateway = {
+            host                = "api.${var.dns_zone_name_public.nationalscreening}" # the hostname which will be passed to the backend pool, not used for connectivity
+            interval            = 30
+            path                = "/status-0123456789abcdef"
+            protocol            = "Https"
+            timeout             = 120
+            unhealthy_threshold = 8
+            match = {
+              status_code = ["200-399"] # not strictly needed, but this stops Terraform detecting a change every time
+            }
           }
-        }
-      }
+        },
+        try(var.application_gateway_additional.probe, {})
+      )
 
       ssl_certificate = {
         nationalscreening_private = {
@@ -59,12 +61,11 @@ locals {
       backend_http_settings = merge(
         {
           apim_gateway = {
-            cookie_based_affinity               = "Disabled"
-            pick_host_name_from_backend_address = true
-            port                                = 443
-            probe_key                           = "apim_gateway"
-            protocol                            = "Https"
-            request_timeout                     = 180
+            cookie_based_affinity = "Disabled"
+            port                  = 443
+            probe_key             = "apim_gateway"
+            protocol              = "Https"
+            request_timeout       = 180
           }
         },
         try(var.application_gateway_additional.backend_http_settings, {})

@@ -65,7 +65,57 @@ variable "application" {
 }
 
 variable "application_gateway_additional" {
-  type    = map(any)
+  type = object({
+    probe = optional(map(object({
+      host                                      = optional(string)
+      interval                                  = number
+      path                                      = string
+      pick_host_name_from_backend_http_settings = optional(bool)
+      protocol                                  = string
+      timeout                                   = number
+      unhealthy_threshold                       = number
+      minimum_servers                           = optional(number)
+      port                                      = optional(number)
+      match = optional(object({
+        status_code = list(string)
+        body        = optional(string)
+      }))
+    })))
+    backend_http_settings = optional(map(object({
+      cookie_based_affinity               = string
+      affinity_cookie_name                = optional(string)
+      path                                = optional(string)
+      port                                = number
+      probe_key                           = optional(string) # Since the names map is only interpolated inside the module, we have to pass in the probe key from the root module
+      protocol                            = string
+      request_timeout                     = optional(number)
+      host_name                           = optional(string)
+      pick_host_name_from_backend_address = optional(bool)
+      trusted_root_certificate_names      = optional(list(string))
+      connection_draining = optional(object({
+        enabled           = bool
+        drain_timeout_sec = number
+      }))
+    })))
+    http_listener = optional(map(object({
+      host_name                     = optional(string)
+      host_names                    = optional(list(string), [])
+      firewall_policy_id            = optional(string)
+      frontend_ip_configuration_key = string
+      frontend_port_key             = string
+      protocol                      = string
+      require_sni                   = optional(bool, false)
+      ssl_certificate_key           = optional(string)
+      ssl_profile_name              = optional(string)
+    })))
+    request_routing_rule = optional(map(object({
+      backend_address_pool_key  = string
+      backend_http_settings_key = string
+      http_listener_key         = string
+      priority                  = number
+      rule_type                 = string
+    })))
+  })
   default = {}
 }
 

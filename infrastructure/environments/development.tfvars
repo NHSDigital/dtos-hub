@@ -158,6 +158,7 @@ application_gateway_additional = {
     parman_www_dev = {
       cookie_based_affinity = "Disabled"
       port                  = 443
+      probe_key             = "parman_www_dev"
       protocol              = "Https"
       request_timeout       = 20
     }
@@ -242,8 +243,8 @@ diagnostic_settings = {
 lets_encrypt_certificates = {
   nationalscreening_wildcard         = "*.non-live.nationalscreening.nhs.uk"
   nationalscreening_wildcard_private = "*.private.non-live.nationalscreening.nhs.uk"
-  screening_wildcard                 = "*.pamo16test.screening.nhs.uk"
-  screening_wildcard_private         = "*.private.pamo16test.screening.nhs.uk"
+  screening_wildcard                 = "test99.non-live.nationalscreening.nhs.uk"
+  screening_wildcard_private         = "test99.private.non-live.nationalscreening.nhs.uk"
 }
 
 firewall_config = {

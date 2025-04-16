@@ -6,23 +6,23 @@ agent_profile_resource_predictions_manual = {
   "days_data" : [
     {}, # Sunday
     {
-      "08:00:00" : 2, # Monday
+      "08:00:00" : 4, # Monday
       "19:00:00" : 0
     },
     {
-      "08:00:00" : 2, # Tuesday
+      "08:00:00" : 4, # Tuesday
       "19:00:00" : 0
     },
     {
-      "08:00:00" : 2, # Wednesday
+      "08:00:00" : 4, # Wednesday
       "19:00:00" : 0
     },
     {
-      "08:00:00" : 2, # Thursday
+      "08:00:00" : 4, # Thursday
       "19:00:00" : 0
     },
     {
-      "08:00:00" : 2, # Friday
+      "08:00:00" : 4, # Friday
       "19:00:00" : 0
     },
     {} # Saturday

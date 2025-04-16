@@ -8,8 +8,10 @@ data "azuread_group" "avd_admins" {
   display_name = var.avd_admins_group_name
 }
 
-data "azuread_service_principal" "MicrosoftWebApp" {
-  application_id = "abfa0a7c-a6b6-4736-8310-5855508787cd"
+# This client id is the same for all Azure customers - it is not a secret.
+# https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/app_service_certificate
+data "azuread_service_principal" "MicrosoftAzureAppService" {
+  client_id = "abfa0a7c-a6b6-4736-8310-5855508787cd"
 }
 
 data "azurerm_key_vault_secret" "object-id" {

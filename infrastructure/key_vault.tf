@@ -98,21 +98,19 @@ resource "azurerm_key_vault_access_policy" "apim" {
   ]
 }
 
-# For App Services Custom Domain certificate bindings
-resource "azurerm_key_vault_access_policy" "app_services" {
+# For App Services Custom Domain certificate bindings - once only, hence in Hub state
+resource "azurerm_key_vault_access_policy" "MicrosoftAzureAppService" {
   for_each = var.regions
 
   key_vault_id = module.key_vault[each.key].key_vault_id
   tenant_id    = data.azurerm_client_config.current.tenant_id
-  object_id    = data.azuread_service_principal.MicrosoftWebApp.object_id
+  object_id    = data.azuread_service_principal.MicrosoftAzureAppService.object_id
 
   secret_permissions = [
-    "Get",
-    "List"
+    "Get"
   ]
 
   certificate_permissions = [
-    "Get",
-    "List"
+    "Get"
   ]
 }

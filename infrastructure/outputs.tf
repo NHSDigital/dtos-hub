@@ -19,8 +19,8 @@ output "key_vault" {
   value = module.key_vault
 }
 
-output "certificates" {
-  value = module.lets_encrypt_certificate
+output "key_vault_certificates" {
+  value = module.lets_encrypt_certificate.key_vault_certificates
 }
 
 # output "private_dns_rg_name" {

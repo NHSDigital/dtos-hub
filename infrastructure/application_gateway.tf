@@ -23,7 +23,7 @@ locals {
             fqdns = ["gateway.${var.dns_zone_name_private.nationalscreening}"]
           }
         },
-        try(var.application_gateway_additional_backend_address_pool_by_region[region], null)
+        try(var.application_gateway_additional_backend_address_pool_by_region[region], {})
       )
 
       probe = merge(

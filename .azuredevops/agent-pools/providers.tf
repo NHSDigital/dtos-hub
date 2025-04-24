@@ -1,17 +1,17 @@
 terraform {
-  required_version = "~> 1.9"
+  required_version = ">= 1.9"
 
   backend "azurerm" {}
 
   required_providers {
     azapi = {
-      version = "~> 1.14" # managed_devops_pool module requires this
       source  = "azure/azapi"
+      version = ">= 1.13, < 3" # managed_devops_pool module requires this
     }
 
     azurerm = {
-      version = "~> 3.71" # managed_devops_pool module requires this
       source  = "hashicorp/azurerm"
+      version = "4.26"
     }
   }
 }

@@ -6,7 +6,7 @@ module "managed_devops_pool" {
   resource_group_name                         = azurerm_resource_group.dev_center_rg[each.key].name
   location                                    = each.key
   name                                        = module.config[each.key].names.managed-devops-pool
-  dev_center_project_resource_id              = azapi_resource.dev_center_project[each.key].id
+  dev_center_project_resource_id              = azurerm_dev_center_project.this[each.key].id
   agent_profile_kind                          = var.agent_profile_kind
   agent_profile_max_agent_lifetime            = var.agent_profile_max_agent_lifetime
   agent_profile_resource_prediction_profile   = var.agent_profile_resource_prediction_profile

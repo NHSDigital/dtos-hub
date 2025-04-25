@@ -48,6 +48,7 @@ locals {
     key_vault                   = var.private_dns_zones.is_key_vault_private_dns_zone_enabled ? "privatelink.vaultcore.azure.net" : null
     storage_blob                = var.private_dns_zones.is_storage_private_dns_zone_enabled ? "privatelink.blob.core.windows.net" : null
     storage_queue               = var.private_dns_zones.is_storage_private_dns_zone_enabled ? "privatelink.queue.core.windows.net" : null
+    storage_table               = var.private_dns_zones.is_storage_private_dns_zone_enabled ? "privatelink.table.core.windows.net" : null
     event_hub                   = var.private_dns_zones.is_event_hub_private_dns_zone_enabled ? "privatelink.servicebus.windows.net" : null
   }
 

@@ -17,86 +17,102 @@ locals {
         }
       }
 
-      backend_address_pool = {
-        apim_gateway = {
-          fqdns = ["gateway.${var.dns_zone_name_private}"]
-        }
-      }
-
-      probe = {
-        apim_gateway = {
-          interval                                  = 30
-          path                                      = "/status-0123456789abcdef"
-          pick_host_name_from_backend_http_settings = true
-          port                                      = 443
-          protocol                                  = "Https"
-          timeout                                   = 120
-          unhealthy_threshold                       = 8
-          match = {
-            status_code = ["200-399"] # not strictly needed, but this stops Terraform detecting a change every time
+      backend_address_pool = merge(
+        {
+          apim_gateway = {
+            fqdns = ["gateway.${var.dns_zone_name_private.nationalscreening}"]
           }
-        }
-      }
+        },
+        try(var.application_gateway_additional_backend_address_pool_by_region[region], {})
+      )
+
+      probe = merge(
+        {
+          apim_gateway = {
+            host                = "api.${var.dns_zone_name_public.nationalscreening}" # the hostname which will be passed to the backend pool, not used for connectivity
+            interval            = 30
+            path                = "/status-0123456789abcdef"
+            protocol            = "Https"
+            timeout             = 120
+            unhealthy_threshold = 8
+            match = {
+              status_code = ["200-399"] # not strictly needed, but this stops Terraform detecting a change every time
+            }
+          }
+        },
+        try(var.application_gateway_additional.probe, {})
+      )
 
       ssl_certificate = {
-        private = {
-          key_vault_secret_id = module.lets_encrypt_certificate.key_vault_certificates["wildcard_private-${region}"].versionless_secret_id
+        nationalscreening_private = {
+          key_vault_secret_id = module.lets_encrypt_certificate.key_vault_certificates["nationalscreening_wildcard_private-${region}"].versionless_secret_id
         }
-        public = {
-          key_vault_secret_id = module.lets_encrypt_certificate.key_vault_certificates["wildcard-${region}"].versionless_secret_id
+        nationalscreening_public = {
+          key_vault_secret_id = module.lets_encrypt_certificate.key_vault_certificates["nationalscreening_wildcard-${region}"].versionless_secret_id
         }
-      }
-
-      # Introducing more than one backend_http_settings block using https protocol will result in
-      # "unexpected status 400 (400 Bad Request) with error: InvalidRequestFormat: Cannot parse the request."
-      # despite that this is a valid configuration via Portal.
-      backend_http_settings = {
-        apim_gateway = {
-          cookie_based_affinity               = "Disabled"
-          pick_host_name_from_backend_address = true # allows this backend_http_settings to be shared by multiple rules
-          port                                = 443
-          probe_key                           = "apim_gateway" # the probe however is gateway-specific (which is the most important APIM URL)
-          protocol                            = "Https"
-          request_timeout                     = 180
+        screening_private = {
+          key_vault_secret_id = module.lets_encrypt_certificate.key_vault_certificates["screening_wildcard_private-${region}"].versionless_secret_id
+        }
+        screening_public = {
+          key_vault_secret_id = module.lets_encrypt_certificate.key_vault_certificates["screening_wildcard-${region}"].versionless_secret_id
         }
       }
 
-      http_listener = {
-        apim_gateway_public = {
-          frontend_ip_configuration_key = "public"
-          frontend_port_key             = "https"
-          host_name                     = "api.${var.dns_zone_name_public}"
-          protocol                      = "Https"
-          require_sni                   = true
-          ssl_certificate_key           = "public"
-          firewall_policy_id            = var.WAF_POLICY_ID_APIM_GATEWAY
-        }
-        apim_gateway_private = {
-          frontend_ip_configuration_key = "private"
-          frontend_port_key             = "https"
-          host_name                     = "api.${var.dns_zone_name_private}"
-          protocol                      = "Https"
-          require_sni                   = true
-          ssl_certificate_key           = "private"
-        }
-      }
+      backend_http_settings = merge(
+        {
+          apim_gateway = {
+            cookie_based_affinity = "Disabled"
+            port                  = 443
+            probe_key             = "apim_gateway"
+            protocol              = "Https"
+            request_timeout       = 180
+          }
+        },
+        try(var.application_gateway_additional.backend_http_settings, {})
+      )
 
-      request_routing_rule = {
-        apim_gateway_public = {
-          backend_address_pool_key  = "apim_gateway"
-          backend_http_settings_key = "apim_gateway"
-          http_listener_key         = "apim_gateway_public"
-          priority                  = 900
-          rule_type                 = "Basic"
-        }
-        apim_gateway_private = {
-          backend_address_pool_key  = "apim_gateway"
-          backend_http_settings_key = "apim_gateway"
-          http_listener_key         = "apim_gateway_private"
-          priority                  = 1000
-          rule_type                 = "Basic"
-        }
-      }
+      http_listener = merge(
+        {
+          apim_gateway_public = {
+            frontend_ip_configuration_key = "public"
+            frontend_port_key             = "https"
+            host_name                     = "api.${var.dns_zone_name_public.nationalscreening}"
+            protocol                      = "Https"
+            require_sni                   = true
+            ssl_certificate_key           = "nationalscreening_public"
+            firewall_policy_id            = var.WAF_POLICY_ID_APIM_GATEWAY
+          }
+          apim_gateway_private = {
+            frontend_ip_configuration_key = "private"
+            frontend_port_key             = "https"
+            host_name                     = "api.${var.dns_zone_name_private.nationalscreening}"
+            protocol                      = "Https"
+            require_sni                   = true
+            ssl_certificate_key           = "nationalscreening_private"
+          }
+        },
+        try(var.application_gateway_additional.http_listener, {})
+      )
+
+      request_routing_rule = merge(
+        {
+          apim_gateway_public = {
+            backend_address_pool_key  = "apim_gateway"
+            backend_http_settings_key = "apim_gateway"
+            http_listener_key         = "apim_gateway_public"
+            priority                  = 900
+            rule_type                 = "Basic"
+          }
+          apim_gateway_private = {
+            backend_address_pool_key  = "apim_gateway"
+            backend_http_settings_key = "apim_gateway"
+            http_listener_key         = "apim_gateway_private"
+            priority                  = 1000
+            rule_type                 = "Basic"
+          }
+        },
+        try(var.application_gateway_additional.request_routing_rule, {})
+      )
     }
   }
 }

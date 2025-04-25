@@ -16,6 +16,10 @@ regexes = [
 ]
 
 [allowlist]
+regexes = [
+  # Microsoft App Service Client ID – safe to allow, same for every Azure customer
+  '''abfa0a7c-a6b6-4736-8310-5855508787cd'''
+]
 paths = [
   '''.terraform.lock.hcl''',
   '''poetry.lock''',

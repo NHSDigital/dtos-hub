@@ -13,7 +13,7 @@ resources:
     - repository: dtos-devops-templates
       type: github
       name: NHSDigital/dtos-devops-templates
-      ref: df90d146b723410018704616e67b4346c6d5b98c
+      ref: 44dca8d8a511e60e6f105ba44d0e643f62860d73
       endpoint: NHSDigital
 
 variables:
@@ -22,7 +22,7 @@ variables:
   - name: TF_DIRECTORY
     value: $(System.DefaultWorkingDirectory)/$(System.TeamProject)/.azuredevops/agent-pools
   - name: TF_VERSION
-    value: 1.9.2
+    value: 1.11.4
   - name: TF_PLAN_ARTIFACT
     value: tf_plan_agent_pool_art_PRD
   - name: ENVIRONMENT

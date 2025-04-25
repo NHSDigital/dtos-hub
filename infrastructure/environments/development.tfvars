@@ -140,6 +140,59 @@ regions = {
   }
 }
 
+application_gateway_additional = {
+  probe = {
+    parman_www_dev = {
+      host                = "www-dev.non-live.nationalscreening.nhs.uk" # the hostname which will be passed to the backend pool, not used for connectivity
+      interval            = 30
+      path                = "/"
+      protocol            = "Https"
+      timeout             = 30
+      unhealthy_threshold = 3
+      match = {
+        status_code = ["200-399"] # not strictly needed, but this stops Terraform detecting a change every time
+      }
+    }
+  }
+  backend_http_settings = {
+    parman_www_dev = {
+      cookie_based_affinity = "Disabled"
+      port                  = 443
+      probe_key             = "parman_www_dev"
+      protocol              = "Https"
+      request_timeout       = 20
+    }
+  }
+  http_listener = {
+    parman_www_dev_public = {
+      frontend_ip_configuration_key = "public"
+      frontend_port_key             = "https"
+      host_name                     = "www-dev.non-live.nationalscreening.nhs.uk"
+      protocol                      = "Https"
+      require_sni                   = true
+      ssl_certificate_key           = "nationalscreening_public"
+      firewall_policy_id            = "/subscriptions/ecef17e1-613b-40b6-83d8-b93e8b5556bf/resourceGroups/rg-hub-dev-uks-hub-networking/providers/Microsoft.Network/applicationGatewayWebApplicationFirewallPolicies/waf-hub-nonlive-uks-agw-parman-www"
+    }
+  }
+  request_routing_rule = {
+    parman_www_dev_public = {
+      backend_address_pool_key  = "parman_www_dev"
+      backend_http_settings_key = "parman_www_dev"
+      http_listener_key         = "parman_www_dev_public"
+      priority                  = 950
+      rule_type                 = "Basic"
+    }
+  }
+}
+
+application_gateway_additional_backend_address_pool_by_region = {
+  uksouth = {
+    parman_www_dev = {
+      fqdns = ["dev-uks-nextjs-frontend.azurewebsites.net"]
+    }
+  }
+}
+
 apim_config = {
   sku_name                    = "Developer"
   sku_capacity                = 1
@@ -173,8 +226,14 @@ avd_source_image_from_gallery = {
   gallery_rg_name = "rg-hub-dev-uks-hub-virtual-desktop"
 }
 
-dns_zone_name_private   = "private.non-live.nationalscreening.nhs.uk"
-dns_zone_name_public    = "non-live.nationalscreening.nhs.uk"
+dns_zone_name_private = {
+  nationalscreening = "private.non-live.nationalscreening.nhs.uk"
+  screening         = "private.pamo16test.screening.nhs.uk"
+}
+dns_zone_name_public = {
+  nationalscreening = "non-live.nationalscreening.nhs.uk"
+  screening         = "pamo16test.screening.nhs.uk"
+}
 dns_zone_rg_name_public = "rg-hub-dev-uks-public-dns-zones"
 
 diagnostic_settings = {
@@ -182,8 +241,10 @@ diagnostic_settings = {
 }
 
 lets_encrypt_certificates = {
-  wildcard         = "*.non-live.nationalscreening.nhs.uk"
-  wildcard_private = "*.private.non-live.nationalscreening.nhs.uk"
+  nationalscreening_wildcard         = "*.non-live.nationalscreening.nhs.uk"
+  nationalscreening_wildcard_private = "*.private.non-live.nationalscreening.nhs.uk"
+  screening_wildcard                 = "test99.non-live.nationalscreening.nhs.uk"
+  screening_wildcard_private         = "test99.private.non-live.nationalscreening.nhs.uk"
 }
 
 firewall_config = {

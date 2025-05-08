@@ -228,11 +228,11 @@ avd_source_image_from_gallery = {
 
 dns_zone_name_private = {
   nationalscreening = "private.non-live.nationalscreening.nhs.uk"
-  screening         = "private.pamo16test.screening.nhs.uk"
+  screening         = "private.non-live.screening.nhs.uk"
 }
 dns_zone_name_public = {
   nationalscreening = "non-live.nationalscreening.nhs.uk"
-  screening         = "pamo16test.screening.nhs.uk"
+  screening         = "non-live.screening.nhs.uk"
 }
 dns_zone_rg_name_public = "rg-hub-dev-uks-public-dns-zones"
 
@@ -243,8 +243,8 @@ diagnostic_settings = {
 lets_encrypt_certificates = {
   nationalscreening_wildcard         = "*.non-live.nationalscreening.nhs.uk"
   nationalscreening_wildcard_private = "*.private.non-live.nationalscreening.nhs.uk"
-  screening_wildcard                 = "test99.non-live.nationalscreening.nhs.uk"
-  screening_wildcard_private         = "test99.private.non-live.nationalscreening.nhs.uk"
+  screening_wildcard                 = "*.non-live.screening.nhs.uk"
+  screening_wildcard_private         = "*.private.non-live.screening.nhs.uk"
 }
 
 firewall_config = {

@@ -28,3 +28,5 @@ agent_profile_resource_predictions_manual = {
     {} # Saturday
   ]
 }
+
+maximum_concurrency = 4

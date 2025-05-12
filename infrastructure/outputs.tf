@@ -23,10 +23,6 @@ output "key_vault_certificates" {
   value = module.lets_encrypt_certificate.key_vault_certificates
 }
 
-# output "private_dns_rg_name" {
-#   value = { for k, v in azurerm_resource_group.private_dns_rg : k => v.name }
-# }
-
 # Output the DNS resolver inbound private ip addresses so they can be used in the private endpoint modules
 output "private_dns_resolver_inbound_ips" {
   value = module.private_dns_resolver
@@ -37,9 +33,9 @@ output "private_dns_zones" {
   value = module.private_dns_zones
 }
 
-# output "private_dns_zones_map" {
-#   value = local.private_dns_zones_map
-# }
+output "public_dns_zone_rg_name" {
+  value = var.dns_zone_rg_name_public
+}
 
 # Output the Firewall details so they can be used in the spoke networks
 output "firewall_policy_id" {

@@ -50,6 +50,7 @@ locals {
     storage_queue               = var.private_dns_zones.is_storage_private_dns_zone_enabled ? "privatelink.queue.core.windows.net" : null
     storage_table               = var.private_dns_zones.is_storage_private_dns_zone_enabled ? "privatelink.table.core.windows.net" : null
     event_hub                   = var.private_dns_zones.is_event_hub_private_dns_zone_enabled ? "privatelink.servicebus.windows.net" : null
+    container_apps              = var.private_dns_zones.is_container_apps_enabled_dns_zone_enabled ? "azurecontainerapps.io" : null
   }
 
   private_dns_zones_obj_list = flatten([

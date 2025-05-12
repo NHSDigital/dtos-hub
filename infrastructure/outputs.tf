@@ -23,10 +23,6 @@ output "key_vault_certificates" {
   value = module.lets_encrypt_certificate.key_vault_certificates
 }
 
-output "key_vault_certificate_pfx_blobs" {
-  value = module.lets_encrypt_certificate.key_vault_certificate_pfx_blobs
-}
-
 # output "private_dns_rg_name" {
 #   value = { for k, v in azurerm_resource_group.private_dns_rg : k => v.name }
 # }

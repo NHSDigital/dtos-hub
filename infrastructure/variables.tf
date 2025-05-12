@@ -323,16 +323,17 @@ variable "network_security_group_rules" {
 variable "private_dns_zones" {
   description = "Configuration for private DNS zones"
   type = object({
-    is_app_services_enabled                  = optional(bool, false)
-    is_azure_sql_private_dns_zone_enabled    = optional(bool, false)
-    is_postgres_sql_private_dns_zone_enabled = optional(bool, false)
-    is_storage_private_dns_zone_enabled      = optional(bool, false)
-    is_acr_private_dns_zone_enabled          = optional(bool, false)
-    is_app_insights_private_dns_zone_enabled = optional(bool, false)
-    is_apim_private_dns_zone_enabled         = optional(bool, false)
-    is_key_vault_private_dns_zone_enabled    = optional(bool, false)
-    is_event_hub_private_dns_zone_enabled    = optional(bool, false)
-    is_event_grid_enabled_dns_zone_enabled   = optional(bool, false)
+    is_app_services_enabled                    = optional(bool, false)
+    is_azure_sql_private_dns_zone_enabled      = optional(bool, false)
+    is_postgres_sql_private_dns_zone_enabled   = optional(bool, false)
+    is_storage_private_dns_zone_enabled        = optional(bool, false)
+    is_acr_private_dns_zone_enabled            = optional(bool, false)
+    is_app_insights_private_dns_zone_enabled   = optional(bool, false)
+    is_apim_private_dns_zone_enabled           = optional(bool, false)
+    is_key_vault_private_dns_zone_enabled      = optional(bool, false)
+    is_event_hub_private_dns_zone_enabled      = optional(bool, false)
+    is_event_grid_enabled_dns_zone_enabled     = optional(bool, false)
+    is_container_apps_enabled_dns_zone_enabled = optional(bool, false)
   })
 }
 

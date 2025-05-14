@@ -26,3 +26,13 @@ resource "acme_certificate" "certificate1" {
     provider = "azure"
   }
 }
+
+resource "azurerm_key_vault_certificate" "acme_imported_cert" {
+  name         = "acme-test-cert"
+  key_vault_id = module.key_vault["uksouth"]
+
+  certificate {
+    contents = base64encode(acme_certificate.certificate1.certificate_p12)
+    password = "" # Blank password
+  }
+}

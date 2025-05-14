@@ -29,7 +29,7 @@ resource "acme_certificate" "certificate1" {
 
 resource "azurerm_key_vault_certificate" "acme_imported_cert" {
   name         = "acme-test-cert"
-  key_vault_id = module.key_vault["uksouth"]
+  key_vault_id = module.key_vault["uksouth"].key_vault_id
 
   certificate {
     contents = base64encode(acme_certificate.certificate1.certificate_p12)

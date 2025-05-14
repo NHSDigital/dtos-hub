@@ -11,3 +11,18 @@ module "lets_encrypt_certificate" {
   subscription_id_hub          = var.TARGET_SUBSCRIPTION_ID
   subscription_id_target       = var.TARGET_SUBSCRIPTION_ID
 }
+
+resource "acme_registration" "reg" {
+  email_address   = "nobody554365765@example.com"
+}
+
+resource "acme_certificate" "certificate1" {
+  account_key_pem           = acme_registration.reg.account_key_pem
+  common_name               = "www-test-1.non-live.nationalscreening.nhs.uk"
+  # subject_alternative_names = ["www2.example.com"]
+  key_type                  = "P256"
+
+  dns_challenge {
+    provider = "azure"
+  }
+}

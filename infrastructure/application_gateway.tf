@@ -44,17 +44,8 @@ locals {
       )
 
       ssl_certificate = {
-        nationalscreening_private = {
-          key_vault_secret_id = module.lets_encrypt_certificate.key_vault_certificates["nationalscreening_wildcard_private-${region}"].versionless_secret_id
-        }
-        nationalscreening_public = {
-          key_vault_secret_id = module.lets_encrypt_certificate.key_vault_certificates["nationalscreening_wildcard-${region}"].versionless_secret_id
-        }
-        screening_private = {
-          key_vault_secret_id = module.lets_encrypt_certificate.key_vault_certificates["screening_wildcard_private-${region}"].versionless_secret_id
-        }
-        screening_public = {
-          key_vault_secret_id = module.lets_encrypt_certificate.key_vault_certificates["screening_wildcard-${region}"].versionless_secret_id
+        for k, v in module.acme_certificate : k => {
+          key_vault_secret_id = v.key_vault_certificate[region].versionless_secret_id
         }
       }
 
@@ -79,7 +70,7 @@ locals {
             host_name                     = "api.${var.dns_zone_name_public.nationalscreening}"
             protocol                      = "Https"
             require_sni                   = true
-            ssl_certificate_key           = "nationalscreening_public"
+            ssl_certificate_key           = "nationalscreening_wildcard"
             firewall_policy_id            = var.WAF_POLICY_ID_APIM_GATEWAY
           }
           apim_gateway_private = {
@@ -88,7 +79,7 @@ locals {
             host_name                     = "api.${var.dns_zone_name_private.nationalscreening}"
             protocol                      = "Https"
             require_sni                   = true
-            ssl_certificate_key           = "nationalscreening_private"
+            ssl_certificate_key           = "nationalscreening_wildcard_private"
           }
         },
         try(var.application_gateway_additional.http_listener, {})

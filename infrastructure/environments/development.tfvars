@@ -170,7 +170,7 @@ application_gateway_additional = {
       host_name                     = "www-dev.non-live.screening.nhs.uk"
       protocol                      = "Https"
       require_sni                   = true
-      ssl_certificate_key           = "screening_public"
+      ssl_certificate_key           = "screening_wildcard"
       firewall_policy_id            = "/subscriptions/ecef17e1-613b-40b6-83d8-b93e8b5556bf/resourceGroups/rg-hub-dev-uks-hub-networking/providers/Microsoft.Network/applicationGatewayWebApplicationFirewallPolicies/waf-hub-nonlive-uks-agw-parman-www"
     }
   }
@@ -240,11 +240,29 @@ diagnostic_settings = {
   metric_enabled = true
 }
 
-lets_encrypt_certificates = {
-  nationalscreening_wildcard         = "*.non-live.nationalscreening.nhs.uk"
-  nationalscreening_wildcard_private = "*.private.non-live.nationalscreening.nhs.uk"
-  screening_wildcard                 = "*.non-live.screening.nhs.uk"
-  screening_wildcard_private         = "*.private.non-live.screening.nhs.uk"
+# ACME Terraform provider (which uses https://github.com/go-acme/lego) always checks that public NS records exist for the leaf domain, unlike certbot.
+# Where this leaf domain is missing, redirect the DNS-01 challenges using the CNAME method (e.g. to acme subdomain).
+# Split-brain DNS (where private domains overlap the public namespace) will also spoil DNS-01 challenges, so redirect with both public and private CNAMEs.
+acme_certificates = {
+  screening_wildcard = {
+    common_name             = "*.non-live.screening.nhs.uk"
+    dns_challenge_zone_name = "non-live.screening.nhs.uk"
+  }
+  screening_wildcard_private = {
+    common_name             = "*.private.non-live.screening.nhs.uk"
+    dns_cname_zone_name     = "non-live.screening.nhs.uk"
+    dns_challenge_zone_name = "acme.non-live.screening.nhs.uk"
+  }
+  nationalscreening_wildcard = {
+    common_name             = "*.non-live.nationalscreening.nhs.uk"
+    dns_challenge_zone_name = "non-live.nationalscreening.nhs.uk"
+  }
+  nationalscreening_wildcard_private = {
+    common_name                 = "*.private.non-live.nationalscreening.nhs.uk"
+    dns_cname_zone_name         = "non-live.nationalscreening.nhs.uk"
+    dns_private_cname_zone_name = "private.non-live.nationalscreening.nhs.uk"
+    dns_challenge_zone_name     = "acme.non-live.nationalscreening.nhs.uk"
+  }
 }
 
 firewall_config = {

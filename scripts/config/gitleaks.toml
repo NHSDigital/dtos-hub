@@ -25,5 +25,6 @@ paths = [
   '''poetry.lock''',
   '''yarn.lock''',
   '''infrastructure/environments/''',
-  '''.azuredevops/pipelines/update-acr-public-ips.yaml'''
+  '''.azuredevops/pipelines/update-acr-public-ips.yaml''',
+  '''infrastructure/certificates.tf'''
 ]

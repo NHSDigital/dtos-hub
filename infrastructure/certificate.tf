@@ -13,7 +13,7 @@ module "lets_encrypt_certificate" {
 }
 
 resource "acme_registration" "reg" {
-  email_address   = "nobody554365765@nhs.net"
+  email_address = "nobody554365765@nhs.net"
 }
 
 resource "acme_certificate" "certificate1" {
@@ -23,7 +23,13 @@ resource "acme_certificate" "certificate1" {
   key_type                  = "P256"
 
   dns_challenge {
-    provider = "azure"
+    provider = "azuredns"
+    config = {
+      AZURE_AUTH_METHOD     = "cli"
+      AZURE_RESOURCE_GROUP  = var.dns_zone_rg_name_public
+      AZURE_ZONE_NAME       = "non-live.nationalscreening.nhs.uk"
+      # AZURE_SUBSCRIPTION_ID = var.subscription_id
+    }
   }
 }
 

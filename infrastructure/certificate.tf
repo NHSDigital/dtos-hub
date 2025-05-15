@@ -38,8 +38,8 @@ resource "acme_certificate" "hub" {
       # https://go-acme.github.io/lego/dns/azuredns/
       # AZURE_AUTH_METHOD     = "cli"
       # AZURE_SUBSCRIPTION_ID = var.TARGET_SUBSCRIPTION_ID
-      AZURE_RESOURCE_GROUP  = lookup(each.value, "zone_rg_name", var.dns_zone_rg_name_public)
-      AZURE_ZONE_NAME       = each.value.zone_name
+      AZURE_RESOURCE_GROUP = lookup(each.value, "zone_rg_name", var.dns_zone_rg_name_public)
+      AZURE_ZONE_NAME      = each.value.zone_name
     }
   }
 }
@@ -51,8 +51,8 @@ locals {
     for cert_key, cert_values in var.acme_certificates : [
       for region in keys(module.key_vault) : merge(
         {
-          cert_key    = cert_key # 1st iterator
-          region      = region   # 2nd iterator
+          cert_key = cert_key # 1st iterator
+          region   = region   # 2nd iterator
         },
         cert_values
       )

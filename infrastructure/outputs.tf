@@ -34,8 +34,8 @@ output "key_vault_certificates" {
 }
 
 output "pfx_passwords" {
-  value       = { for k, v in random_password.pfx : k => v.result }
-  sensitive   = true
+  value     = { for k, v in random_password.pfx : k => v.result }
+  sensitive = true
 }
 
 # Output the DNS resolver inbound private ip addresses so they can be used in the private endpoint modules

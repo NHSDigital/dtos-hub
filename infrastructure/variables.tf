@@ -30,6 +30,17 @@ variable "WAF_POLICY_ID_APIM_GATEWAY" {
   type        = string
 }
 
+variable "acme_certificates" {
+  type = map(object({
+    common_name               = string
+    subject_alternative_names = optional(list(string))
+    zone_name                 = string
+    zone_rg_name              = optional(string)
+    key_type                  = optional(string, "P256")
+  }))
+  description = "Map of ACME certificates to be requested"
+}
+
 variable "apim_config" {
   description = "Configuration for API Management"
   type = object({

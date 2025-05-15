@@ -240,6 +240,25 @@ diagnostic_settings = {
   metric_enabled = true
 }
 
+acme_certificates = {
+  test51         = {
+    common_name = "test51.non-live.nationalscreening.nhs.uk"
+    zone_name   = "non-live.nationalscreening.nhs.uk"
+  }
+  test51_private = {
+    common_name = "test51.private.non-live.nationalscreening.nhs.uk"
+    zone_name   = "non-live.nationalscreening.nhs.uk"
+  }
+  test52         = {
+    common_name = "test52.non-live.screening.nhs.uk"
+    zone_name   = "non-live.screening.nhs.uk"
+  }
+  test52_private = {
+    common_name = "test52.private.non-live.screening.nhs.uk"
+    zone_name   = "non-live.screening.nhs.uk"
+  }
+}
+
 lets_encrypt_certificates = {
   nationalscreening_wildcard         = "*.non-live.nationalscreening.nhs.uk"
   nationalscreening_wildcard_private = "*.private.non-live.nationalscreening.nhs.uk"

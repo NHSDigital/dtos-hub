@@ -30,7 +30,7 @@ resource "acme_certificate" "hub" {
   common_name               = each.value.common_name
   subject_alternative_names = each.value.subject_alternative_names
   key_type                  = each.value.key_type
-  certificate_p12_password  = random_password.pfx.result
+  certificate_p12_password  = random_password.pfx[each.key].result
 
   dns_challenge {
     provider = "azuredns"

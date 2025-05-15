@@ -38,7 +38,7 @@ resource "azurerm_key_vault_certificate" "acme_imported_cert" {
   key_vault_id = module.key_vault["uksouth"].key_vault_id
 
   certificate {
-    contents = base64encode(acme_certificate.certificate1.certificate_p12)
+    contents = acme_certificate.certificate1.certificate_p12
     password = "" # Blank password
   }
 }

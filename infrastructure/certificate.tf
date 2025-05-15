@@ -65,7 +65,7 @@ locals {
 }
 
 resource "azurerm_key_vault_certificate" "acme" {
-  for_each = acme_certs_map
+  for_each = local.acme_certs_map
 
   name         = replace(replace(each.value.common_name, "*.", "wildcard-"), ".", "-")
   key_vault_id = module.key_vault[each.value.region].key_vault_id
@@ -82,7 +82,7 @@ resource "azurerm_key_vault_certificate" "acme" {
 
 # Workaround while App Service cannot import elliptic curve Key Vault Certificate objects
 resource "azurerm_key_vault_secret" "acme" {
-  for_each = acme_certs_map
+  for_each = local.acme_certs_map
 
   name         = "pfx-${replace(replace(each.value.common_name, "*.", "wildcard-"), ".", "-")}"
   key_vault_id = module.key_vault[each.value.region].key_vault_id

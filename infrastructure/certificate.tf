@@ -28,7 +28,7 @@ resource "acme_certificate" "certificate1" {
       AZURE_AUTH_METHOD     = "cli"
       AZURE_RESOURCE_GROUP  = var.dns_zone_rg_name_public
       AZURE_ZONE_NAME       = "non-live.nationalscreening.nhs.uk"
-      # AZURE_SUBSCRIPTION_ID = var.subscription_id
+      AZURE_SUBSCRIPTION_ID = var.TARGET_SUBSCRIPTION_ID
     }
   }
 }

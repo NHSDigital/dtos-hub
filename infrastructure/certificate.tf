@@ -18,17 +18,17 @@ resource "acme_registration" "reg" {
 
 resource "acme_certificate" "certificate1" {
   account_key_pem           = acme_registration.reg.account_key_pem
-  common_name               = "www-test-1.non-live.nationalscreening.nhs.uk"
+  common_name               = "www-test-2.non-live.nationalscreening.nhs.uk"
   # subject_alternative_names = ["www2.example.com"]
   key_type                  = "P256"
 
   dns_challenge {
     provider = "azuredns"
     config = {
-      AZURE_AUTH_METHOD     = "cli"
+      #AZURE_AUTH_METHOD     = "cli"
       AZURE_RESOURCE_GROUP  = var.dns_zone_rg_name_public
       AZURE_ZONE_NAME       = "non-live.nationalscreening.nhs.uk"
-      AZURE_SUBSCRIPTION_ID = var.TARGET_SUBSCRIPTION_ID
+      #AZURE_SUBSCRIPTION_ID = var.TARGET_SUBSCRIPTION_ID
     }
   }
 }

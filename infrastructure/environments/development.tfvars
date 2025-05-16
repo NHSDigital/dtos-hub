@@ -244,22 +244,22 @@ diagnostic_settings = {
 # Split-brain DNS will spoil DNS-01 challenges, so redirect challenges which have Private DNS zones to .acme subdomain using CNAME method.
 acme_certificates = {
   screening = {
-    common_name             = "test69.non-live.screening.nhs.uk"
+    common_name             = "test70.non-live.screening.nhs.uk"
     dns_challenge_zone_name = "non-live.screening.nhs.uk"
   }
   screening_private = {
-    common_name             = "test69.private.non-live.screening.nhs.uk"
+    common_name             = "test70.private.non-live.screening.nhs.uk"
     dns_cname_zone_name     = "non-live.screening.nhs.uk"
     dns_challenge_zone_name = "acme.non-live.screening.nhs.uk"
   }
   nationalscreening = {
-    common_name             = "test68.non-live.nationalscreening.nhs.uk"
+    common_name             = "test71.non-live.nationalscreening.nhs.uk"
     dns_challenge_zone_name = "non-live.nationalscreening.nhs.uk"
   }
   nationalscreening_private = {
-    common_name                 = "test68.private.non-live.nationalscreening.nhs.uk"
+    common_name                 = "test71.private.non-live.nationalscreening.nhs.uk"
     dns_cname_zone_name         = "non-live.nationalscreening.nhs.uk"
-    dns_private_cname_zone_name = "private.non-live.screening.nhs.uk"
+    dns_private_cname_zone_name = "private.non-live.nationalscreening.nhs.uk"
     dns_challenge_zone_name     = "acme.non-live.nationalscreening.nhs.uk"
   }
 }

@@ -256,11 +256,11 @@ acme_certificates = {
     common_name             = "test66.non-live.screening.nhs.uk"
     dns_challenge_zone_name = "non-live.screening.nhs.uk"
   }
-  # screening_private = {
-  #   common_name             = "test66.private.non-live.screening.nhs.uk"
-  #   dns_cname_zone_name     = "non-live.screening.nhs.uk"
-  #   dns_challenge_zone_name = "acme.non-live.screening.nhs.uk"
-  # }
+  screening_private = {
+    common_name             = "test66.private.non-live.screening.nhs.uk"
+    dns_cname_zone_name     = "non-live.screening.nhs.uk"
+    dns_challenge_zone_name = "acme.non-live.screening.nhs.uk"
+  }
 }
 
 lets_encrypt_certificates = {

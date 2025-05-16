@@ -13,7 +13,7 @@ module "lets_encrypt_certificate" {
 }
 
 resource "acme_registration" "reg" {
-  email_address = "nobody554365765@nhs.net"
+  email_address = "nobody55436765@nhs.net"
 }
 
 resource "random_password" "pfx" {

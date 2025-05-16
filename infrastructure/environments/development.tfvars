@@ -247,7 +247,7 @@ acme_certificates = {
   }
   test53_private = {
     common_name = "test53.private.non-live.nationalscreening.nhs.uk"
-    zone_name   = "acme.non-live.screening.nhs.uk"
+    zone_name   = "acme.non-live.nationalscreening.nhs.uk"
   }
   test54 = {
     common_name = "test54.non-live.screening.nhs.uk"

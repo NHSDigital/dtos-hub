@@ -49,8 +49,10 @@ resource "acme_certificate" "hub" {
       # https://go-acme.github.io/lego/dns/azuredns/
       # AZURE_AUTH_METHOD     = "cli"
       # AZURE_SUBSCRIPTION_ID = var.TARGET_SUBSCRIPTION_ID
-      AZURE_RESOURCE_GROUP = lookup(each.value, "zone_rg_name", var.dns_zone_rg_name_public)
-      AZURE_ZONE_NAME      = each.value.dns_challenge_zone_name
+      # AZURE_RESOURCE_GROUP = lookup(each.value, "zone_rg_name", var.dns_zone_rg_name_public)
+      # AZURE_ZONE_NAME      = each.value.dns_challenge_zone_name
+      AZURE_ZONE_NAME      = "acme.non-live.nationalscreening.nhs.uk"
+      AZURE_RESOURCE_GROUP = var.dns_zone_rg_name_public
     }
   }
 

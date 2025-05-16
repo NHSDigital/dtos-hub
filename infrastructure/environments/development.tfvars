@@ -243,19 +243,19 @@ diagnostic_settings = {
 # Lego (https://github.com/go-acme/lego - used by acme Terraform provider) always checks public NS records exist for the leaf domain.
 # .private subdomain overlaps with the Azure Private DNS zone of the same name. To avoid split-brain DNS, redirect .private DNS challenges to .acme subdomain.
 acme_certificates = {
-  screening = {
-    common_name             = "test69.non-live.screening.nhs.uk"
-    dns_challenge_zone_name = "non-live.screening.nhs.uk"
-  }
-  screening_private = {
-    common_name             = "test69.private.non-live.screening.nhs.uk"
-    dns_cname_zone_name     = "non-live.screening.nhs.uk"
-    dns_challenge_zone_name = "acme.non-live.screening.nhs.uk"
-  }
-  nationalscreening = {
-    common_name             = "test68.non-live.nationalscreening.nhs.uk"
-    dns_challenge_zone_name = "non-live.nationalscreening.nhs.uk"
-  }
+  # screening = {
+  #   common_name             = "test69.non-live.screening.nhs.uk"
+  #   dns_challenge_zone_name = "non-live.screening.nhs.uk"
+  # }
+  # screening_private = {
+  #   common_name             = "test69.private.non-live.screening.nhs.uk"
+  #   dns_cname_zone_name     = "non-live.screening.nhs.uk"
+  #   dns_challenge_zone_name = "acme.non-live.screening.nhs.uk"
+  # }
+  # nationalscreening = {
+  #   common_name             = "test68.non-live.nationalscreening.nhs.uk"
+  #   dns_challenge_zone_name = "non-live.nationalscreening.nhs.uk"
+  # }
   nationalscreening_private = {
     common_name             = "test68.private.non-live.nationalscreening.nhs.uk"
     dns_cname_zone_name     = "non-live.nationalscreening.nhs.uk"

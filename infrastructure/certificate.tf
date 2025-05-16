@@ -23,7 +23,7 @@ resource "random_password" "pfx" {
   special = true
 }
 
-# Creates CNAMEs to redirect DNS-01 challenges for private zones to public acme zones
+# Creates CNAMEs to redirect DNS-01 challenges for private zones to public acme zone
 resource "azurerm_dns_cname_record" "acme_private" {
   for_each = { for k, v in var.acme_certificates : k => v if contains(v.common_name, ".private.") }
 

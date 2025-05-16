@@ -36,7 +36,7 @@ variable "acme_certificates" {
     subject_alternative_names = optional(list(string))
     zone_name                 = string
     zone_rg_name              = optional(string)
-    key_type                  = optional(string, "P256")
+    key_type                  = optional(string, "P256") # https://registry.terraform.io/providers/vancluever/acme/latest/docs/resources/certificate
   }))
   description = "Map of ACME certificates to be requested"
 }

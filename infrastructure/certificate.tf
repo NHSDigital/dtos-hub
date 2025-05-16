@@ -89,10 +89,6 @@ resource "azurerm_key_vault_certificate" "acme" {
     contents = acme_certificate.hub[each.value.naming_key].certificate_p12
     password = random_password.pfx[each.value.naming_key].result
   }
-
-  tags = {
-    managed_by = "terraform"
-  }
 }
 
 # Workaround while App Service cannot import elliptic curve Key Vault Certificate objects
@@ -103,10 +99,6 @@ resource "azurerm_key_vault_secret" "acme" {
   key_vault_id = module.key_vault[each.value.region].key_vault_id
   value        = acme_certificate.hub[each.value.naming_key].certificate_p12
   content_type = "application/x-pkcs12"
-
-  tags = {
-    managed_by = "terraform"
-  }
 }
 
 output "key_vault_certificates2" {

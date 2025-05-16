@@ -27,7 +27,7 @@ resource "random_password" "pfx" {
 resource "azurerm_dns_cname_record" "acme_private" {
   for_each = { for k, v in var.acme_certificates : k => v if v.dns_cname_zone_name != null }
 
-  name                = replace(each.value.common_name, ".${each.value.dns_cname_zone_name}", "")
+  name                = "_acme-challenge.${replace(each.value.common_name, ".${each.value.dns_cname_zone_name}", "")}"
   zone_name           = each.value.dns_cname_zone_name
   resource_group_name = coalesce(each.value.zone_rg_name, var.dns_zone_rg_name_public)
   ttl                 = 300

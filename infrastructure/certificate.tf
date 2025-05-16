@@ -34,15 +34,15 @@ resource "azurerm_dns_cname_record" "challenge_redirect" {
   record              = "_acme-challenge.${split(".", each.value.common_name)[0]}.${each.value.dns_challenge_zone_name}"
 }
 
-# Private DNS zones that overlap the public namespace also need the challenge CNAME records.
+# Private DNS zones that overlap the public namespace also need the challenge CNAME records to pass Lego azuredns checks. Private DNS is regional.
 resource "azurerm_private_dns_cname_record" "challenge_redirect_private" {
-  for_each = { for k, v in var.acme_certificates : k => v if v.dns_private_cname_zone_name != null }
+  for_each = { for k, v in local.acme_certs_map : k => v if v.dns_private_cname_zone_name != null }
 
   name                = "_acme-challenge.${replace(each.value.common_name, ".${each.value.dns_private_cname_zone_name}", "")}"
   zone_name           = each.value.dns_private_cname_zone_name
-  resource_group_name = azurerm_resource_group.private_dns_rg.name
+  resource_group_name = azurerm_resource_group.private_dns_rg[each.value.region].name
   ttl                 = 300
-  record              = azurerm_dns_cname_record.challenge_redirect[each.key].record
+  record              = azurerm_dns_cname_record.challenge_redirect[each.value.naming_key].record
 }
 
 resource "acme_certificate" "hub" {

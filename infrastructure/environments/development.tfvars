@@ -241,7 +241,7 @@ diagnostic_settings = {
 }
 
 # Lego (https://github.com/go-acme/lego - used by acme Terraform provider) always checks public NS records exist for the leaf domain.
-# Split-brain DNS will spoil DNS-01 challenges, so redirect challenges which have private DNS zones to .acme subdomain using CNAME method.
+# Split-brain DNS will spoil DNS-01 challenges, so redirect challenges which have Private DNS zones to .acme subdomain using CNAME method.
 acme_certificates = {
   screening = {
     common_name             = "test69.non-live.screening.nhs.uk"

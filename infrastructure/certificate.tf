@@ -23,6 +23,17 @@ resource "random_password" "pfx" {
   special = true
 }
 
+# Creates CNAMEs to redirect DNS-01 challenges for private zones to public acme zones
+resource "azurerm_dns_cname_record" "acme_private" {
+  for_each = { for k, v in var.acme_certificates : k => v if contains(v.common_name, ".private.") }
+
+  name                = "_acme-challenge." + regex("^(.*)\\.private", each.value.common_name)
+  zone_name           = regex("\\.private\\.(.*)$", each.value.common_name) # parent zone
+  resource_group_name = lookup(each.value, "zone_rg_name", var.dns_zone_rg_name_public)
+  ttl                 = 300
+  record              = "_acme-challenge." + replace(each.value.common_name, ".private.", ".acme.")
+}
+
 resource "acme_certificate" "hub" {
   for_each = var.acme_certificates
 
@@ -42,6 +53,8 @@ resource "acme_certificate" "hub" {
       AZURE_ZONE_NAME      = each.value.zone_name
     }
   }
+
+  depends_on = [azurerm_dns_cname_record.acme_private]
 }
 
 locals {

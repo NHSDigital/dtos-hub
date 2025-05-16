@@ -12,6 +12,28 @@ module "lets_encrypt_certificate" {
   subscription_id_target       = var.TARGET_SUBSCRIPTION_ID
 }
 
+locals {
+  # There are multiple certs, and possibly multiple regional Key Vaults to store them in.
+  # We cannot nest for loops inside a map, so first iterate all permutations as a list of objects...
+  acme_certs_object_list = flatten([
+    for cert_key, cert_values in var.acme_certificates : [
+      for region in keys(module.key_vault) : merge(
+        {
+          naming_key           = cert_key # 1st iterator
+          region               = region   # 2nd iterator
+          name                 = replace(replace(cert_values.common_name, "*.", "wildcard-"), ".", "-")
+          pfx_blob_secret_name = "pfx-${replace(replace(cert_values.common_name, "*.", "wildcard-"), ".", "-")}"
+        },
+        cert_values
+      )
+    ]
+  ])
+  # ...then project them into a map with unique keys (combining the iterators), for consumption by a for_each meta argument
+  acme_certs_map = {
+    for item in local.acme_certs_object_list : "${item.naming_key}-${item.region}" => item
+  }
+}
+
 resource "acme_registration" "reg" {
   email_address = "nobody55436765@nhs.net"
 }
@@ -71,28 +93,6 @@ resource "acme_certificate" "hub" {
   ]
 }
 
-locals {
-  # There are multiple certs, and possibly multiple regional Key Vaults to store them in.
-  # We cannot nest for loops inside a map, so first iterate all permutations as a list of objects...
-  acme_certs_object_list = flatten([
-    for cert_key, cert_values in var.acme_certificates : [
-      for region in keys(module.key_vault) : merge(
-        {
-          naming_key           = cert_key # 1st iterator
-          region               = region   # 2nd iterator
-          name                 = replace(replace(cert_values.common_name, "*.", "wildcard-"), ".", "-")
-          pfx_blob_secret_name = "pfx-${replace(replace(cert_values.common_name, "*.", "wildcard-"), ".", "-")}"
-        },
-        cert_values
-      )
-    ]
-  ])
-  # ...then project them into a map with unique keys (combining the iterators), for consumption by a for_each meta argument
-  acme_certs_map = {
-    for item in local.acme_certs_object_list : "${item.naming_key}-${item.region}" => item
-  }
-}
-
 resource "azurerm_key_vault_certificate" "acme" {
   for_each = local.acme_certs_map
 
@@ -113,19 +113,4 @@ resource "azurerm_key_vault_secret" "acme" {
   key_vault_id = module.key_vault[each.value.region].key_vault_id
   value        = acme_certificate.hub[each.value.naming_key].certificate_p12
   content_type = "application/x-pkcs12"
-}
-
-output "key_vault_certificates2" {
-  value = {
-    for k, v in local.acme_certs_map : k => {
-      name                  = v.name
-      naming_key            = v.naming_key
-      subject               = v.common_name
-      location              = v.region
-      pfx_blob_secret_name  = v.pfx_blob_secret_name
-      id                    = azurerm_key_vault_certificate.acme[k].id
-      versionless_id        = azurerm_key_vault_certificate.acme[k].versionless_id
-      versionless_secret_id = azurerm_key_vault_certificate.acme[k].versionless_secret_id
-    }
-  }
 }

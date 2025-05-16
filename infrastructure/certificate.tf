@@ -28,11 +28,11 @@ resource "azurerm_dns_cname_record" "acme_private" {
   for_each = { for k, v in var.acme_certificates : k => v if strcontains(v.common_name, ".private.") }
 
   name                = "_acme-challenge.${regex("^.*\\.private", each.value.common_name)}"
-
   zone_name           = regex("\\.private\\.(.*)$", each.value.common_name)[0] # parent zone
   resource_group_name = coalesce(each.value.zone_rg_name, var.dns_zone_rg_name_public)
   ttl                 = 300
-  record              = "_acme-challenge.${replace(each.value.common_name, ".private.", ".acme.")}"
+  #record              = "_acme-challenge.${replace(each.value.common_name, ".private.", ".acme.")}"
+  record              = "_acme-challenge.${each.value.common_name}.${each.value.zone_name}"
 }
 
 resource "acme_certificate" "hub" {

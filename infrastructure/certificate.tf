@@ -29,7 +29,7 @@ resource "azurerm_dns_cname_record" "acme_private" {
 
   name                = "_acme-challenge.${replace(each.value.common_name, ".${each.value.dns_cname_zone_name}", "")}"
   zone_name           = each.value.dns_cname_zone_name
-  resource_group_name = coalesce(each.value.zone_rg_name, var.dns_zone_rg_name_public)
+  resource_group_name = coalesce(each.value.dns_challenge_zone_rg_name, var.dns_zone_rg_name_public)
   ttl                 = 300
   record              = "_acme-challenge.${split(".", each.value.common_name)[0]}.${each.value.dns_challenge_zone_name}"
 }

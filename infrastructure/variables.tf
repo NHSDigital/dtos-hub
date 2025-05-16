@@ -32,12 +32,12 @@ variable "WAF_POLICY_ID_APIM_GATEWAY" {
 
 variable "acme_certificates" {
   type = map(object({
-    common_name               = string
-    subject_alternative_names = optional(list(string))
-    dns_cname_zone_name       = optional(string) # CNAME for redirecting DNS-01 challenges
-    dns_challenge_zone_name   = string
-    zone_rg_name              = optional(string)
-    key_type                  = optional(string, "P256") # https://registry.terraform.io/providers/vancluever/acme/latest/docs/resources/certificate
+    common_name                = string
+    subject_alternative_names  = optional(list(string))
+    dns_cname_zone_name        = optional(string) # CNAME for redirecting DNS-01 challenges
+    dns_challenge_zone_name    = string
+    dns_challenge_zone_rg_name = optional(string)
+    key_type                   = optional(string, "P256") # https://registry.terraform.io/providers/vancluever/acme/latest/docs/resources/certificate
   }))
   description = "Map of ACME certificates to be requested"
 }

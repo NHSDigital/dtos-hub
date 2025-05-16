@@ -247,11 +247,11 @@ acme_certificates = {
     common_name             = "test65.non-live.nationalscreening.nhs.uk"
     dns_challenge_zone_name = "non-live.nationalscreening.nhs.uk"
   }
-  nationalscreening_private = {
-    common_name             = "test65.private.non-live.nationalscreening.nhs.uk"
-    dns_cname_zone_name     = "non-live.nationalscreening.nhs.uk"
-    dns_challenge_zone_name = "acme.non-live.nationalscreening.nhs.uk"
-  }
+  # nationalscreening_private = {
+  #   common_name             = "test65.private.non-live.nationalscreening.nhs.uk"
+  #   dns_cname_zone_name     = "non-live.nationalscreening.nhs.uk"
+  #   dns_challenge_zone_name = "acme.non-live.nationalscreening.nhs.uk"
+  # }
   screening = {
     common_name             = "test66.non-live.screening.nhs.uk"
     dns_challenge_zone_name = "non-live.screening.nhs.uk"

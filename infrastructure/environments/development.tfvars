@@ -244,11 +244,11 @@ diagnostic_settings = {
 # .private subdomain overlaps with the Azure Private DNS zone of the same name. To avoid split-brain DNS, redirect .private DNS challenges to .acme subdomain.
 acme_certificates = {
   nationalscreening = {
-    common_name             = "test65.non-live.nationalscreening.nhs.uk"
+    common_name             = "test67.non-live.nationalscreening.nhs.uk"
     dns_challenge_zone_name = "non-live.nationalscreening.nhs.uk"
   }
   nationalscreening_private = {
-    common_name             = "test65.private.non-live.nationalscreening.nhs.uk"
+    common_name             = "test67.private.non-live.nationalscreening.nhs.uk"
     dns_cname_zone_name     = "non-live.nationalscreening.nhs.uk"
     dns_challenge_zone_name = "acme.non-live.nationalscreening.nhs.uk"
   }

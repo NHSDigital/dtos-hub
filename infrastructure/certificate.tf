@@ -23,8 +23,8 @@ resource "random_password" "pfx" {
   special = true
 }
 
-# Create CNAME records for any redirected DNS-01 challenges.
-resource "azurerm_dns_cname_record" "acme_private" {
+# Create CNAME records for any redirected DNS-01 challenges. Lego azuredns provider will validate these before allowing a redirected AZURE_ZONE_NAME.
+resource "azurerm_dns_cname_record" "challenge_redirect" {
   for_each = { for k, v in var.acme_certificates : k => v if v.dns_cname_zone_name != null }
 
   name                = "_acme-challenge.${replace(each.value.common_name, ".${each.value.dns_cname_zone_name}", "")}"
@@ -32,6 +32,17 @@ resource "azurerm_dns_cname_record" "acme_private" {
   resource_group_name = coalesce(each.value.dns_challenge_zone_rg_name, var.dns_zone_rg_name_public)
   ttl                 = 300
   record              = "_acme-challenge.${split(".", each.value.common_name)[0]}.${each.value.dns_challenge_zone_name}"
+}
+
+# Private DNS zones that overlap the public namespace also need the challenge CNAME records.
+resource "azurerm_private_dns_cname_record" "challenge_redirect_private" {
+  for_each = { for k, v in var.acme_certificates : k => v if v.dns_private_cname_zone_name != null }
+
+  name                = "_acme-challenge.${replace(each.value.common_name, ".${each.value.dns_private_cname_zone_name}", "")}"
+  zone_name           = each.value.dns_private_cname_zone_name
+  resource_group_name = azurerm_resource_group.private_dns_rg.name
+  ttl                 = 300
+  record              = azurerm_dns_cname_record.challenge_redirect[each.key].record
 }
 
 resource "acme_certificate" "hub" {
@@ -49,14 +60,15 @@ resource "acme_certificate" "hub" {
       # https://go-acme.github.io/lego/dns/azuredns/
       # AZURE_AUTH_METHOD     = "cli"
       # AZURE_SUBSCRIPTION_ID = var.TARGET_SUBSCRIPTION_ID
-      # AZURE_RESOURCE_GROUP = lookup(each.value, "zone_rg_name", var.dns_zone_rg_name_public)
-      # AZURE_ZONE_NAME      = each.value.dns_challenge_zone_name
-      AZURE_ZONE_NAME      = "acme.non-live.nationalscreening.nhs.uk"
-      AZURE_RESOURCE_GROUP = var.dns_zone_rg_name_public
+      AZURE_RESOURCE_GROUP = lookup(each.value, "zone_rg_name", var.dns_zone_rg_name_public)
+      AZURE_ZONE_NAME      = each.value.dns_challenge_zone_name
     }
   }
 
-  depends_on = [azurerm_dns_cname_record.acme_private]
+  depends_on = [
+    azurerm_dns_cname_record.challenge_redirect,
+    azurerm_private_dns_cname_record.challenge_redirect_private
+  ]
 }
 
 locals {

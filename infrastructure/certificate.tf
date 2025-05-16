@@ -23,16 +23,16 @@ resource "random_password" "pfx" {
   special = true
 }
 
-# Create CNAMEs to redirect DNS-01 challenges for private zone to public acme zone
-resource "azurerm_dns_cname_record" "acme_private" {
-  for_each = { for k, v in var.acme_certificates : k => v if strcontains(v.common_name, ".private.") }
+# # Create CNAMEs to redirect DNS-01 challenges for private zone to public acme zone
+# resource "azurerm_dns_cname_record" "acme_private" {
+#   for_each = { for k, v in var.acme_certificates : k => v if strcontains(v.common_name, ".private.") }
 
-  name                = "_acme-challenge.${regex("^.*\\.private", each.value.common_name)}"
-  zone_name           = regex("\\.private\\.(.*)$", each.value.common_name)[0] # parent zone
-  resource_group_name = coalesce(each.value.zone_rg_name, var.dns_zone_rg_name_public)
-  ttl                 = 300
-  record              = "_acme-challenge.${replace(each.value.common_name, ".private.", ".acme.")}"
-}
+#   name                = "_acme-challenge.${regex("^.*\\.private", each.value.common_name)}"
+#   zone_name           = regex("\\.private\\.(.*)$", each.value.common_name)[0] # parent zone
+#   resource_group_name = coalesce(each.value.zone_rg_name, var.dns_zone_rg_name_public)
+#   ttl                 = 300
+#   record              = "_acme-challenge.${replace(each.value.common_name, ".private.", ".acme.")}"
+# }
 
 resource "acme_certificate" "hub" {
   for_each = var.acme_certificates
@@ -54,7 +54,7 @@ resource "acme_certificate" "hub" {
     }
   }
 
-  depends_on = [azurerm_dns_cname_record.acme_private]
+  # depends_on = [azurerm_dns_cname_record.acme_private]
 }
 
 locals {

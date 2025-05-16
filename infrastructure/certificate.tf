@@ -55,7 +55,9 @@ resource "acme_certificate" "hub" {
     }
   }
 
-  depends_on = [azurerm_dns_cname_record.acme_private]
+  depends_on = [
+    contains(keys(azurerm_dns_cname_record.acme_private), each.key) ? azurerm_dns_cname_record.acme_private[each.key] : null
+  ]
 }
 
 locals {

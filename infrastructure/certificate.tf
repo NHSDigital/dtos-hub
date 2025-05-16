@@ -25,7 +25,7 @@ resource "random_password" "pfx" {
 
 # Create CNAMEs to redirect DNS-01 challenges for private zone to public acme zone
 resource "azurerm_dns_cname_record" "acme_private" {
-  for_each = { for k, v in var.acme_certificates : k => v if contains(v.common_name, ".private.") }
+  for_each = { for k, v in var.acme_certificates : k => v if strcontains(v.common_name, ".private.") }
 
   name                = "_acme-challenge.${regex("^.*\\.private", each.value.common_name)}"
 

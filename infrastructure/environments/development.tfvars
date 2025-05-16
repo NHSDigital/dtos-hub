@@ -242,20 +242,20 @@ diagnostic_settings = {
 
 acme_certificates = {
   nationalscreening = {
-    common_name = "test61.non-live.nationalscreening.nhs.uk"
-    zone_name   = "non-live.nationalscreening.nhs.uk"
+    common_name             = "test65.non-live.nationalscreening.nhs.uk"
+    dns_challenge_zone_name = "non-live.nationalscreening.nhs.uk"
   }
-  # nationalscreening_private = {
-  #   common_name = "test55.private.non-live.nationalscreening.nhs.uk"
-  #   zone_name   = "non-live.nationalscreening.nhs.uk"
-  # }
+  nationalscreening_private = {
+    common_name             = "test65.private.non-live.nationalscreening.nhs.uk"
+    dns_challenge_zone_name = "acme.non-live.nationalscreening.nhs.uk"
+  }
   screening = {
-    common_name = "test62.non-live.screening.nhs.uk"
-    zone_name   = "non-live.screening.nhs.uk"
+    common_name             = "test66.non-live.screening.nhs.uk"
+    dns_challenge_zone_name = "non-live.screening.nhs.uk"
   }
   screening_private = {
-    common_name = "test62.private.non-live.screening.nhs.uk"
-    zone_name   = "acme.non-live.screening.nhs.uk"
+    common_name             = "test66.private.non-live.screening.nhs.uk"
+    dns_challenge_zone_name = "acme.non-live.screening.nhs.uk"
   }
 }
 

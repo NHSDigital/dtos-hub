@@ -23,95 +23,95 @@ resource "random_password" "pfx" {
   special = true
 }
 
-# # Create CNAMEs to redirect DNS-01 challenges for private zone to public acme zone
-# resource "azurerm_dns_cname_record" "acme_private" {
-#   for_each = { for k, v in var.acme_certificates : k => v if strcontains(v.common_name, ".private.") }
+# Create CNAMEs to redirect DNS-01 challenges for private zone to public acme zone
+resource "azurerm_dns_cname_record" "acme_private" {
+  for_each = { for k, v in var.acme_certificates : k => v if strcontains(v.common_name, ".private.") }
 
-#   name                = "_acme-challenge.${regex("^.*\\.private", each.value.common_name)}"
-#   zone_name           = regex("\\.private\\.(.*)$", each.value.common_name)[0] # parent zone
-#   resource_group_name = coalesce(each.value.zone_rg_name, var.dns_zone_rg_name_public)
-#   ttl                 = 300
-#   record              = "_acme-challenge.${replace(each.value.common_name, ".private.", ".acme.")}"
+  name                = "_acme-challenge.${regex("^.*\\.private", each.value.common_name)}"
+  zone_name           = regex("\\.private\\.(.*)$", each.value.common_name)[0] # parent zone
+  resource_group_name = coalesce(each.value.zone_rg_name, var.dns_zone_rg_name_public)
+  ttl                 = 300
+  record              = "_acme-challenge.${replace(each.value.common_name, ".private.", ".acme.")}"
+}
+
+# resource "acme_certificate" "hub" {
+#   for_each = var.acme_certificates
+
+#   account_key_pem           = acme_registration.reg.account_key_pem
+#   common_name               = each.value.common_name
+#   subject_alternative_names = each.value.subject_alternative_names
+#   key_type                  = each.value.key_type
+#   certificate_p12_password  = random_password.pfx[each.key].result
+
+#   dns_challenge {
+#     provider = "azuredns"
+#     config = {
+#       # https://go-acme.github.io/lego/dns/azuredns/
+#       # AZURE_AUTH_METHOD     = "cli"
+#       # AZURE_SUBSCRIPTION_ID = var.TARGET_SUBSCRIPTION_ID
+#       AZURE_RESOURCE_GROUP = lookup(each.value, "zone_rg_name", var.dns_zone_rg_name_public)
+#       AZURE_ZONE_NAME      = each.value.dns_challenge_zone_name
+#     }
+#   }
+
+#   # depends_on = [azurerm_dns_cname_record.acme_private]
 # }
 
-resource "acme_certificate" "hub" {
-  for_each = var.acme_certificates
+# locals {
+#   # There are multiple certs, and possibly multiple regional Key Vaults to store them in.
+#   # We cannot nest for loops inside a map, so first iterate all permutations as a list of objects...
+#   acme_certs_object_list = flatten([
+#     for cert_key, cert_values in var.acme_certificates : [
+#       for region in keys(module.key_vault) : merge(
+#         {
+#           naming_key           = cert_key # 1st iterator
+#           region               = region   # 2nd iterator
+#           name                 = replace(replace(cert_values.common_name, "*.", "wildcard-"), ".", "-")
+#           pfx_blob_secret_name = "pfx-${replace(replace(cert_values.common_name, "*.", "wildcard-"), ".", "-")}"
+#         },
+#         cert_values
+#       )
+#     ]
+#   ])
+#   # ...then project them into a map with unique keys (combining the iterators), for consumption by a for_each meta argument
+#   acme_certs_map = {
+#     for item in local.acme_certs_object_list : "${item.naming_key}-${item.region}" => item
+#   }
+# }
 
-  account_key_pem           = acme_registration.reg.account_key_pem
-  common_name               = each.value.common_name
-  subject_alternative_names = each.value.subject_alternative_names
-  key_type                  = each.value.key_type
-  certificate_p12_password  = random_password.pfx[each.key].result
+# resource "azurerm_key_vault_certificate" "acme" {
+#   for_each = local.acme_certs_map
 
-  dns_challenge {
-    provider = "azuredns"
-    config = {
-      # https://go-acme.github.io/lego/dns/azuredns/
-      # AZURE_AUTH_METHOD     = "cli"
-      # AZURE_SUBSCRIPTION_ID = var.TARGET_SUBSCRIPTION_ID
-      AZURE_RESOURCE_GROUP = lookup(each.value, "zone_rg_name", var.dns_zone_rg_name_public)
-      AZURE_ZONE_NAME      = each.value.zone_name
-    }
-  }
+#   name         = each.value.name
+#   key_vault_id = module.key_vault[each.value.region].key_vault_id
 
-  # depends_on = [azurerm_dns_cname_record.acme_private]
-}
+#   certificate {
+#     contents = acme_certificate.hub[each.value.naming_key].certificate_p12
+#     password = random_password.pfx[each.value.naming_key].result
+#   }
+# }
 
-locals {
-  # There are multiple certs, and possibly multiple regional Key Vaults to store them in.
-  # We cannot nest for loops inside a map, so first iterate all permutations as a list of objects...
-  acme_certs_object_list = flatten([
-    for cert_key, cert_values in var.acme_certificates : [
-      for region in keys(module.key_vault) : merge(
-        {
-          naming_key           = cert_key # 1st iterator
-          region               = region   # 2nd iterator
-          name                 = replace(replace(cert_values.common_name, "*.", "wildcard-"), ".", "-")
-          pfx_blob_secret_name = "pfx-${replace(replace(cert_values.common_name, "*.", "wildcard-"), ".", "-")}"
-        },
-        cert_values
-      )
-    ]
-  ])
-  # ...then project them into a map with unique keys (combining the iterators), for consumption by a for_each meta argument
-  acme_certs_map = {
-    for item in local.acme_certs_object_list : "${item.naming_key}-${item.region}" => item
-  }
-}
+# # Workaround while App Service cannot import elliptic curve Key Vault Certificate objects
+# resource "azurerm_key_vault_secret" "acme" {
+#   for_each = local.acme_certs_map
 
-resource "azurerm_key_vault_certificate" "acme" {
-  for_each = local.acme_certs_map
+#   name         = each.value.pfx_blob_secret_name
+#   key_vault_id = module.key_vault[each.value.region].key_vault_id
+#   value        = acme_certificate.hub[each.value.naming_key].certificate_p12
+#   content_type = "application/x-pkcs12"
+# }
 
-  name         = each.value.name
-  key_vault_id = module.key_vault[each.value.region].key_vault_id
-
-  certificate {
-    contents = acme_certificate.hub[each.value.naming_key].certificate_p12
-    password = random_password.pfx[each.value.naming_key].result
-  }
-}
-
-# Workaround while App Service cannot import elliptic curve Key Vault Certificate objects
-resource "azurerm_key_vault_secret" "acme" {
-  for_each = local.acme_certs_map
-
-  name         = each.value.pfx_blob_secret_name
-  key_vault_id = module.key_vault[each.value.region].key_vault_id
-  value        = acme_certificate.hub[each.value.naming_key].certificate_p12
-  content_type = "application/x-pkcs12"
-}
-
-output "key_vault_certificates2" {
-  value = {
-    for k, v in local.acme_certs_map : k => {
-      name                  = v.name
-      naming_key            = v.naming_key
-      subject               = v.common_name
-      location              = v.region
-      pfx_blob_secret_name  = v.pfx_blob_secret_name
-      id                    = azurerm_key_vault_certificate.acme[k].id
-      versionless_id        = azurerm_key_vault_certificate.acme[k].versionless_id
-      versionless_secret_id = azurerm_key_vault_certificate.acme[k].versionless_secret_id
-    }
-  }
-}
+# output "key_vault_certificates2" {
+#   value = {
+#     for k, v in local.acme_certs_map : k => {
+#       name                  = v.name
+#       naming_key            = v.naming_key
+#       subject               = v.common_name
+#       location              = v.region
+#       pfx_blob_secret_name  = v.pfx_blob_secret_name
+#       id                    = azurerm_key_vault_certificate.acme[k].id
+#       versionless_id        = azurerm_key_vault_certificate.acme[k].versionless_id
+#       versionless_secret_id = azurerm_key_vault_certificate.acme[k].versionless_secret_id
+#     }
+#   }
+# }

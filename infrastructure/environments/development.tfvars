@@ -241,19 +241,19 @@ diagnostic_settings = {
 }
 
 acme_certificates = {
-  test51 = {
+  test53 = {
     common_name = "test53.non-live.nationalscreening.nhs.uk"
     zone_name   = "non-live.nationalscreening.nhs.uk"
   }
-  test51_private = {
+  test53_private = {
     common_name = "test53.private.non-live.nationalscreening.nhs.uk"
     zone_name   = "acme.non-live.screening.nhs.uk"
   }
-  test52 = {
+  test54 = {
     common_name = "test54.non-live.screening.nhs.uk"
     zone_name   = "non-live.screening.nhs.uk"
   }
-  test52_private = {
+  test54_private = {
     common_name = "test54.private.non-live.screening.nhs.uk"
     zone_name   = "acme.non-live.screening.nhs.uk"
   }

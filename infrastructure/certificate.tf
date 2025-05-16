@@ -30,8 +30,7 @@ resource "azurerm_dns_cname_record" "acme_private" {
   name                = "_acme-challenge.${regex("^.*\\.private", each.value.common_name)}"
 
   zone_name           = regex("\\.private\\.(.*)$", each.value.common_name)[0] # parent zone
-  #resource_group_name = lookup(each.value, "zone_rg_name", var.dns_zone_rg_name_public)
-  resource_group_name = var.dns_zone_rg_name_public
+  resource_group_name = coalesce(each.value.zone_rg_name, var.dns_zone_rg_name_public)
   ttl                 = 300
   record              = "_acme-challenge.${replace(each.value.common_name, ".private.", ".acme.")}"
 }

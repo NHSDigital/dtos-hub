@@ -27,8 +27,8 @@ resource "random_password" "pfx" {
 resource "azurerm_dns_cname_record" "acme_private" {
   for_each = { for k, v in var.acme_certificates : k => v if contains(v.common_name, ".private.") }
 
-  name                = "_acme-challenge." + regex("^(.*)\\.private", each.value.common_name)
-  zone_name           = regex("\\.private\\.(.*)$", each.value.common_name) # parent zone
+  name                = "_acme-challenge." + regex("^.*\\.private", each.value.common_name)[0]
+  zone_name           = regex("\\.private\\.(.*)$", each.value.common_name)[0] # parent zone
   resource_group_name = lookup(each.value, "zone_rg_name", var.dns_zone_rg_name_public)
   ttl                 = 300
   record              = "_acme-challenge." + replace(each.value.common_name, ".private.", ".acme.")

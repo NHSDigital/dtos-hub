@@ -35,30 +35,28 @@ resource "azurerm_dns_cname_record" "acme_private" {
   record              = "_acme-challenge.${replace(each.value.common_name, ".private.", ".acme.")}"
 }
 
-resource "acme_certificate" "hub" {
-  for_each = var.acme_certificates
+# resource "acme_certificate" "hub" {
+#   for_each = var.acme_certificates
 
-  account_key_pem           = acme_registration.reg.account_key_pem
-  common_name               = each.value.common_name
-  subject_alternative_names = each.value.subject_alternative_names
-  key_type                  = each.value.key_type
-  certificate_p12_password  = random_password.pfx[each.key].result
+#   account_key_pem           = acme_registration.reg.account_key_pem
+#   common_name               = each.value.common_name
+#   subject_alternative_names = each.value.subject_alternative_names
+#   key_type                  = each.value.key_type
+#   certificate_p12_password  = random_password.pfx[each.key].result
 
-  dns_challenge {
-    provider = "azuredns"
-    config = {
-      # https://go-acme.github.io/lego/dns/azuredns/
-      # AZURE_AUTH_METHOD     = "cli"
-      # AZURE_SUBSCRIPTION_ID = var.TARGET_SUBSCRIPTION_ID
-      AZURE_RESOURCE_GROUP = lookup(each.value, "zone_rg_name", var.dns_zone_rg_name_public)
-      AZURE_ZONE_NAME      = each.value.zone_name
-    }
-  }
+#   dns_challenge {
+#     provider = "azuredns"
+#     config = {
+#       # https://go-acme.github.io/lego/dns/azuredns/
+#       # AZURE_AUTH_METHOD     = "cli"
+#       # AZURE_SUBSCRIPTION_ID = var.TARGET_SUBSCRIPTION_ID
+#       AZURE_RESOURCE_GROUP = lookup(each.value, "zone_rg_name", var.dns_zone_rg_name_public)
+#       AZURE_ZONE_NAME      = each.value.zone_name
+#     }
+#   }
 
-  depends_on = [
-    contains(keys(azurerm_dns_cname_record.acme_private), each.key) ? azurerm_dns_cname_record.acme_private[each.key] : null
-  ]
-}
+#   depends_on = [azurerm_dns_cname_record.acme_private]
+# }
 
 locals {
   # There are multiple certs, and possibly multiple regional Key Vaults to store them in.

@@ -23,8 +23,7 @@ resource "random_password" "pfx" {
   special = true
 }
 
-# Create CNAME records for redirected DNS-01 challenges.
-# Lego insists on checking public NS records exist, but '.private' subdomain overlaps with the Azure Private DNS zone of the same name.
+# Create CNAME records for any redirected DNS-01 challenges.
 resource "azurerm_dns_cname_record" "acme_private" {
   for_each = { for k, v in var.acme_certificates : k => v if v.dns_cname_zone_name != null }
 

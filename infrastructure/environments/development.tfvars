@@ -240,6 +240,8 @@ diagnostic_settings = {
   metric_enabled = true
 }
 
+# Lego (https://github.com/go-acme/lego - used by acme Terraform provider) always checks public NS records exist for the leaf domain.
+# .private subdomain overlaps with the Azure Private DNS zone of the same name. To avoid split-brain DNS, redirect .private DNS challenges to .acme subdomain.
 acme_certificates = {
   nationalscreening = {
     common_name             = "test65.non-live.nationalscreening.nhs.uk"

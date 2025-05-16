@@ -51,8 +51,10 @@ locals {
     for cert_key, cert_values in var.acme_certificates : [
       for region in keys(module.key_vault) : merge(
         {
-          cert_key = cert_key # 1st iterator
-          region   = region   # 2nd iterator
+          naming_key           = cert_key # 1st iterator
+          region               = region   # 2nd iterator
+          name                 = replace(replace(cert_values.common_name, "*.", "wildcard-"), ".", "-")
+          pfx_blob_secret_name = "pfx-${replace(replace(cert_values.common_name, "*.", "wildcard-"), ".", "-")}"
         },
         cert_values
       )
@@ -60,19 +62,19 @@ locals {
   ])
   # ...then project them into a map with unique keys (combining the iterators), for consumption by a for_each meta argument
   acme_certs_map = {
-    for item in local.acme_certs_object_list : "${item.cert_key}-${item.region}" => item
+    for item in local.acme_certs_object_list : "${item.naming_key}-${item.region}" => item
   }
 }
 
 resource "azurerm_key_vault_certificate" "acme" {
   for_each = local.acme_certs_map
 
-  name         = replace(replace(each.value.common_name, "*.", "wildcard-"), ".", "-")
+  name         = each.value.name
   key_vault_id = module.key_vault[each.value.region].key_vault_id
 
   certificate {
-    contents = acme_certificate.hub[each.value.cert_key].certificate_p12
-    password = random_password.pfx[each.value.cert_key].result
+    contents = acme_certificate.hub[each.value.naming_key].certificate_p12
+    password = random_password.pfx[each.value.naming_key].result
   }
 
   tags = {
@@ -84,12 +86,27 @@ resource "azurerm_key_vault_certificate" "acme" {
 resource "azurerm_key_vault_secret" "acme" {
   for_each = local.acme_certs_map
 
-  name         = "pfx-${replace(replace(each.value.common_name, "*.", "wildcard-"), ".", "-")}"
+  name         = each.value.pfx_blob_secret_name
   key_vault_id = module.key_vault[each.value.region].key_vault_id
-  value        = acme_certificate.hub[each.value.cert_key].certificate_p12
+  value        = acme_certificate.hub[each.value.naming_key].certificate_p12
   content_type = "application/x-pkcs12"
 
   tags = {
     managed_by = "terraform"
+  }
+}
+
+output "key_vault_certificates2" {
+  value = {
+    for k, v in local.acme_certs_map : k => {
+      name                  = v.name
+      naming_key            = v.naming_key
+      subject               = v.common_name
+      location              = v.region
+      pfx_blob_secret_name  = v.pfx_blob_secret_name
+      id                    = azurerm_key_vault_certificate.acme[k].id
+      versionless_id        = azurerm_key_vault_certificate.acme[k].versionless_id
+      versionless_secret_id = azurerm_key_vault_certificate.acme[k].versionless_secret_id
+    }
   }
 }

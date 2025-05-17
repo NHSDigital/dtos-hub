@@ -31,6 +31,10 @@ module "acme_certificate" {
   subscription_id_dns_public          = var.TARGET_SUBSCRIPTION_ID
 }
 
+output "certificates" {
+  value = module.acme_certificate
+}
+
 # locals {
 #   # There are multiple certs, and possibly multiple regional Key Vaults to store them in.
 #   # We cannot nest for loops inside a map, so first iterate all permutations as a list of objects...
@@ -131,4 +135,24 @@ module "acme_certificate" {
 #   key_vault_id = module.key_vault[each.value.region].key_vault_id
 #   value        = acme_certificate.hub[each.value.naming_key].certificate_p12
 #   content_type = "application/x-pkcs12"
+# }
+
+# output "key_vault_certificates2" {
+#   value = {
+#     for k, v in local.acme_certs_map : k => {
+#       name                  = v.name
+#       naming_key            = v.naming_key
+#       subject               = v.common_name
+#       location              = v.region
+#       pfx_blob_secret_name  = v.pfx_blob_secret_name
+#       id                    = azurerm_key_vault_certificate.acme[k].id
+#       versionless_id        = azurerm_key_vault_certificate.acme[k].versionless_id
+#       versionless_secret_id = azurerm_key_vault_certificate.acme[k].versionless_secret_id
+#     }
+#   }
+# }
+
+# output "pfx_passwords" {
+#   value     = { for k, v in random_password.pfx : k => v.result }
+#   sensitive = true
 # }

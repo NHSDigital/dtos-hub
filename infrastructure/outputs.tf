@@ -33,26 +33,6 @@ output "key_vault_certificates" {
   value = module.lets_encrypt_certificate.key_vault_certificates
 }
 
-output "key_vault_certificates2" {
-  value = {
-    for k, v in local.acme_certs_map : k => {
-      name                  = v.name
-      naming_key            = v.naming_key
-      subject               = v.common_name
-      location              = v.region
-      pfx_blob_secret_name  = v.pfx_blob_secret_name
-      id                    = azurerm_key_vault_certificate.acme[k].id
-      versionless_id        = azurerm_key_vault_certificate.acme[k].versionless_id
-      versionless_secret_id = azurerm_key_vault_certificate.acme[k].versionless_secret_id
-    }
-  }
-}
-
-output "pfx_passwords" {
-  value     = { for k, v in random_password.pfx : k => v.result }
-  sensitive = true
-}
-
 # Output the DNS resolver inbound private ip addresses so they can be used in the private endpoint modules
 output "private_dns_resolver_inbound_ips" {
   value = module.private_dns_resolver

@@ -1,5 +1,5 @@
-resource "acme_registration" "reg" {
-  email_address = var.LETS_ENCRYPT_CONTACT_EMAIL
+resource "acme_registration" "hub" {
+  email_address    = var.LETS_ENCRYPT_CONTACT_EMAIL
 }
 
 module "acme_certificate" {

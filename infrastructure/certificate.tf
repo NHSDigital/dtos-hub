@@ -27,6 +27,7 @@ module "acme_certificate" {
   certificate                         = each.value
   email                               = "nobody55436765@nhs.net" #var.LETS_ENCRYPT_CONTACT_EMAIL
   key_vaults                          = module.key_vault
+  private_dns_zones                   = azurerm_resource_group.private_dns_rg
   public_dns_zone_resource_group_name = var.dns_zone_rg_name_public
   subscription_id_dns_public          = var.TARGET_SUBSCRIPTION_ID
 }

@@ -1,4 +1,4 @@
-resource "acme_registration" "hub" {
+resource "acme_registration" "blah" {
   email_address    = var.LETS_ENCRYPT_CONTACT_EMAIL
 }
 
@@ -13,7 +13,7 @@ module "acme_certificate" {
     azurerm.dns_private = azurerm
   }
 
-  acme_registration_account_key_pem   = acme_registration.hub.account_key_pem
+  acme_registration_account_key_pem   = acme_registration.blah.account_key_pem
   certificate_naming_key              = each.key
   certificate                         = each.value
   key_vaults                          = module.key_vault

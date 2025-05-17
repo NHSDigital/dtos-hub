@@ -21,8 +21,3 @@ module "acme_certificate" {
   public_dns_zone_resource_group_name = var.dns_zone_rg_name_public
   subscription_id_dns_public          = var.TARGET_SUBSCRIPTION_ID
 }
-
-output "certificates" {
-  value     = module.acme_certificate
-  sensitive = true
-}

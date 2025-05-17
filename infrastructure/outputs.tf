@@ -2,6 +2,11 @@ output "azure_monitor_private_link_scope_name" {
   value = azurerm_monitor_private_link_scope.ampls.name
 }
 
+output "certificates" {
+  value     = module.acme_certificate
+  sensitive = true
+}
+
 output "event_grid_topic" {
   value = module.event_grid_topic
 }
@@ -27,10 +32,6 @@ output "firewall_private_ip_addresses" {
 
 output "key_vault" {
   value = module.key_vault
-}
-
-output "key_vault_certificates" {
-  value = module.lets_encrypt_certificate.key_vault_certificates
 }
 
 # Output the DNS resolver inbound private ip addresses so they can be used in the private endpoint modules

@@ -16,7 +16,7 @@ resource "acme_registration" "reg" {
   email_address = "nobody55436765@nhs.net"
 }
 
-module "acme_certificate" {
+module "ssl_certificate" {
   for_each = var.acme_certificates
 
   source = "../../dtos-devops-templates/infrastructure/modules/acme-certificate"

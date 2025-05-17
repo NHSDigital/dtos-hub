@@ -70,7 +70,7 @@ locals {
             host_name                     = "api.${var.dns_zone_name_public.nationalscreening}"
             protocol                      = "Https"
             require_sni                   = true
-            ssl_certificate_key           = "nationalscreening_public"
+            ssl_certificate_key           = "nationalscreening_wildcard"
             firewall_policy_id            = var.WAF_POLICY_ID_APIM_GATEWAY
           }
           apim_gateway_private = {
@@ -79,7 +79,7 @@ locals {
             host_name                     = "api.${var.dns_zone_name_private.nationalscreening}"
             protocol                      = "Https"
             require_sni                   = true
-            ssl_certificate_key           = "nationalscreening_private"
+            ssl_certificate_key           = "nationalscreening_wildcard_private"
           }
         },
         try(var.application_gateway_additional.http_listener, {})

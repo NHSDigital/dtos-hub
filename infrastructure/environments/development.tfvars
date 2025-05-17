@@ -170,7 +170,7 @@ application_gateway_additional = {
       host_name                     = "www-dev.non-live.screening.nhs.uk"
       protocol                      = "Https"
       require_sni                   = true
-      ssl_certificate_key           = "screening_public"
+      ssl_certificate_key           = "screening_wildcard"
       firewall_policy_id            = "/subscriptions/ecef17e1-613b-40b6-83d8-b93e8b5556bf/resourceGroups/rg-hub-dev-uks-hub-networking/providers/Microsoft.Network/applicationGatewayWebApplicationFirewallPolicies/waf-hub-nonlive-uks-agw-parman-www"
     }
   }

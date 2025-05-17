@@ -12,6 +12,10 @@ module "lets_encrypt_certificate" {
   subscription_id_target       = var.TARGET_SUBSCRIPTION_ID
 }
 
+resource "acme_registration" "reg" {
+  email_address = "nobody55436765@nhs.net"
+}
+
 module "acme_certificate" {
   for_each = var.acme_certificates
 
@@ -23,9 +27,9 @@ module "acme_certificate" {
     azurerm.dns_private = azurerm
   }
 
+  acme_registration_account_key_pem   = acme_registration.reg.account_key_pem
   certificate_name                    = each.key
   certificate                         = each.value
-  email                               = "nobody55436765@nhs.net" #var.LETS_ENCRYPT_CONTACT_EMAIL
   key_vaults                          = module.key_vault
   private_dns_zones                   = azurerm_resource_group.private_dns_rg
   public_dns_zone_resource_group_name = var.dns_zone_rg_name_public
@@ -33,7 +37,8 @@ module "acme_certificate" {
 }
 
 output "certificates" {
-  value = module.acme_certificate
+  value     = module.acme_certificate
+  sensitive = true
 }
 
 # locals {

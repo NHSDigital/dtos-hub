@@ -13,7 +13,7 @@ module "lets_encrypt_certificate" {
 }
 
 resource "acme_registration" "reg" {
-  email_address = "nobody55436765@nhs.net"
+  email_address = "nobody55436765@nhs.net" # var.LETS_ENCRYPT_CONTACT_EMAIL
 }
 
 module "ssl_certificate" {
@@ -37,7 +37,7 @@ module "ssl_certificate" {
 }
 
 output "certificates" {
-  value     = module.acme_certificate
+  value     = module.ssl_certificate
   sensitive = true
 }
 

@@ -287,12 +287,6 @@ variable "firewall_config" {
   default = {}
 }
 
-variable "lets_encrypt_certificates" {
-  type = map(string)
-}
-
-
-
 variable "key_vault" {
   description = "Configuration for the key vault"
   type = object({

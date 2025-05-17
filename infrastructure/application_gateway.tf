@@ -44,17 +44,8 @@ locals {
       )
 
       ssl_certificate = {
-        nationalscreening_private = {
-          key_vault_secret_id = module.lets_encrypt_certificate.key_vault_certificates["nationalscreening_wildcard_private-${region}"].versionless_secret_id
-        }
-        nationalscreening_public = {
-          key_vault_secret_id = module.lets_encrypt_certificate.key_vault_certificates["nationalscreening_wildcard-${region}"].versionless_secret_id
-        }
-        screening_private = {
-          key_vault_secret_id = module.lets_encrypt_certificate.key_vault_certificates["screening_wildcard_private-${region}"].versionless_secret_id
-        }
-        screening_public = {
-          key_vault_secret_id = module.lets_encrypt_certificate.key_vault_certificates["screening_wildcard-${region}"].versionless_secret_id
+        for k, v in module.acme_certificate : k => {
+          key_vault_secret_id = v.key_vault_certificate[region].versionless_secret_id
         }
       }
 

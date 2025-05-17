@@ -244,32 +244,25 @@ diagnostic_settings = {
 # Where this leaf domain is missing, redirect the DNS-01 challenges using the CNAME method (e.g. to acme subdomain).
 # Split-brain DNS (where private domains overlap the public namespace) will also spoil DNS-01 challenges, so redirect with both public and private CNAMEs.
 acme_certificates = {
-  screening = {
-    common_name             = "test72.non-live.screening.nhs.uk"
+  screening_wildcard = {
+    common_name             = "*.non-live.screening.nhs.uk"
     dns_challenge_zone_name = "non-live.screening.nhs.uk"
   }
-  screening_private = {
-    common_name             = "test72.private.non-live.screening.nhs.uk"
+  screening_wildcard_private = {
+    common_name             = "*.private.non-live.screening.nhs.uk"
     dns_cname_zone_name     = "non-live.screening.nhs.uk"
     dns_challenge_zone_name = "acme.non-live.screening.nhs.uk"
   }
-  nationalscreening = {
-    common_name             = "test73.non-live.nationalscreening.nhs.uk"
+  nationalscreening_wildcard = {
+    common_name             = "*.non-live.nationalscreening.nhs.uk"
     dns_challenge_zone_name = "non-live.nationalscreening.nhs.uk"
   }
-  nationalscreening_private = {
-    common_name                 = "test73.private.non-live.nationalscreening.nhs.uk"
+  screening_wildcard_private = {
+    common_name                 = "*.private.non-live.nationalscreening.nhs.uk"
     dns_cname_zone_name         = "non-live.nationalscreening.nhs.uk"
     dns_private_cname_zone_name = "private.non-live.nationalscreening.nhs.uk"
     dns_challenge_zone_name     = "acme.non-live.nationalscreening.nhs.uk"
   }
-}
-
-lets_encrypt_certificates = {
-  nationalscreening_wildcard         = "*.non-live.nationalscreening.nhs.uk"
-  nationalscreening_wildcard_private = "*.private.non-live.nationalscreening.nhs.uk"
-  screening_wildcard                 = "*.non-live.screening.nhs.uk"
-  screening_wildcard_private         = "*.private.non-live.screening.nhs.uk"
 }
 
 firewall_config = {

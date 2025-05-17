@@ -25,37 +25,37 @@ module "api-management" {
   developer_portal_hostname_configuration = [
     {
       host_name    = "portal.${var.dns_zone_name_private.nationalscreening}"
-      key_vault_id = module.lets_encrypt_certificate.key_vault_certificates["nationalscreening_wildcard_private-${each.key}"].versionless_secret_id
+      key_vault_id = module.acme_certificate["nationalscreening_wildcard_private"].key_vault_certificate[each.key].versionless_secret_id
     }
   ]
 
   management_hostname_configuration = [
     {
       host_name    = "management.${var.dns_zone_name_private.nationalscreening}"
-      key_vault_id = module.lets_encrypt_certificate.key_vault_certificates["nationalscreening_wildcard_private-${each.key}"].versionless_secret_id
+      key_vault_id = module.acme_certificate["nationalscreening_wildcard_private"].key_vault_certificate[each.key].versionless_secret_id
     }
   ]
 
   proxy_hostname_configuration = [
     {
       host_name           = "gateway.${var.dns_zone_name_private.nationalscreening}"
-      key_vault_id        = module.lets_encrypt_certificate.key_vault_certificates["nationalscreening_wildcard_private-${each.key}"].versionless_secret_id
+      key_vault_id        = module.acme_certificate["nationalscreening_wildcard_private"].key_vault_certificate[each.key].versionless_secret_id
       default_ssl_binding = true
     },
     {
       host_name    = "api.${var.dns_zone_name_private.nationalscreening}"
-      key_vault_id = module.lets_encrypt_certificate.key_vault_certificates["nationalscreening_wildcard_private-${each.key}"].versionless_secret_id
+      key_vault_id = module.acme_certificate["nationalscreening_wildcard_private"].key_vault_certificate[each.key].versionless_secret_id
     },
     {
       host_name    = "api.${var.dns_zone_name_public.nationalscreening}"
-      key_vault_id = module.lets_encrypt_certificate.key_vault_certificates["nationalscreening_wildcard-${each.key}"].versionless_secret_id
+      key_vault_id = module.acme_certificate["nationalscreening_wildcard"].key_vault_certificate[each.key].versionless_secret_id
     }
   ]
 
   scm_hostname_configuration = [
     {
       host_name    = "scm.${var.dns_zone_name_private.nationalscreening}"
-      key_vault_id = module.lets_encrypt_certificate.key_vault_certificates["nationalscreening_wildcard_private-${each.key}"].versionless_secret_id
+      key_vault_id = module.acme_certificate["nationalscreening_wildcard_private"].key_vault_certificate[each.key].versionless_secret_id
     }
   ]
 

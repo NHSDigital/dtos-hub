@@ -120,7 +120,11 @@ resource "azapi_resource" "github_network_settings" {
     }
   }
 
+  response_export_values = ["id"]
+
   tags = var.tags
 
-  response_export_values = ["*"]
+  lifecycle {
+    ignore_changes = [tags]
+  }
 }

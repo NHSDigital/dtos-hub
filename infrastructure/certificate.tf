@@ -1,13 +1,23 @@
-module "lets_encrypt_certificate" {
-  source = "../../dtos-devops-templates/infrastructure/modules/lets-encrypt-certificates"
+resource "acme_registration" "hub" {
+  email_address = var.LETS_ENCRYPT_CONTACT_EMAIL
+}
 
-  certificates                 = var.lets_encrypt_certificates
-  dns_zone_names               = var.dns_zone_name_public
-  dns_zone_resource_group_name = var.dns_zone_rg_name_public
-  environment                  = var.environment
-  email                        = var.LETS_ENCRYPT_CONTACT_EMAIL
-  key_vaults                   = module.key_vault
-  storage_account_name_hub     = var.HUB_BACKEND_AZURE_STORAGE_ACCOUNT_NAME
-  subscription_id_hub          = var.TARGET_SUBSCRIPTION_ID
-  subscription_id_target       = var.TARGET_SUBSCRIPTION_ID
+module "acme_certificate" {
+  for_each = var.acme_certificates
+
+  source = "../../dtos-devops-templates/infrastructure/modules/acme-certificate"
+
+  providers = {
+    azurerm             = azurerm
+    azurerm.dns_public  = azurerm
+    azurerm.dns_private = azurerm
+  }
+
+  acme_registration_account_key_pem   = acme_registration.hub.account_key_pem
+  certificate_naming_key              = each.key
+  certificate                         = each.value
+  key_vaults                          = module.key_vault
+  private_dns_zone_resource_groups    = azurerm_resource_group.private_dns_rg
+  public_dns_zone_resource_group_name = var.dns_zone_rg_name_public
+  subscription_id_dns_public          = var.TARGET_SUBSCRIPTION_ID
 }

@@ -7,6 +7,11 @@ terraform {
       version = "4.26"
     }
 
+    acme = {
+      source  = "vancluever/acme"
+      version = "~> 2.0"
+    }
+
     random = "~> 3.5.1"
 
     azuread = {
@@ -32,3 +37,7 @@ provider "azapi" {
 }
 
 provider "azuread" {}
+
+provider "acme" {
+  server_url = "https://acme-v02.api.letsencrypt.org/directory"
+}

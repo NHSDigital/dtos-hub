@@ -233,11 +233,29 @@ eventhub_namespaces = {
   }
 }
 
-lets_encrypt_certificates = {
-  nationalscreening_wildcard         = "*.nationalscreening.nhs.uk"
-  nationalscreening_wildcard_private = "*.private.nationalscreening.nhs.uk"
-  screening_wildcard                 = "*.screening.nhs.uk"
-  screening_wildcard_private         = "*.private.screening.nhs.uk"
+# ACME Terraform provider (which uses https://github.com/go-acme/lego) always checks that public NS records exist for the leaf domain, unlike certbot.
+# Where this leaf domain is missing, redirect the DNS-01 challenges using the CNAME method (e.g. to acme subdomain).
+# Split-brain DNS (where private domains overlap the public namespace) will also spoil DNS-01 challenges, so redirect with both public and private CNAMEs.
+acme_certificates = {
+  screening_wildcard = {
+    common_name             = "*.screening.nhs.uk"
+    dns_challenge_zone_name = "screening.nhs.uk"
+  }
+  screening_wildcard_private = {
+    common_name             = "*.private.screening.nhs.uk"
+    dns_cname_zone_name     = "screening.nhs.uk"
+    dns_challenge_zone_name = "acme.screening.nhs.uk"
+  }
+  nationalscreening_wildcard = {
+    common_name             = "*.nationalscreening.nhs.uk"
+    dns_challenge_zone_name = "nationalscreening.nhs.uk"
+  }
+  nationalscreening_wildcard_private = {
+    common_name                 = "*.private.nationalscreening.nhs.uk"
+    dns_cname_zone_name         = "nationalscreening.nhs.uk"
+    dns_private_cname_zone_name = "private.nationalscreening.nhs.uk"
+    dns_challenge_zone_name     = "acme.nationalscreening.nhs.uk"
+  }
 }
 
 firewall_config = {

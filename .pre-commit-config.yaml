@@ -1,0 +1,5 @@
+repos:
+-   repo: https://github.com/gitleaks/gitleaks
+    rev: v8.12.0  # Update to the latest stable version of gitleaks
+    hooks:
+    -   id: gitleaks

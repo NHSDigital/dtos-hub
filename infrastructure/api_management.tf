@@ -22,21 +22,21 @@ module "api-management" {
   monitor_diagnostic_setting_apim_metrics      = local.monitor_diagnostic_setting_apim_metrics
   metric_enabled                               = var.diagnostic_settings.metric_enabled
 
-  developer_portal_hostname_configuration = [
+  custom_domains_developer_portal = [
     {
       host_name    = "portal.${var.dns_zone_name_private.nationalscreening}"
       key_vault_id = module.acme_certificate["nationalscreening_wildcard_private"].key_vault_certificate[each.key].versionless_secret_id
     }
   ]
 
-  management_hostname_configuration = [
+  custom_domains_management = [
     {
       host_name    = "management.${var.dns_zone_name_private.nationalscreening}"
       key_vault_id = module.acme_certificate["nationalscreening_wildcard_private"].key_vault_certificate[each.key].versionless_secret_id
     }
   ]
 
-  proxy_hostname_configuration = [
+  custom_domains_gateway = [
     {
       host_name           = "gateway.${var.dns_zone_name_private.nationalscreening}"
       key_vault_id        = module.acme_certificate["nationalscreening_wildcard_private"].key_vault_certificate[each.key].versionless_secret_id
@@ -45,6 +45,9 @@ module "api-management" {
     {
       host_name    = "api.${var.dns_zone_name_private.nationalscreening}"
       key_vault_id = module.acme_certificate["nationalscreening_wildcard_private"].key_vault_certificate[each.key].versionless_secret_id
+      # Technically there should only be a single default binding, however the 'gateway' and private 'api' bindings share the same wildcard certificate.
+      # Configure both as defaults to match how Azure Portal will report it, preventing Terraform reporting a change on every plan.
+      default_ssl_binding = true
     },
     {
       host_name    = "api.${var.dns_zone_name_public.nationalscreening}"
@@ -52,36 +55,31 @@ module "api-management" {
     }
   ]
 
-  scm_hostname_configuration = [
+  custom_domains_scm = [
     {
       host_name    = "scm.${var.dns_zone_name_private.nationalscreening}"
       key_vault_id = module.acme_certificate["nationalscreening_wildcard_private"].key_vault_certificate[each.key].versionless_secret_id
     }
   ]
 
-
-  /*________________________________
-| API Management Portal Settings |
-__________________________________*/
+/* --------------------------------------------------------------------------------------------------
+  API Management Portal Settings
+-------------------------------------------------------------------------------------------------- */
 
   sign_in_enabled = var.apim_config.sign_in_enabled
-
   sign_up_enabled = var.apim_config.sign_up_enabled
 
-  /*________________________________
-| API Management AAD Integration |
-__________________________________*/
+/* --------------------------------------------------------------------------------------------------
+  API Management Entra ID Integration
+-------------------------------------------------------------------------------------------------- */
+
   client_id       = data.azurerm_key_vault_secret.object-id[each.key].value
   client_secret   = data.azurerm_key_vault_secret.secret[each.key].value
   allowed_tenants = [data.azurerm_client_config.current.tenant_id]
 
   tags = var.tags
-
 }
 
-/*________________________________
-| API Management Public IP Address |
-__________________________________*/
 
 module "apim-public-ip" {
   for_each = length(var.apim_config.zones) > 0 ? var.regions : {}

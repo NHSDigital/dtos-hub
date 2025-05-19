@@ -46,7 +46,7 @@ module "api-management" {
       host_name    = "api.${var.dns_zone_name_private.nationalscreening}"
       key_vault_id = module.acme_certificate["nationalscreening_wildcard_private"].key_vault_certificate[each.key].versionless_secret_id
       # Technically there should only be a single default binding, however the 'gateway' and private 'api' bindings share the same wildcard certificate.
-      # Configure both as defaults to match how Azure Portal will report it, preventing Terraform reporting a change on every plan.
+      # Configure both as defaults to match how Azure Portal will always report it, preventing Terraform reporting a change on every plan.
       default_ssl_binding = true
     },
     {

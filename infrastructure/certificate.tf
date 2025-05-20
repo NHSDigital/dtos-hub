@@ -20,4 +20,6 @@ module "acme_certificate" {
   private_dns_zone_resource_groups    = azurerm_resource_group.private_dns_rg
   public_dns_zone_resource_group_name = var.dns_zone_rg_name_public
   subscription_id_dns_public          = var.TARGET_SUBSCRIPTION_ID
+
+  tags = var.tags
 }

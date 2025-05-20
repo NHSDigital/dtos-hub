@@ -275,8 +275,8 @@ acme_certificates = {
   nationalscreening_wildcard_private = {
     common_name                 = "*.private.non-live.nationalscreening.nhs.uk"
     dns_cname_zone_name         = "non-live.nationalscreening.nhs.uk"
-    dns_private_cname_zone_name = "private.non-live.nationalscreening.nhs.uk"
     dns_challenge_zone_name     = "acme.non-live.nationalscreening.nhs.uk"
+    dns_private_cname_zone_name = "private.non-live.nationalscreening.nhs.uk"
   }
 }
 

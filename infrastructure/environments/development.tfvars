@@ -278,6 +278,12 @@ acme_certificates = {
     dns_private_cname_zone_name = "private.non-live.nationalscreening.nhs.uk"
     dns_challenge_zone_name     = "acme.non-live.nationalscreening.nhs.uk"
   }
+  split_horizon_test = {
+    common_name             = "split.private.non-live.nationalscreening.nhs.uk"
+    dns_cname_zone_name     = "non-live.nationalscreening.nhs.uk"
+    dns_challenge_zone_name = "acme.non-live.nationalscreening.nhs.uk"
+    recursive_nameservers   = ["8.8.8.8:53"]
+  }
 }
 
 firewall_config = {

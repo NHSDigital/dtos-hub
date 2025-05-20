@@ -47,6 +47,7 @@ projects = {
     }
   }
 
+
   dtos-participant-manager = {
     full_name  = "participant-manager"
     short_name = "parman"
@@ -63,7 +64,7 @@ projects = {
 
   dtos-analyse-data-pipeline = {
     full_name  = "analytics-data-pipeline"
-    short_name = "addppl"
+    short_name = "andppl"
     acr = {
       sku                           = "Premium"
       admin_enabled                 = false

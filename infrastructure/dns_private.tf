@@ -35,6 +35,7 @@ module "private_dns_resolver" {
 locals {
   private_dns_zones = {
     national_screening          = var.dns_zone_name_private.nationalscreening
+    screening                   = var.dns_zone_name_private.screening
     container_registry          = "privatelink.azurecr.io"
     app_insights                = var.private_dns_zones.is_app_insights_private_dns_zone_enabled ? "privatelink.monitor.azure.com" : null
     automation                  = var.private_dns_zones.is_app_insights_private_dns_zone_enabled ? "privatelink.agentsvc.azure-automation.net" : null

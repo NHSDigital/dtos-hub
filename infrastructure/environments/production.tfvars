@@ -242,9 +242,10 @@ acme_certificates = {
     dns_challenge_zone_name = "screening.nhs.uk"
   }
   screening_wildcard_private = {
-    common_name             = "*.private.screening.nhs.uk"
-    dns_cname_zone_name     = "screening.nhs.uk"
-    dns_challenge_zone_name = "acme.screening.nhs.uk"
+    common_name                 = "*.private.screening.nhs.uk"
+    dns_cname_zone_name         = "screening.nhs.uk"
+    dns_private_cname_zone_name = "private.screening.nhs.uk"
+    dns_challenge_zone_name     = "acme.screening.nhs.uk"
   }
   nationalscreening_wildcard = {
     common_name             = "*.nationalscreening.nhs.uk"

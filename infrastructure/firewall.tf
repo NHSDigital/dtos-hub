@@ -45,6 +45,55 @@ module "public_ip" {
   zones                = each.value.zones
 }
 
+# Not using module since it assumes only a single rule per network rule collection
+resource "azurerm_firewall_policy_rule_collection_group" "allow_egress_traffic_to_internet_only" {
+  for_each = var.regions
+
+  name               = "${module.config[each.key].names.firewall}-egress-policy-rule-collection-group"
+  firewall_policy_id = module.firewall[each.key].firewall_policy_id
+  priority           = 65000
+
+  network_rule_collection {
+    name     = "DenyUnmatchedInternalTraffic"
+    priority = 64000
+    action   = "Deny"
+    rule {
+      name                  = "DenyPrivate10"
+      protocols             = ["Any"]
+      source_addresses      = ["*"]
+      destination_addresses = ["10.0.0.0/8"]
+      destination_ports     = ["*"]
+    }
+    rule {
+      name                  = "DenyPrivate172"
+      protocols             = ["Any"]
+      source_addresses      = ["*"]
+      destination_addresses = ["172.16.0.0/12"]
+      destination_ports     = ["*"]
+    }
+    rule {
+      name                  = "DenyPrivate192"
+      protocols             = ["Any"]
+      source_addresses      = ["*"]
+      destination_addresses = ["192.168.0.0/16"]
+      destination_ports     = ["*"]
+    }
+  }
+
+  network_rule_collection {
+    name     = "AllowEgressToInternet"
+    priority = 65000
+    action   = "Allow"
+    rule {
+      name                  = "AllowEgress"
+      protocols             = ["Any"]
+      source_addresses      = ["*"]
+      destination_addresses = ["*"]
+      destination_ports     = ["*"]
+    }
+  }
+}
+
 locals {
   # Create a map of the Public IP addresses to add to the firewall
   public_ips_flatlist = flatten([

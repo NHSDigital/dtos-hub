@@ -6,4 +6,6 @@ module "frontdoor_profile" {
   name                = module.config[local.primary_region].names.front-door-profile
   resource_group_name = azurerm_resource_group.rg_hub[local.primary_region].name
   sku_name            = each.value.sku_name
+
+  tags = var.tags
 }

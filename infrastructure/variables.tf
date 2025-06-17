@@ -356,6 +356,9 @@ variable "projects" {
       uai_name                      = string
       public_network_access_enabled = bool
     }))
+    frontdoor_profile = optional(object({
+      sku_name = string
+    }))
     tags = map(string)
   }))
 }

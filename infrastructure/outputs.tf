@@ -30,6 +30,10 @@ output "firewall_private_ip_addresses" {
   value = { for k, v in module.firewall : k => v.private_ip_address }
 }
 
+output "frontdoor_profile" {
+  value = module.frontdoor_profile
+}
+
 output "key_vault" {
   value = module.key_vault
 }

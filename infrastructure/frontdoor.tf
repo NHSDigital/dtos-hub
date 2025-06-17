@@ -4,7 +4,7 @@ module "frontdoor_profile" {
   source = "../../dtos-devops-templates/infrastructure/modules/cdn-frontdoor-profile"
 
   name                = "${module.config[local.primary_region].names.front-door-profile}-${each.value.short_name}"
-  resource_group_name = azurerm_resource_group.rg_hub[local.primary_region].name
+  resource_group_name = azurerm_resource_group.rg_project[each.key].name
   sku_name            = each.value.frontdoor_profile.sku_name
 
   tags = var.tags

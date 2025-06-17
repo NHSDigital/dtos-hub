@@ -30,6 +30,10 @@ output "firewall_private_ip_addresses" {
   value = { for k, v in module.firewall : k => v.private_ip_address }
 }
 
+output "frontdoor_profile" {
+  value = module.frontdoor_profile
+}
+
 output "key_vault" {
   value = module.key_vault
 }
@@ -42,6 +46,10 @@ output "private_dns_resolver_inbound_ips" {
 # Output the private DNS zone IDs so they can be used in private endpoint modules
 output "private_dns_zones" {
   value = module.private_dns_zones
+}
+
+output "networking_rg_name" {
+  value = { for k, v in azurerm_resource_group.rg_hub : k => v.name }
 }
 
 output "private_endpoint_rg_name" {

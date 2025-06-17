@@ -70,7 +70,6 @@ features = {
   private_endpoints_enabled              = true
   private_service_connection_is_manual   = false
   public_network_access_enabled          = true
-  github_actions_enabled                 = false
   log_analytics_data_export_rule_enabled = true
 }
 

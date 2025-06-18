@@ -14,9 +14,6 @@ projects = {
       uai_name                      = "dtos-cohort-manager-acr-push"
       public_network_access_enabled = true
     }
-    frontdoor_profile = {
-      sku_name = "Premium_AzureFrontDoor"
-    }
     tags = {
       Project = "DToS Cohort Manager"
     }
@@ -58,6 +55,9 @@ projects = {
       admin_enabled                 = false
       uai_name                      = "dtos-participant-manager-acr-push"
       public_network_access_enabled = true
+    }
+    frontdoor_profile = {
+      sku_name = "Premium_AzureFrontDoor"
     }
     tags = {
       Project = "DToS Participant Manager"

@@ -58,9 +58,6 @@ stages:
                 - checkout: self
                 - checkout: dtos-devops-templates
                 - template: .azuredevops/templates/steps/tf_apply.yaml@dtos-devops-templates
-                  parameters:
-                    tfApplyShell: pscore
-                    tfApplyScript: terraform state rm 'azapi_resource.github_network_settings["uksouth"]'
                   # parameters:
                   #   # The Application Gateway Config null resource needs an authenticated PowerShell context, hence our shell is pscore
                   #   # AzureCLI@2 task is used rather than AzurePowerShell@5 because Terraform is unable to use a PowerShell authentication context directly

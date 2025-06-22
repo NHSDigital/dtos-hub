@@ -120,7 +120,7 @@ resource "azurerm_key_vault_access_policy" "frontdoor" {
 
   key_vault_id = module.key_vault[each.key].key_vault_id
   tenant_id    = data.azurerm_client_config.current.tenant_id
-  object_id    = data.azuread_service_principal.frontdoor.object_id
+  object_id    = module.frontdoor_profile.system_assigned_identity
 
   secret_permissions = [
     "Get"

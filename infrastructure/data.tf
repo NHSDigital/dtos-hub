@@ -14,10 +14,6 @@ data "azuread_service_principal" "MicrosoftAzureAppService" {
   client_id = "abfa0a7c-a6b6-4736-8310-5855508787cd"
 }
 
-data "azuread_service_principal" "frontdoor" {
-  display_name = "Microsoft.AzurefrontDoor-Cdn"
-}
-
 data "azurerm_key_vault_secret" "object-id" {
   for_each     = var.regions
   name         = "dtos-apim-object-id"

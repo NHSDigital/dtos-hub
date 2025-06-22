@@ -8,5 +8,9 @@ module "frontdoor_profile" {
   resource_group_name = azurerm_resource_group.rg_project["${each.key}-${local.primary_region}"].name
   sku_name            = each.value.frontdoor_profile.sku_name
 
+  identity = {
+    type = "SystemAssigned"
+  }
+
   tags = var.tags
 }

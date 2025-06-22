@@ -116,13 +116,20 @@ resource "azurerm_key_vault_access_policy" "MicrosoftAzureAppService" {
 }
 
 locals {
+  # There may be multiple Front Door Profiles and possibly multiple regional Key Vaults.
+  # We cannot nest for loops inside a map, so first iterate all permutations of both as a list of objects...
+  front_door_access_policy_object_list = flatten([
+    for region in keys(var.regions) : [
+      for profile, config in local.frontdoor_profiles : {
+        region  = region  # 1st iterator
+        profile = profile # 2nd iterator
+      } if config.identity != null
+    ]
+  ])
+
+  # ...then project the list of objects into a map with unique keys (combining the iterators), for consumption by a for_each meta argument
   front_door_access_policy_map = {
-    for region in keys(var.regions) :
-    for profile, config in local.frontdoor_profiles :
-    "${profile}-${region}" => {
-      region  = region
-      profile = profile
-    } if config.identity != null
+    for object in local.front_door_access_policy_object_list : "${object.profile}-${object.region}" => object
   }
 }
 

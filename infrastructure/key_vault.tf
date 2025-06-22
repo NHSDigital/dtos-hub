@@ -114,3 +114,15 @@ resource "azurerm_key_vault_access_policy" "MicrosoftAzureAppService" {
     "Get"
   ]
 }
+
+resource "azurerm_key_vault_access_policy" "frontdoor" {
+  for_each = var.regions
+
+  key_vault_id = module.key_vault[each.key].key_vault_id
+  tenant_id    = data.azurerm_client_config.current.tenant_id
+  object_id    = data.azuread_service_principal.frontdoor.object_id
+
+  secret_permissions = [
+    "Get"
+  ]
+}

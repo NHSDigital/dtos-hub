@@ -123,7 +123,7 @@ locals {
       for profile, config in local.frontdoor_profiles : {
         region  = region  # 1st iterator
         profile = profile # 2nd iterator
-      } if config.identity != null
+      } if try(config.identity, null) != null
     ]
   ])
 

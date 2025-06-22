@@ -361,7 +361,7 @@ variable "projects" {
       identity = optional(object({
         type         = string                 # "SystemAssigned", "UserAssigned", or "SystemAssigned, UserAssigned".
         identity_ids = optional(list(string)) # only required if using UserAssigned identity
-      }))
+      }), null)
     }))
     tags = map(string)
   }))

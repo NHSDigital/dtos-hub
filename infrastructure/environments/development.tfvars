@@ -58,6 +58,9 @@ projects = {
     }
     frontdoor_profile = {
       sku_name = "Premium_AzureFrontDoor"
+      identity = {
+        type = "SystemAssigned"
+      }
     }
     tags = {
       Project = "DToS Participant Manager"

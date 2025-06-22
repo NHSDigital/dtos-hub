@@ -358,6 +358,10 @@ variable "projects" {
     }))
     frontdoor_profile = optional(object({
       sku_name = string
+      identity = optional(object({
+        type         = string                 # "SystemAssigned", "UserAssigned", or "SystemAssigned, UserAssigned".
+        identity_ids = optional(list(string)) # only required if using UserAssigned identity
+      }))
     }))
     tags = map(string)
   }))

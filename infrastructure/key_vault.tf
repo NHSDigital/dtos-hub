@@ -115,12 +115,23 @@ resource "azurerm_key_vault_access_policy" "MicrosoftAzureAppService" {
   ]
 }
 
-resource "azurerm_key_vault_access_policy" "frontdoor" {
-  for_each = var.regions
+locals {
+  front_door_access_policy_map = {
+    for region in keys(var.regions) :
+    for profile, config in local.frontdoor_profiles :
+    "${profile}-${region}" => {
+      region  = region
+      profile = profile
+    } if config.identity != null
+  }
+}
 
-  key_vault_id = module.key_vault[each.key].key_vault_id
+resource "azurerm_key_vault_access_policy" "frontdoor" {
+  for_each = local.front_door_access_policy_map
+
+  key_vault_id = module.key_vault[each.value.region].key_vault_id
   tenant_id    = data.azurerm_client_config.current.tenant_id
-  object_id    = module.frontdoor_profile.system_assigned_identity
+  object_id    = module.frontdoor_profile[each.value.profile].system_assigned_identity
 
   secret_permissions = [
     "Get"

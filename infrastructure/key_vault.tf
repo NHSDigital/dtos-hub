@@ -146,7 +146,7 @@ resource "azurerm_cdn_frontdoor_secret" "screening_wildcard" {
 
   secret {
     customer_certificate {
-      key_vault_certificate_id = module.acme_certificate["pamo16test6"].key_vault_certificate[local.primary_region].versionless_secret_id
+      key_vault_certificate_id = module.acme_certificate["pamo16test6"].key_vault_certificate[local.primary_region].versionless_id
     }
   }
 

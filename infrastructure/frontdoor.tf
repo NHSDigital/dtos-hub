@@ -13,7 +13,7 @@ module "frontdoor_profile" {
   name                = "${module.config[local.primary_region].names.front-door-profile}-${each.value.short_name}"
   resource_group_name = azurerm_resource_group.rg_project["${each.key}-${local.primary_region}"].name
   sku_name            = each.value.frontdoor_profile.sku_name
-  secrets             = { for k in each.value.frontdoor_profile.secrets : k => module.acme_certificate["k"].key_vault_certificate[local.primary_region].versionless_id }
+  secrets             = { for k in each.value.frontdoor_profile.secrets : k => module.acme_certificate[k].key_vault_certificate[local.primary_region].versionless_id }
 
   identity = each.value.frontdoor_profile.identity
 

@@ -266,6 +266,7 @@ acme_certificates = {
   pamo16test6 = {
     common_name             = "pamo16test6.non-live.screening.nhs.uk"
     dns_challenge_zone_name = "non-live.screening.nhs.uk"
+    key_type                = "4096"
   }
   screening_wildcard = {
     common_name             = "*.non-live.screening.nhs.uk"

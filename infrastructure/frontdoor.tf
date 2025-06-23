@@ -9,6 +9,11 @@ module "frontdoor_profile" {
 
   source = "../../dtos-devops-templates/infrastructure/modules/cdn-frontdoor-profile"
 
+  log_analytics_workspace_id                        = module.log_analytics_workspace_hub[local.primary_region].id
+  monitor_diagnostic_setting_frontdoor_enabled_logs = local.monitor_diagnostic_setting_frontdoor_enabled_logs
+  monitor_diagnostic_setting_frontdoor_metrics      = local.monitor_diagnostic_setting_frontdoor_metrics
+  metric_enabled                                    = var.diagnostic_settings.metric_enabled
+
   # Front Door Profile is a global resource, hence the use of primary_region Key Vault
   name                = "${module.config[local.primary_region].names.front-door-profile}-${each.value.short_name}"
   resource_group_name = azurerm_resource_group.rg_project["${each.key}-${local.primary_region}"].name

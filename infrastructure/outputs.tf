@@ -34,6 +34,10 @@ output "frontdoor_profile" {
   value = module.frontdoor_profile
 }
 
+output "front_door_access_policy_map" {
+  value = local.front_door_access_policy_map
+}
+
 output "key_vault" {
   value = module.key_vault
 }

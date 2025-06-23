@@ -141,7 +141,7 @@ resource "azurerm_key_vault_access_policy" "frontdoor" {
 resource "azurerm_cdn_frontdoor_secret" "screening_wildcard" {
   for_each = local.frontdoor_profiles
 
-  name                     = "screening_wildcard"
+  name                     = "screening-wildcard"
   cdn_frontdoor_profile_id = module.frontdoor_profile[each.key].id
 
   secret {

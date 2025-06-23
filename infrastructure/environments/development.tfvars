@@ -257,7 +257,7 @@ acme_certificates = {
   pamo16test6 = {
     common_name             = "pamo16test6.non-live.screening.nhs.uk"
     dns_challenge_zone_name = "non-live.screening.nhs.uk"
-    key_type                = "4096"
+    key_type                = "4096" # Front Door requires RSA, ECC is not supported
   }
   screening_wildcard = {
     common_name             = "*.non-live.screening.nhs.uk"

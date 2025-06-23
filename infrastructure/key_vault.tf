@@ -133,14 +133,14 @@ locals {
   }
 }
 
-resource "azurerm_key_vault_access_policy" "frontdoor" {
-  for_each = local.front_door_access_policy_map
+# resource "azurerm_key_vault_access_policy" "frontdoor" {
+#   for_each = local.front_door_access_policy_map
 
-  key_vault_id = module.key_vault[each.value.region].key_vault_id
-  tenant_id    = data.azurerm_client_config.current.tenant_id
-  object_id    = module.frontdoor_profile[each.value.profile].system_assigned_identity
+#   key_vault_id = module.key_vault[each.value.region].key_vault_id
+#   tenant_id    = data.azurerm_client_config.current.tenant_id
+#   object_id    = module.frontdoor_profile[each.value.profile].system_assigned_identity
 
-  secret_permissions = [
-    "Get"
-  ]
-}
+#   secret_permissions = [
+#     "Get"
+#   ]
+# }

@@ -52,7 +52,8 @@ locals {
     storage_table               = var.private_dns_zones.is_storage_private_dns_zone_enabled ? "privatelink.table.core.windows.net" : null
     event_hub                   = var.private_dns_zones.is_event_hub_private_dns_zone_enabled ? "privatelink.servicebus.windows.net" : null
     container_apps              = var.private_dns_zones.is_container_apps_enabled_dns_zone_enabled ? "azurecontainerapps.io" : null
-    service_bus_namespace       = var.private_dns_zones.is_service_bus_namespace_enabled ? "privatelink.servicebus.windows.net" : null  }
+    service_bus_namespace       = var.private_dns_zones.is_service_bus_namespace_enabled ? "privatelink.servicebus.windows.net" : null
+  }
 
   private_dns_zones_obj_list = flatten([
     for region in keys(var.regions) : [

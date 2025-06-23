@@ -34,3 +34,38 @@ module "virtual-desktop" {
 
   tags = var.tags
 }
+
+module "route-table-virtual-desktop" {
+  for_each = var.regions
+
+  source = "../../dtos-devops-templates/infrastructure/modules/route-table"
+
+  name                = "${module.config[each.key].names.route-table}-virtual-desktop"
+  resource_group_name = azurerm_resource_group.rg_hub[each.key].name
+  location            = each.key
+
+  bgp_route_propagation_enabled = false
+
+  routes = [
+    {
+      name           = "AVDSessionHostControl"
+      address_prefix = "WindowsVirtualDesktop"
+      next_hop_type  = "Internet"
+    },
+    {
+      name           = "EntraAuthTraffic"
+      address_prefix = "AzureActiveDirectory"
+      next_hop_type  = "Internet"
+    },
+    {
+      name                   = "EgressViaFirewall"
+      address_prefix         = "0.0.0.0/0"
+      next_hop_type          = "VirtualAppliance"
+      next_hop_in_ip_address = module.firewall[each.key].private_ip_address
+    }
+  ]
+
+  subnet_ids = [module.subnets_hub["${module.config[each.key].names.subnet}-virtual-desktop"].id]
+
+  tags = var.tags
+}

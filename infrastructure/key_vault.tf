@@ -122,33 +122,11 @@ resource "azurerm_key_vault_access_policy" "frontdoor" {
   tenant_id    = data.azurerm_client_config.current.tenant_id
   object_id    = data.azuread_service_principal.MicrosoftAzureFrontDoorCdn.object_id
 
-  key_permissions = [
-    "Get",
-    "List"
-  ]
-
   secret_permissions = [
     "Get",
-    "List"
   ]
 
   certificate_permissions = [
     "Get",
-    "List"
   ]
-}
-
-resource "azurerm_cdn_frontdoor_secret" "screening_wildcard" {
-  for_each = local.frontdoor_profiles
-
-  name                     = "pamo16test6"
-  cdn_frontdoor_profile_id = module.frontdoor_profile[each.key].id
-
-  secret {
-    customer_certificate {
-      key_vault_certificate_id = module.acme_certificate["pamo16test6"].key_vault_certificate[local.primary_region].versionless_id
-    }
-  }
-
-  depends_on = [azurerm_key_vault_access_policy.frontdoor]
 }

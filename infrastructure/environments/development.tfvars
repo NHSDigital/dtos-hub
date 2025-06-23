@@ -58,7 +58,7 @@ projects = {
     }
     frontdoor_profile = {
       sku_name = "Premium_AzureFrontDoor"
-      secrets = ["pamo16test6"] # Keys from var.acme_certificates
+      secrets  = ["pamo16test6"] # Keys from var.acme_certificates
     }
     tags = {
       Project = "DToS Participant Manager"

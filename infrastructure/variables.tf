@@ -357,6 +357,7 @@ variable "projects" {
       public_network_access_enabled = bool
     }))
     frontdoor_profile = optional(object({
+      secrets  = optional(list(string), [])
       sku_name = string
       identity = optional(object({
         type         = string                 # "SystemAssigned", "UserAssigned", or "SystemAssigned, UserAssigned".

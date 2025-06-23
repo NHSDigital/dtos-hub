@@ -132,13 +132,6 @@ regions = {
         service_delegation_name    = "Microsoft.DevOpsInfrastructure/pools"
         service_delegation_actions = ["Microsoft.Network/virtualNetworks/subnets/join/action"]
       }
-      github-actions = {
-        cidr_newbits               = 8
-        cidr_offset                = 10
-        delegation_name            = "GitHub.Network/networkSettings" # az provider register --namespace 'GitHub.Network'
-        service_delegation_name    = "GitHub.Network/networkSettings"
-        service_delegation_actions = ["Microsoft.Network/virtualNetworks/subnets/join/action"]
-      }
       dns-resolver-in = {
         cidr_newbits               = 12
         cidr_offset                = 112

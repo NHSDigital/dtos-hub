@@ -284,16 +284,18 @@ key_vault = {
 }
 
 private_dns_zones = {
-  is_app_services_enabled                  = true
-  is_azure_sql_private_dns_zone_enabled    = true
-  is_postgres_sql_private_dns_zone_enabled = true
-  is_storage_private_dns_zone_enabled      = true
-  is_acr_private_dns_zone_enabled          = true
-  is_app_insights_private_dns_zone_enabled = true
-  is_apim_private_dns_zone_enabled         = true
-  is_key_vault_private_dns_zone_enabled    = true
-  is_event_hub_private_dns_zone_enabled    = true
-  is_event_grid_enabled_dns_zone_enabled   = true
+  is_app_services_enabled                    = true
+  is_azure_sql_private_dns_zone_enabled      = true
+  is_postgres_sql_private_dns_zone_enabled   = true
+  is_storage_private_dns_zone_enabled        = true
+  is_acr_private_dns_zone_enabled            = true
+  is_app_insights_private_dns_zone_enabled   = true
+  is_apim_private_dns_zone_enabled           = true
+  is_key_vault_private_dns_zone_enabled      = true
+  is_event_hub_private_dns_zone_enabled      = true
+  is_event_grid_enabled_dns_zone_enabled     = true
+  is_container_apps_enabled_dns_zone_enabled = true
+  is_service_bus_namespace_enabled           = true
 }
 
 law = {

@@ -317,6 +317,7 @@ private_dns_zones = {
   is_event_hub_private_dns_zone_enabled      = true
   is_event_grid_enabled_dns_zone_enabled     = true
   is_container_apps_enabled_dns_zone_enabled = true
+  is_service_bus_namespace_enabled           = true
 }
 
 law = {

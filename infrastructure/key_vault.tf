@@ -149,6 +149,8 @@ resource "azurerm_cdn_frontdoor_secret" "screening_wildcard" {
       key_vault_certificate_id = module.acme_certificate["screening_wildcard"].key_vault_certificate[local.primary_region].versionless_secret_id
     }
   }
+
+  depends_on = [azurerm_key_vault_access_policy.frontdoor]
 }
 
 # locals {

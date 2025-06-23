@@ -141,12 +141,12 @@ resource "azurerm_key_vault_access_policy" "frontdoor" {
 resource "azurerm_cdn_frontdoor_secret" "screening_wildcard" {
   for_each = local.frontdoor_profiles
 
-  name                     = "screening-wildcard"
+  name                     = "pamo16test6"
   cdn_frontdoor_profile_id = module.frontdoor_profile[each.key].id
 
   secret {
     customer_certificate {
-      key_vault_certificate_id = module.acme_certificate["screening_wildcard"].key_vault_certificate[local.primary_region].versionless_secret_id
+      key_vault_certificate_id = module.acme_certificate["pamo16test6"].key_vault_certificate[local.primary_region].versionless_secret_id
     }
   }
 

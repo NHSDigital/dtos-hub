@@ -48,10 +48,6 @@ output "private_dns_zones" {
   value = module.private_dns_zones
 }
 
-output "networking_rg_name" {
-  value = { for k, v in azurerm_resource_group.rg_hub : k => v.name }
-}
-
 output "private_endpoint_rg_name" {
   value = { for k, v in azurerm_resource_group.rg_private_endpoints : k => v.name }
 }

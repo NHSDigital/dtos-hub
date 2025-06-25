@@ -242,11 +242,6 @@ diagnostic_settings = {
 # Where this leaf domain is missing, redirect the DNS-01 challenges using the CNAME method (e.g. to acme subdomain).
 # Split-brain DNS (where private domains overlap the public namespace) will also spoil DNS-01 challenges, so redirect with both public and private CNAMEs.
 acme_certificates = {
-  pamo16test6 = {
-    common_name             = "pamo16test6.non-live.screening.nhs.uk"
-    dns_challenge_zone_name = "non-live.screening.nhs.uk"
-    key_type                = "4096" # Front Door requires RSA, ECC is not supported
-  }
   screening_wildcard = {
     common_name             = "*.non-live.screening.nhs.uk"
     dns_challenge_zone_name = "non-live.screening.nhs.uk"

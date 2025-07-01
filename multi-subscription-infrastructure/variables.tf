@@ -64,6 +64,34 @@ variable "regions" {
   }))
 }
 
+variable "activity_log_alert" {
+  type = map(object({
+    criteria = optional(object({
+      category = string
+      level    = string
+      service_health = optional(object({
+        events    = list(string)
+        locations = list(string)
+        services  = optional(list(string), [])
+      }))
+    }))
+  }))
+}
+
+# variable "activity_log_alert" {
+#   type = map(object({
+#     criteria = optional(map(object({
+#       category = string
+#       level    = string
+#       service_health = optional(map(object({
+#         events    = list(string)
+#         locations = list(string)
+#         services  = optional(list(string), [])
+#       })))
+#     })))
+#   }))
+# }
+
 variable "monitor_action_group" {
   description = "Default configuration for the monitor action groups."
   type = map(object({
@@ -95,7 +123,6 @@ variable "monitor_action_group" {
       service_uri             = string
       use_common_alert_schema = optional(bool, false)
     })))
-
   }))
 }
 

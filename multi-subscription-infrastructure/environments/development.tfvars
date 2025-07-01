@@ -2,7 +2,7 @@ application = "hub"
 environment = "DEV"
 env_type    = "nonlive"
 
-attached_environments = ["dev", "nft", "int"]
+# attached_environments = ["dev", "nft", "int"]
 
 regions = {
   uksouth = {
@@ -65,6 +65,35 @@ monitor_action_group = {
     }
   }
 }
+
+
+activity_log_alert = {
+  criteria-action_group-uksouth = {
+    criteria = {
+      category = "ServiceHealth"
+      level    = "Critical"
+      service_health = {
+        events    = ["Incident", "Maintenance"]
+        locations = ["uksouth"]
+        services  = []
+      }
+    }
+  }
+}
+
+# activity_log_alert = {
+#   criteria = {
+#     category = "ServiceHealth"
+#     level    = "Critical"
+#     service_health = {
+#       alert_team = {
+#         events     = ["Incident", "Maintenance"]
+#         locations  = ["uksouth"]
+#         # services   = "Activity Logs & Alerts"
+#       }
+#     }
+#   }
+# }
 
 
 tags = {

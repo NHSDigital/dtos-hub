@@ -1,7 +1,7 @@
 module "monitor_action_group" {
   for_each = local.monitor_action_group_map
 
-  source = "../../../dtos-devops-templates/infrastructure/modules/monitor-action-group"
+  source = "../../dtos-devops-templates/infrastructure/modules/monitor-action-group"
 
   name                = "${module.regions_config[each.value.region].names.monitor-action-group}-${lower(each.value.short_name)}"
   resource_group_name = azurerm_resource_group.core[each.value.region].name
@@ -17,7 +17,7 @@ module "monitor_action_group" {
 module "azurerm_monitor_smart_detector_alert_rule" {
   for_each = local.monitor_action_group_map
 
-  source = "../../../dtos-devops-templates/infrastructure/modules/monitor-smart-detector-alert-rule"
+  source = "../../dtos-devops-templates/infrastructure/modules/monitor-smart-detector-alert-rule"
 
   resource_group_name     = azurerm_resource_group.core[each.value.region].name
   subscription_id         = var.TARGET_SUBSCRIPTION_ID

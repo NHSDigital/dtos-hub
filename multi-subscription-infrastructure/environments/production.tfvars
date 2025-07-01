@@ -1,8 +1,8 @@
 application = "hub"
-environment = "DEV"
-env_type    = "nonlive"
+environment = "PROD"
+env_type    = "live"
 
-attached_environments = ["dev", "nft", "int"]
+attached_environments = ["pre", "prd"]
 
 projects = {
   dtos-cohort-manager = {
@@ -12,10 +12,7 @@ projects = {
       sku                           = "Premium"
       admin_enabled                 = false
       uai_name                      = "dtos-cohort-manager-acr-push"
-      public_network_access_enabled = true
-    }
-    frontdoor_profile = {
-      sku_name = "Premium_AzureFrontDoor"
+      public_network_access_enabled = false
     }
     tags = {
       Project = "DToS Cohort Manager"
@@ -29,7 +26,7 @@ projects = {
       sku                           = "Premium"
       admin_enabled                 = false
       uai_name                      = "dtos-communication-management-acr-push"
-      public_network_access_enabled = true
+      public_network_access_enabled = false
     }
     tags = {
       Project = "DToS Communication Management"
@@ -43,7 +40,7 @@ projects = {
       sku                           = "Premium"
       admin_enabled                 = false
       uai_name                      = "dtos-service-insights-acr-push"
-      public_network_access_enabled = true
+      public_network_access_enabled = false
     }
     tags = {
       Project = "DToS Service Insights"
@@ -57,52 +54,28 @@ projects = {
       sku                           = "Premium"
       admin_enabled                 = false
       uai_name                      = "dtos-participant-manager-acr-push"
-      public_network_access_enabled = true
-    }
-    frontdoor_profile = {
-      sku_name = "Premium_AzureFrontDoor"
+      public_network_access_enabled = false
     }
     tags = {
       Project = "DToS Participant Manager"
     }
   }
+}
 
-  dtos-tooling = {
-    full_name  = "dtos-tooling"
-    short_name = "tooling"
-    acr = {
-      sku                           = "Premium"
-      admin_enabled                 = false
-      uai_name                      = "dtos-tooling-push"
-      public_network_access_enabled = true
-    }
-    tags = {
-      Project = "DToS Tooling"
-    }
-  }
-
-  dtos-manage-breast-screening = {
-    full_name  = "dtos-manage-breast-screening"
-    short_name = "manbrs"
-    tags = {
-      Project = "Manage Breast Screening"
-    }
-    frontdoor_profile = {
-      sku_name = "Premium_AzureFrontDoor"
-    }
-  }
+diagnostic_settings = {
+  metric_enabled = true
 }
 
 features = {
   private_endpoints_enabled              = true
   private_service_connection_is_manual   = false
   public_network_access_enabled          = true
-  log_analytics_data_export_rule_enabled = false
+  log_analytics_data_export_rule_enabled = true
 }
 
 regions = {
   uksouth = {
-    address_space     = "10.100.0.0/16"
+    address_space     = "10.1.0.0/16"
     is_primary_region = true
     subnets = {
       acr = {
@@ -149,80 +122,14 @@ regions = {
   }
 }
 
-monitor_action_group = {
-  action_group = {
-    short_name = "SHA"
-    email_receiver = {
-      alert_team = {
-        name                    = "Service_Health_Alerts"
-        email_address           = "england.dtos-azure-health-alerts@nhs.net"
-        use_common_alert_schema = false
-      }
-    }
-  }
-}
-
-application_gateway_additional = {
-  probe = {
-    parman_www_dev = {
-      host                = "www-dev.non-live.screening.nhs.uk" # the hostname which will be passed to the backend pool, not used for connectivity
-      interval            = 30
-      path                = "/"
-      protocol            = "Https"
-      timeout             = 30
-      unhealthy_threshold = 3
-      match = {
-        status_code = ["200-399"] # not strictly needed, but this stops Terraform detecting a change every time
-      }
-    }
-  }
-  backend_http_settings = {
-    parman_www_dev = {
-      cookie_based_affinity = "Disabled"
-      port                  = 443
-      probe_key             = "parman_www_dev"
-      protocol              = "Https"
-      request_timeout       = 20
-    }
-  }
-  http_listener = {
-    parman_www_dev_public = {
-      frontend_ip_configuration_key = "public"
-      frontend_port_key             = "https"
-      host_name                     = "www-dev.non-live.screening.nhs.uk"
-      protocol                      = "Https"
-      require_sni                   = true
-      ssl_certificate_key           = "screening_wildcard"
-      firewall_policy_id            = "/subscriptions/ecef17e1-613b-40b6-83d8-b93e8b5556bf/resourceGroups/rg-hub-dev-uks-hub-networking/providers/Microsoft.Network/applicationGatewayWebApplicationFirewallPolicies/waf-hub-nonlive-uks-agw-parman-www"
-    }
-  }
-  request_routing_rule = {
-    parman_www_dev_public = {
-      backend_address_pool_key  = "parman_www_dev"
-      backend_http_settings_key = "parman_www_dev"
-      http_listener_key         = "parman_www_dev_public"
-      priority                  = 950
-      rule_type                 = "Basic"
-    }
-  }
-}
-
-application_gateway_additional_backend_address_pool_by_region = {
-  uksouth = {
-    parman_www_dev = {
-      fqdns = ["dev-uks-nextjs-frontend.azurewebsites.net"]
-    }
-  }
-}
-
 apim_config = {
-  sku_name                    = "Developer"
-  sku_capacity                = 1
+  sku_name                    = "Premium"
+  sku_capacity                = 3
   virtual_network_type        = "Internal"
   publisher_email             = "apim.dtos@hscic.gov.uk"
   publisher_name              = "DToS - NHS Digital"
   gateway_disabled            = false
-  zones                       = []
+  zones                       = ["1", "2", "3"]
   public_ip_allocation_method = "Static"
   public_ip_sku               = "Standard"
   sign_in_enabled             = true
@@ -237,29 +144,92 @@ apim_config = {
   }
 }
 
-avd_vm_count                 = 6
+avd_vm_count                 = 2
 avd_maximum_sessions_allowed = 6 # per session host
 avd_vm_size                  = "Standard_D4as_v5"
-avd_users_group_name         = "DToS-hub-dev-uks-hub-virtual-desktop-User-Login"
-avd_admins_group_name        = "DToS-hub-dev-uks-hub-virtual-desktop-User-ADMIN-Login"
-avd_source_image_from_gallery = {
-  image_name      = "gi_wvd"
-  gallery_name    = "rg_hub_dev_uks_compute_gallery"
-  gallery_rg_name = "rg-hub-dev-uks-hub-virtual-desktop"
-}
+avd_users_group_name         = "DToS-hub-prod-uks-hub-virtual-desktop-User-Login"
+avd_admins_group_name        = "DToS-hub-prod-uks-hub-virtual-desktop-User-ADMIN-Login"
+# AVD_SOURCE_IMAGE_ID will be set by ADO variable group to allow deployment from another subscription
+#
+# avd_source_image_from_gallery = {
+#   image_name      = "gi_wvd"
+#   gallery_name    = "rg_hub_prod_uks_compute_gallery"
+#   gallery_rg_name = "rg-hub-prod-uks-hub-virtual-desktop"
+# }
+# avd_source_image_reference = {
+#   offer     = "windows-11"
+#   publisher = "microsoftwindowsdesktop"
+#   sku       = "win11-23h2-avd"
+#   version   = "latest"
+# }
 
 dns_zone_name_private = {
-  nationalscreening = "private.non-live.nationalscreening.nhs.uk"
-  screening         = "private.non-live.screening.nhs.uk"
+  nationalscreening = "private.nationalscreening.nhs.uk"
+  screening         = "private.screening.nhs.uk"
 }
 dns_zone_name_public = {
-  nationalscreening = "non-live.nationalscreening.nhs.uk"
-  screening         = "non-live.screening.nhs.uk"
+  nationalscreening = "nationalscreening.nhs.uk"
+  screening         = "screening.nhs.uk"
 }
-dns_zone_rg_name_public = "rg-hub-dev-uks-public-dns-zones"
+dns_zone_rg_name_public = "rg-hub-prod-uks-public-dns-zones"
 
-diagnostic_settings = {
-  metric_enabled = true
+eventhub_namespaces = {
+  dtos-hub = {
+    sku                           = "Standard"
+    public_network_access_enabled = true
+    minimum_tls_version           = "1.2"
+    maximum_throughput_units      = 1
+    auth_rule = {
+      listen = true
+      send   = false
+      manage = false
+    }
+    event_hubs = {
+      # Log events from the Hub itself as well as from individual applications
+      dtos-hub = {
+        name              = "dtosHubProd"
+        consumer_group    = "dtosHubConsumerGroupProd"
+        partition_count   = 2
+        message_retention = 1
+      }
+      cohort-manager-pre = {
+        name              = "cohortExportPreProd"
+        consumer_group    = "cohortConsumerGroupPreProd"
+        partition_count   = 2
+        message_retention = 1
+      }
+      cohort-manager-prod = {
+        name              = "cohortExportProd"
+        consumer_group    = "cohortConsumerGroupProd"
+        partition_count   = 2
+        message_retention = 1
+      }
+      communication-manager-pre = {
+        name              = "commgtExportPreProd"
+        consumer_group    = "commgtConsumerGroupPreProd"
+        partition_count   = 2
+        message_retention = 1
+      }
+      communication-manager-prod = {
+        name              = "commgtExportProd"
+        consumer_group    = "commgtConsumerGroupProd"
+        partition_count   = 2
+        message_retention = 1
+      }
+      service-insights-pre = {
+        name              = "serinsExportPreProd"
+        consumer_group    = "serinsConsumerGroupPreProd"
+        partition_count   = 2
+        message_retention = 1
+      }
+      service-insights-prod = {
+        name              = "serinsExportProd"
+        consumer_group    = "serinsConsumerGroupProd"
+        partition_count   = 2
+        message_retention = 1
+      }
+    }
+  }
 }
 
 # ACME Terraform provider (which uses https://github.com/go-acme/lego) always checks that public NS records exist for the leaf domain, unlike certbot.
@@ -267,24 +237,24 @@ diagnostic_settings = {
 # Split-brain DNS (where private domains overlap the public namespace) will also spoil DNS-01 challenges, so redirect with both public and private CNAMEs.
 acme_certificates = {
   screening_wildcard = {
-    common_name             = "*.non-live.screening.nhs.uk"
-    dns_challenge_zone_name = "non-live.screening.nhs.uk"
+    common_name             = "*.screening.nhs.uk"
+    dns_challenge_zone_name = "screening.nhs.uk"
   }
   screening_wildcard_private = {
-    common_name                 = "*.private.non-live.screening.nhs.uk"
-    dns_cname_zone_name         = "non-live.screening.nhs.uk"
-    dns_private_cname_zone_name = "private.non-live.screening.nhs.uk"
-    dns_challenge_zone_name     = "acme.non-live.screening.nhs.uk"
+    common_name                 = "*.private.screening.nhs.uk"
+    dns_cname_zone_name         = "screening.nhs.uk"
+    dns_private_cname_zone_name = "private.screening.nhs.uk"
+    dns_challenge_zone_name     = "acme.screening.nhs.uk"
   }
   nationalscreening_wildcard = {
-    common_name             = "*.non-live.nationalscreening.nhs.uk"
-    dns_challenge_zone_name = "non-live.nationalscreening.nhs.uk"
+    common_name             = "*.nationalscreening.nhs.uk"
+    dns_challenge_zone_name = "nationalscreening.nhs.uk"
   }
   nationalscreening_wildcard_private = {
-    common_name                 = "*.private.non-live.nationalscreening.nhs.uk"
-    dns_cname_zone_name         = "non-live.nationalscreening.nhs.uk"
-    dns_private_cname_zone_name = "private.non-live.nationalscreening.nhs.uk"
-    dns_challenge_zone_name     = "acme.non-live.nationalscreening.nhs.uk"
+    common_name                 = "*.private.nationalscreening.nhs.uk"
+    dns_cname_zone_name         = "nationalscreening.nhs.uk"
+    dns_private_cname_zone_name = "private.nationalscreening.nhs.uk"
+    dns_challenge_zone_name     = "acme.nationalscreening.nhs.uk"
   }
 }
 
@@ -313,23 +283,40 @@ key_vault = {
 }
 
 private_dns_zones = {
-  is_app_services_enabled                    = true
-  is_azure_sql_private_dns_zone_enabled      = true
-  is_postgres_sql_private_dns_zone_enabled   = true
-  is_storage_private_dns_zone_enabled        = true
-  is_acr_private_dns_zone_enabled            = true
-  is_app_insights_private_dns_zone_enabled   = true
-  is_apim_private_dns_zone_enabled           = true
-  is_key_vault_private_dns_zone_enabled      = true
-  is_event_hub_private_dns_zone_enabled      = true
-  is_event_grid_enabled_dns_zone_enabled     = true
-  is_container_apps_enabled_dns_zone_enabled = true
+  is_app_services_enabled                  = true
+  is_azure_sql_private_dns_zone_enabled    = true
+  is_postgres_sql_private_dns_zone_enabled = true
+  is_storage_private_dns_zone_enabled      = true
+  is_acr_private_dns_zone_enabled          = true
+  is_app_insights_private_dns_zone_enabled = true
+  is_apim_private_dns_zone_enabled         = true
+  is_key_vault_private_dns_zone_enabled    = true
+  is_event_hub_private_dns_zone_enabled    = true
+  is_event_grid_enabled_dns_zone_enabled   = true
 }
 
 law = {
-  export_enabled = false
+  export_enabled = true
   law_sku        = "PerGB2018"
   retention_days = 30
+  export_table_names = [
+    "AGWAccessLogs",
+    "AGWFirewallLogs",
+    "Alert",
+    "ApiManagementGatewayLogs",
+    "APIMDevPortalAuditDiagnosticLog",
+    "AppDependencies",
+    "AppExceptions",
+    "AppMetrics",
+    "AppPerformanceCounters",
+    "AppRequests",
+    "AppSystemEvents",
+    "AppTraces",
+    "AzureDiagnostics",
+    "AzureMetrics",
+    "LAQueryLogs",
+    "Usage"
+  ]
 }
 
 network_security_group_rules = {
@@ -442,74 +429,21 @@ network_security_group_rules = {
       source_address_prefix      = "WindowsVirtualDesktop"
       destination_address_prefix = "VirtualNetwork"
     }
+  ],
+
+  github-actions = [
+    {
+      name                       = "AllowStorageOutbound"
+      priority                   = 230
+      direction                  = "Outbound"
+      access                     = "Allow"
+      protocol                   = "*"
+      source_port_range          = "*"
+      destination_port_range     = "*"
+      source_address_prefix      = "*"
+      destination_address_prefix = "Storage"
+    }
   ]
-}
-
-tags = {
-  Project = "DToS Hub"
-}
-
-event_grid_configs = {
-  # evgt-<env_name>-<project_id_source>-<api_name>-<theme>
-
-  # CreateEpisode writes to this topic
-  evgt-dev-si-create-episode-ep = {
-    identity_type = "SystemAssigned"
-    environment   = "dev"
-  }
-  # UpdateEpisode writes to this topic
-  evgt-dev-si-update-episode-ep = {
-    identity_type = "SystemAssigned"
-    environment   = "dev"
-  }
-  # ReceiveData writes to this topic
-  evgt-dev-si-receive-data-ep = {
-    identity_type = "SystemAssigned"
-    environment   = "dev"
-  }
-  # ReceiveData writes to this topic
-  evgt-dev-si-receive-data-pr = {
-    identity_type = "SystemAssigned"
-    environment   = "dev"
-  }
-  evgt-nft-si-create-episode-ep = {
-    identity_type = "SystemAssigned"
-    environment   = "nft"
-  }
-  # UpdateEpisode writes to this topic
-  evgt-nft-si-update-episode-ep = {
-    identity_type = "SystemAssigned"
-    environment   = "nft"
-  }
-  # ReceiveData writes to this topic
-  evgt-nft-si-receive-data-ep = {
-    identity_type = "SystemAssigned"
-    environment   = "nft"
-  }
-  # ReceiveData writes to this topic
-  evgt-nft-si-receive-data-pr = {
-    identity_type = "SystemAssigned"
-    environment   = "nft"
-  }
-  evgt-int-si-create-episode-ep = {
-    identity_type = "SystemAssigned"
-    environment   = "int"
-  }
-  # UpdateEpisode writes to this topic
-  evgt-int-si-update-episode-ep = {
-    identity_type = "SystemAssigned"
-    environment   = "int"
-  }
-  # ReceiveData writes to this topic
-  evgt-int-si-receive-data-ep = {
-    identity_type = "SystemAssigned"
-    environment   = "int"
-  }
-  # ReceiveData writes to this topic
-  evgt-int-si-receive-data-pr = {
-    identity_type = "SystemAssigned"
-    environment   = "int"
-  }
 }
 
 event_grid_defaults = {
@@ -521,17 +455,6 @@ event_grid_defaults = {
   public_network_access_enabled = false
 }
 
-storage_accounts = {
-
-  eventgrid = {
-    name_suffix                   = "eventgrid"
-    account_tier                  = "Standard"
-    replication_type              = "LRS"
-    public_network_access_enabled = false
-    containers = {
-      config = {
-        container_name = "deadletterqueue"
-      }
-    }
-  }
+tags = {
+  Project = "DToS Hub"
 }

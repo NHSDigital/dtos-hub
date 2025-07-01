@@ -14,6 +14,11 @@ module "monitor_action_group" {
   webhook_receiver    = each.value.webhook_receiver
 }
 
+data "azurerm_resources" "all_app_insights" {
+  type = "microsoft.insights/components"
+}
+
+
 module "azurerm_monitor_smart_detector_alert_rule" {
   for_each = local.monitor_action_group_map
 
@@ -22,9 +27,9 @@ module "azurerm_monitor_smart_detector_alert_rule" {
   resource_group_name     = azurerm_resource_group.rg_base[each.value.region].name
   subscription_id         = var.TARGET_SUBSCRIPTION_ID
   action_group_id         = module.monitor_action_group[each.key].monitor_action_group.id
-  scope_resource_ids      = data.azurerm_application_insights.ai.id
+  scope_resource_ids      = data.azurerm_resources.all_app_insights.resources[*].id
   detector_type           = "FailureAnomaliesDetector"
-  description             = "testing"
+  description             = "FailureAnomaliesDetector"
 
 }
 

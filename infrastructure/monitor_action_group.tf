@@ -4,7 +4,7 @@ module "monitor_action_group" {
   source = "../../dtos-devops-templates/infrastructure/modules/monitor-action-group"
 
   name                = "${module.regions_config[each.value.region].names.monitor-action-group}-${lower(each.value.short_name)}"
-  resource_group_name = azurerm_resource_group.core[each.value.region].name
+  resource_group_name = azurerm_resource_group.rg_base[each.value.region].name
   location            = each.value.region
   short_name          = each.value.short_name
   email_receiver      = each.value.email_receiver
@@ -19,7 +19,7 @@ module "azurerm_monitor_smart_detector_alert_rule" {
 
   source = "../../dtos-devops-templates/infrastructure/modules/monitor-smart-detector-alert-rule"
 
-  resource_group_name     = azurerm_resource_group.core[each.value.region].name
+  resource_group_name     = azurerm_resource_group.rg_base[each.value.region].name
   subscription_id         = var.TARGET_SUBSCRIPTION_ID
   action_group_id         = module.monitor_action_group[each.key].monitor_action_group.id
   scope_resource_ids      = data.azurerm_application_insights.ai.id

@@ -3,7 +3,7 @@ module "monitor_action_group" {
 
   source = "../../dtos-devops-templates/infrastructure/modules/monitor-action-group"
 
-  name                = "${module.regions_config[each.value.region].names.monitor-action-group}-${lower(each.value.short_name)}"
+  name                = "${module.config[each.value.region].names.monitor-action-group}-${lower(each.value.short_name)}"
   resource_group_name = azurerm_resource_group.rg_base[each.value.region].name
   location            = each.value.region
   short_name          = each.value.short_name

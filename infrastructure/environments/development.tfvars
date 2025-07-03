@@ -14,6 +14,9 @@ projects = {
       uai_name                      = "dtos-cohort-manager-acr-push"
       public_network_access_enabled = true
     }
+    frontdoor_profile = {
+      sku_name = "Premium_AzureFrontDoor"
+    }
     tags = {
       Project = "DToS Cohort Manager"
     }
@@ -47,7 +50,6 @@ projects = {
     }
   }
 
-
   dtos-participant-manager = {
     full_name  = "participant-manager"
     short_name = "parman"
@@ -57,22 +59,11 @@ projects = {
       uai_name                      = "dtos-participant-manager-acr-push"
       public_network_access_enabled = true
     }
+    frontdoor_profile = {
+      sku_name = "Premium_AzureFrontDoor"
+    }
     tags = {
       Project = "DToS Participant Manager"
-    }
-  }
-
-  dtos-analyse-data-pipeline = {
-    full_name  = "analytics-data-pipeline"
-    short_name = "andppl"
-    acr = {
-      sku                           = "Premium"
-      admin_enabled                 = false
-      uai_name                      = "dtos-analyse-data-pipeline-acr-push"
-      public_network_access_enabled = true
-    }
-    tags = {
-      Project = "DToS Analyse Data Pipeline"
     }
   }
 
@@ -89,13 +80,23 @@ projects = {
       Project = "DToS Tooling"
     }
   }
+
+  dtos-manage-breast-screening = {
+    full_name  = "dtos-manage-breast-screening"
+    short_name = "manbrs"
+    tags = {
+      Project = "Manage Breast Screening"
+    }
+    frontdoor_profile = {
+      sku_name = "Premium_AzureFrontDoor"
+    }
+  }
 }
 
 features = {
   private_endpoints_enabled              = true
   private_service_connection_is_manual   = false
   public_network_access_enabled          = true
-  github_actions_enabled                 = true
   log_analytics_data_export_rule_enabled = false
 }
 
@@ -129,13 +130,6 @@ regions = {
         cidr_offset                = 9
         delegation_name            = "Microsoft.DevOpsInfrastructure/pools" # az provider register --namespace 'Microsoft.DevOpsInfrastructure'
         service_delegation_name    = "Microsoft.DevOpsInfrastructure/pools"
-        service_delegation_actions = ["Microsoft.Network/virtualNetworks/subnets/join/action"]
-      }
-      github-actions = {
-        cidr_newbits               = 8
-        cidr_offset                = 10
-        delegation_name            = "GitHub.Network/networkSettings" # az provider register --namespace 'GitHub.Network'
-        service_delegation_name    = "GitHub.Network/networkSettings"
         service_delegation_actions = ["Microsoft.Network/virtualNetworks/subnets/join/action"]
       }
       dns-resolver-in = {
@@ -434,20 +428,6 @@ network_security_group_rules = {
       destination_port_range     = "3389"
       source_address_prefix      = "WindowsVirtualDesktop"
       destination_address_prefix = "VirtualNetwork"
-    }
-  ],
-
-  github-actions = [
-    {
-      name                       = "AllowStorageOutbound"
-      priority                   = 230
-      direction                  = "Outbound"
-      access                     = "Allow"
-      protocol                   = "*"
-      source_port_range          = "*"
-      destination_port_range     = "*"
-      source_address_prefix      = "*"
-      destination_address_prefix = "Storage"
     }
   ]
 }

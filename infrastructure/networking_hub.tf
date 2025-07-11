@@ -97,34 +97,3 @@ resource "azurerm_role_assignment" "devops_reader" {
   role_definition_name = "Reader"
   principal_id         = data.azuread_service_principal.devops_infrastructure.id
 }
-
-
-
-# Used to grant GitHub Actions runners access to private subnets
-resource "azapi_resource" "github_network_settings" {
-  for_each = {
-    for key, value in var.regions : key => value
-    if var.features.github_actions_enabled == true
-  }
-
-  type                      = "GitHub.Network/networkSettings@2024-04-02"
-  name                      = "gh-enterprise-link"
-  parent_id                 = azurerm_resource_group.rg_hub[each.key].id
-  schema_validation_enabled = false
-  location                  = each.key
-
-  body = {
-    properties = {
-      subnetId   = module.subnets_hub["${module.config[each.key].names.subnet}-github-actions"].id
-      businessId = var.GITHUB_ORG_DATABASE_ID
-    }
-  }
-
-  response_export_values = ["id"]
-
-  tags = var.tags
-
-  lifecycle {
-    ignore_changes = [tags]
-  }
-}

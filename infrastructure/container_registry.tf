@@ -44,7 +44,7 @@ locals {
       region                        = value.region_key
       tags                          = value.tags
     }
-    if value.acr != {}         # only include acrs that are not empty
+    if value.acr != null       # only include acrs that are not empty
     && value.is_primary_region # only include acrs in primary regions
   }
 }

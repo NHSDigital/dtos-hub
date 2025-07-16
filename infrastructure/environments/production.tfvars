@@ -14,6 +14,9 @@ projects = {
       uai_name                      = "dtos-cohort-manager-acr-push"
       public_network_access_enabled = false
     }
+    frontdoor_profile = {
+      sku_name = "Premium_AzureFrontDoor"
+    }
     tags = {
       Project = "DToS Cohort Manager"
     }
@@ -283,16 +286,17 @@ key_vault = {
 }
 
 private_dns_zones = {
-  is_app_services_enabled                  = true
-  is_azure_sql_private_dns_zone_enabled    = true
-  is_postgres_sql_private_dns_zone_enabled = true
-  is_storage_private_dns_zone_enabled      = true
-  is_acr_private_dns_zone_enabled          = true
-  is_app_insights_private_dns_zone_enabled = true
-  is_apim_private_dns_zone_enabled         = true
-  is_key_vault_private_dns_zone_enabled    = true
-  is_event_hub_private_dns_zone_enabled    = true
-  is_event_grid_enabled_dns_zone_enabled   = true
+  is_app_services_enabled                    = true
+  is_azure_sql_private_dns_zone_enabled      = true
+  is_postgres_sql_private_dns_zone_enabled   = true
+  is_storage_private_dns_zone_enabled        = true
+  is_acr_private_dns_zone_enabled            = true
+  is_app_insights_private_dns_zone_enabled   = true
+  is_apim_private_dns_zone_enabled           = true
+  is_key_vault_private_dns_zone_enabled      = true
+  is_event_hub_private_dns_zone_enabled      = true
+  is_event_grid_enabled_dns_zone_enabled     = true
+  is_container_apps_enabled_dns_zone_enabled = true
 }
 
 law = {

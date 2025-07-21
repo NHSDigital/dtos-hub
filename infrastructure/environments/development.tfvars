@@ -149,6 +149,19 @@ regions = {
   }
 }
 
+monitor_action_group = {
+  action_group = {
+    short_name = "SHA"
+    email_receiver = {
+      alert_team = {
+        name                    = "Service_Health_Alerts"
+        email_address           = "england.dtos-azure-health-alerts@nhs.net"
+        use_common_alert_schema = false
+      }
+    }
+  }
+}
+
 application_gateway_additional = {
   probe = {
     parman_www_dev = {

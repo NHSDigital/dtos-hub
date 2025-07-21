@@ -1,0 +1,91 @@
+---
+name: $(Build.SourceBranchName)-$(Date:yyyyMMdd)_$(Rev:r)
+trigger: none
+pr: none
+
+pool:
+  name: private-pool-dev-uks
+  # vmImage: ubuntu-latest
+
+resources:
+  repositories:
+    - repository: dtos-devops-templates
+      type: github
+      name: NHSDigital/dtos-devops-templates
+      ref: 56422f6befe4173a9873591d003400a1cfb0b557
+      endpoint: NHSDigital
+
+variables:
+  - group: DEV_multi_sub_backend
+  - group: DEV_hub_config
+  - name: TF_DIRECTORY
+    value: $(System.DefaultWorkingDirectory)/$(System.TeamProject)/multi-subscription-infrastructure
+  - name: TF_VERSION
+    value: 1.11.4
+  - name: TF_PLAN_ARTIFACT
+    value: tf_plan_hub_art_multi_subscription_DEV
+  - name: ENVIRONMENT
+    value: development
+
+stages:
+  - stage: terraform_plan
+    displayName: Terraform Plan
+    condition: eq(variables['Build.Reason'], 'Manual')
+    variables:
+      tfVarsFile: environments/$(ENVIRONMENT).tfvars
+    jobs:
+      - job: get_subscription_ids
+        displayName: Get associated subscription IDs
+        steps:
+          - checkout: dtos-devops-templates
+          - template: .azuredevops/templates/steps/get-subscription-ids.yaml@dtos-devops-templates
+            parameters:
+              azureSubscription: $(SERVICE_CONNECTION)
+
+      - job: init_and_plan
+        displayName: Run Terraform plan per subscription
+        dependsOn: get_subscription_ids
+        strategy:
+          matrix: $[ dependencies.get_subscription_ids.outputs['get_associated_subscription_ids.subscriptionMatrix'] ]
+        steps:
+          - checkout: self
+          - checkout: dtos-devops-templates
+          - script: |
+              echo "Running Terraform plan for subscription $(value) with Short ID: $(shortId)"
+              export TF_PLAN_ARTIFACT="tf_plan_$(shortId)_DEV"
+              echo "TF_PLAN_ARTIFACT=$TF_PLAN_ARTIFACT"
+              export BACKEND_AZURE_STORAGE_ACCOUNT_KEY=$(BACKEND_AZURE_STORAGE_ACCOUNT_KEY)
+            displayName: Show current subscription
+          - template: .azuredevops/templates/steps/tf_plan.yaml@dtos-devops-templates
+            parameters:
+              tfCommandOptions: '-var="TARGET_SUBSCRIPTION_ID=$(value)"'
+
+
+  - stage: terraform_apply
+    displayName: Terraform Apply
+    dependsOn: [terraform_plan]
+    # condition: and(eq(dependencies.terraform_plan.outputs['init_and_plan.TerraformPlan.changesPresent'], 'true'), eq(variables['Build.Reason'], 'Manual'))
+    jobs:
+      - job: get_subscription_ids
+        displayName: Get associated subscription IDs
+        steps:
+          - checkout: dtos-devops-templates
+          - template: .azuredevops/templates/steps/get-subscription-ids.yaml@dtos-devops-templates
+            parameters:
+              azureSubscription: $(SERVICE_CONNECTION)
+
+      - job: terraform_apply
+        displayName: Init, get plan artifact, apply
+        # environment: $(ENVIRONMENT)
+        dependsOn: get_subscription_ids
+        strategy:
+          matrix: $[ dependencies.get_subscription_ids.outputs['get_associated_subscription_ids.subscriptionMatrix'] ]
+        steps:
+          - checkout: self
+          - checkout: dtos-devops-templates
+          - script: |
+              echo "Running Terraform plan for subscription $(value) with Short ID: $(shortId)"
+              export TF_PLAN_ARTIFACT="tf_plan_$(shortId)_DEV"
+              echo "TF_PLAN_ARTIFACT=$TF_PLAN_ARTIFACT"
+              export BACKEND_AZURE_STORAGE_ACCOUNT_KEY=$(BACKEND_AZURE_STORAGE_ACCOUNT_KEY)
+          - template: .azuredevops/templates/steps/tf_apply.yaml@dtos-devops-templates

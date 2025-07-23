@@ -3,12 +3,6 @@ variable "TARGET_SUBSCRIPTION_ID" {
   type        = string
 }
 
-# variable "SUBSCRIPTION_ID_LIST" {
-#   description = "A list of Azure subscription IDs used for smart detector alert rules."
-#   type        = string
-# }
-
-
 variable "application" {
   description = "Project/Application code for deployment"
   type        = string
@@ -24,29 +18,6 @@ variable "env_type" {
   description = "Environment grouping for shared hub (live/non-live)"
   type        = string
 }
-
-
-# variable "features" {
-#   description = "Feature flags for the deployment"
-#   type        = map(bool)
-# }
-
-# variable "private_dns_zones" {
-#   description = "Configuration for private DNS zones"
-#   type = object({
-#     is_app_services_enabled                    = optional(bool, false)
-#     is_azure_sql_private_dns_zone_enabled      = optional(bool, false)
-#     is_postgres_sql_private_dns_zone_enabled   = optional(bool, false)
-#     is_storage_private_dns_zone_enabled        = optional(bool, false)
-#     is_acr_private_dns_zone_enabled            = optional(bool, false)
-#     is_app_insights_private_dns_zone_enabled   = optional(bool, false)
-#     is_apim_private_dns_zone_enabled           = optional(bool, false)
-#     is_key_vault_private_dns_zone_enabled      = optional(bool, false)
-#     is_event_hub_private_dns_zone_enabled      = optional(bool, false)
-#     is_event_grid_enabled_dns_zone_enabled     = optional(bool, false)
-#     is_container_apps_enabled_dns_zone_enabled = optional(bool, false)
-#   })
-# }
 
 variable "regions" {
   type = map(object({
@@ -77,20 +48,6 @@ variable "activity_log_alert" {
     }))
   }))
 }
-
-# variable "activity_log_alert" {
-#   type = map(object({
-#     criteria = optional(map(object({
-#       category = string
-#       level    = string
-#       service_health = optional(map(object({
-#         events    = list(string)
-#         locations = list(string)
-#         services  = optional(list(string), [])
-#       })))
-#     })))
-#   }))
-# }
 
 variable "monitor_action_group" {
   description = "Default configuration for the monitor action groups."
@@ -125,7 +82,6 @@ variable "monitor_action_group" {
     })))
   }))
 }
-
 
 variable "tags" {
   description = "Tags to be applied to resources"

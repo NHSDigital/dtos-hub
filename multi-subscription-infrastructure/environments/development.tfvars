@@ -2,8 +2,6 @@ application = "hub"
 environment = "DEV"
 env_type    = "nonlive"
 
-attached_environments = ["dev", "nft", "int"]
-
 regions = {
   uksouth = {
     address_space     = "10.100.0.0/16"
@@ -66,6 +64,20 @@ monitor_action_group = {
   }
 }
 
+
+activity_log_alert = {
+  criteria-action_group-uksouth = {
+    criteria = {
+      category = "ServiceHealth"
+      level    = "Critical"
+      service_health = {
+        events    = ["Incident", "Maintenance"]
+        locations = ["uksouth"]
+        services  = []
+      }
+    }
+  }
+}
 
 tags = {
   Project = "DToS Hub"

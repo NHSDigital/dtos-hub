@@ -35,34 +35,6 @@ projects = {
       Project = "DToS Communication Management"
     }
   }
-
-  dtos-service-insights = {
-    full_name  = "service-insights"
-    short_name = "serins"
-    acr = {
-      sku                           = "Premium"
-      admin_enabled                 = false
-      uai_name                      = "dtos-service-insights-acr-push"
-      public_network_access_enabled = false
-    }
-    tags = {
-      Project = "DToS Service Insights"
-    }
-  }
-
-  dtos-participant-manager = {
-    full_name  = "participant-manager"
-    short_name = "parman"
-    acr = {
-      sku                           = "Premium"
-      admin_enabled                 = false
-      uai_name                      = "dtos-participant-manager-acr-push"
-      public_network_access_enabled = false
-    }
-    tags = {
-      Project = "DToS Participant Manager"
-    }
-  }
 }
 
 diagnostic_settings = {

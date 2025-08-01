@@ -36,37 +36,6 @@ projects = {
     }
   }
 
-  dtos-service-insights = {
-    full_name  = "service-insights"
-    short_name = "serins"
-    acr = {
-      sku                           = "Premium"
-      admin_enabled                 = false
-      uai_name                      = "dtos-service-insights-acr-push"
-      public_network_access_enabled = true
-    }
-    tags = {
-      Project = "DToS Service Insights"
-    }
-  }
-
-  dtos-participant-manager = {
-    full_name  = "participant-manager"
-    short_name = "parman"
-    acr = {
-      sku                           = "Premium"
-      admin_enabled                 = false
-      uai_name                      = "dtos-participant-manager-acr-push"
-      public_network_access_enabled = true
-    }
-    frontdoor_profile = {
-      sku_name = "Premium_AzureFrontDoor"
-    }
-    tags = {
-      Project = "DToS Participant Manager"
-    }
-  }
-
   dtos-tooling = {
     full_name  = "dtos-tooling"
     short_name = "tooling"
@@ -144,19 +113,6 @@ regions = {
         cidr_newbits = 10
         cidr_offset  = 192
         create_nsg   = false
-      }
-    }
-  }
-}
-
-monitor_action_group = {
-  action_group = {
-    short_name = "SHA"
-    email_receiver = {
-      alert_team = {
-        name                    = "Service_Health_Alerts"
-        email_address           = "england.dtos-azure-health-alerts@nhs.net"
-        use_common_alert_schema = false
       }
     }
   }

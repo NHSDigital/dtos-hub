@@ -22,20 +22,6 @@ projects = {
     }
   }
 
-  dtos-communication-management = {
-    full_name  = "communication-management"
-    short_name = "commgt"
-    acr = {
-      sku                           = "Premium"
-      admin_enabled                 = false
-      uai_name                      = "dtos-communication-management-acr-push"
-      public_network_access_enabled = true
-    }
-    tags = {
-      Project = "DToS Communication Management"
-    }
-  }
-
   dtos-tooling = {
     full_name  = "dtos-tooling"
     short_name = "tooling"

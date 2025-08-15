@@ -21,20 +21,6 @@ projects = {
       Project = "DToS Cohort Manager"
     }
   }
-
-  dtos-communication-management = {
-    full_name  = "communication-management"
-    short_name = "commgt"
-    acr = {
-      sku                           = "Premium"
-      admin_enabled                 = false
-      uai_name                      = "dtos-communication-management-acr-push"
-      public_network_access_enabled = false
-    }
-    tags = {
-      Project = "DToS Communication Management"
-    }
-  }
 }
 
 diagnostic_settings = {

@@ -21,6 +21,17 @@ projects = {
       Project = "DToS Cohort Manager"
     }
   }
+
+  dtos-manage-breast-screening = {
+    full_name  = "dtos-manage-breast-screening"
+    short_name = "manbrs"
+    tags = {
+      Project = "Manage Breast Screening"
+    }
+    frontdoor_profile = {
+      sku_name = "Premium_AzureFrontDoor"
+    }
+  }
 }
 
 diagnostic_settings = {

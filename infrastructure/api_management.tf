@@ -24,41 +24,41 @@ module "api-management" {
 
   custom_domains_developer_portal = [
     {
-      host_name    = "portal.${var.dns_zone_name_private.nationalscreening}"
-      key_vault_id = module.acme_certificate["nationalscreening_wildcard_private"].key_vault_certificate[each.key].versionless_secret_id
+      host_name                = "portal.${var.dns_zone_name_private.nationalscreening}"
+      key_vault_certificate_id = module.acme_certificate["nationalscreening_wildcard_private"].key_vault_certificate[each.key].versionless_secret_id
     }
   ]
 
   custom_domains_management = [
     {
-      host_name    = "management.${var.dns_zone_name_private.nationalscreening}"
-      key_vault_id = module.acme_certificate["nationalscreening_wildcard_private"].key_vault_certificate[each.key].versionless_secret_id
+      host_name                = "management.${var.dns_zone_name_private.nationalscreening}"
+      key_vault_certificate_id = module.acme_certificate["nationalscreening_wildcard_private"].key_vault_certificate[each.key].versionless_secret_id
     }
   ]
 
   custom_domains_gateway = [
     {
-      host_name           = "gateway.${var.dns_zone_name_private.nationalscreening}"
-      key_vault_id        = module.acme_certificate["nationalscreening_wildcard_private"].key_vault_certificate[each.key].versionless_secret_id
-      default_ssl_binding = true
+      host_name                = "gateway.${var.dns_zone_name_private.nationalscreening}"
+      key_vault_certificate_id = module.acme_certificate["nationalscreening_wildcard_private"].key_vault_certificate[each.key].versionless_secret_id
+      default_ssl_binding      = true
     },
     {
-      host_name    = "api.${var.dns_zone_name_private.nationalscreening}"
-      key_vault_id = module.acme_certificate["nationalscreening_wildcard_private"].key_vault_certificate[each.key].versionless_secret_id
+      host_name                = "api.${var.dns_zone_name_private.nationalscreening}"
+      key_vault_certificate_id = module.acme_certificate["nationalscreening_wildcard_private"].key_vault_certificate[each.key].versionless_secret_id
       # Technically there should only be a single default binding, however the 'gateway' and private 'api' bindings share the same wildcard certificate.
       # Configure both as defaults to match how Azure Portal will always report it, preventing Terraform reporting a change on every plan.
       default_ssl_binding = true
     },
     {
-      host_name    = "api.${var.dns_zone_name_public.nationalscreening}"
-      key_vault_id = module.acme_certificate["nationalscreening_wildcard"].key_vault_certificate[each.key].versionless_secret_id
+      host_name                = "api.${var.dns_zone_name_public.nationalscreening}"
+      key_vault_certificate_id = module.acme_certificate["nationalscreening_wildcard"].key_vault_certificate[each.key].versionless_secret_id
     }
   ]
 
   custom_domains_scm = [
     {
-      host_name    = "scm.${var.dns_zone_name_private.nationalscreening}"
-      key_vault_id = module.acme_certificate["nationalscreening_wildcard_private"].key_vault_certificate[each.key].versionless_secret_id
+      host_name                = "scm.${var.dns_zone_name_private.nationalscreening}"
+      key_vault_certificate_id = module.acme_certificate["nationalscreening_wildcard_private"].key_vault_certificate[each.key].versionless_secret_id
     }
   ]
 

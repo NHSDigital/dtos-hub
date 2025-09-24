@@ -29,4 +29,6 @@ agent_profile_resource_predictions_manual = {
   ]
 }
 
+fabric_profile_sku_name = "Standard_D2d_v5"
+
 maximum_concurrency = 4

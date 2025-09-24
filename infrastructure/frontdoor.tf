@@ -58,6 +58,11 @@ module "frontdoor_profile" {
 #   }
 #   name = "${var.env_type}-apim-gateway"
 #   origin_group = {
+#     health_probe = {
+#       interval_in_seconds = 30
+#       path                = "/status-0123456789abcdef"
+#       request_type        = "GET"
+#     }
 #     session_affinity_enabled = false
 #   }
 #   origins = {

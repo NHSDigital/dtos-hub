@@ -123,6 +123,7 @@ variable "application_gateway_additional" {
       backend_http_settings_key = string
       http_listener_key         = string
       priority                  = number
+      rewrite_rule_set_key      = optional(string)
       rule_type                 = string
     })))
   })

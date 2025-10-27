@@ -104,58 +104,60 @@ regions = {
   }
 }
 
-# application_gateway_additional = {
-#   probe = {
-#     parman_www_dev = {
-#       host                = "www-dev.non-live.screening.nhs.uk" # the hostname which will be passed to the backend pool, not used for connectivity
-#       interval            = 30
-#       path                = "/"
-#       protocol            = "Https"
-#       timeout             = 30
-#       unhealthy_threshold = 3
-#       match = {
-#         status_code = ["200-399"] # not strictly needed, but this stops Terraform detecting a change every time
-#       }
-#     }
-#   }
-#   backend_http_settings = {
-#     parman_www_dev = {
-#       cookie_based_affinity = "Disabled"
-#       port                  = 443
-#       probe_key             = "parman_www_dev"
-#       protocol              = "Https"
-#       request_timeout       = 20
-#     }
-#   }
-#   http_listener = {
-#     parman_www_dev_public = {
-#       frontend_ip_configuration_key = "public"
-#       frontend_port_key             = "https"
-#       host_name                     = "www-dev.non-live.screening.nhs.uk"
-#       protocol                      = "Https"
-#       require_sni                   = true
-#       ssl_certificate_key           = "screening_wildcard"
-#       firewall_policy_id            = "/subscriptions/ecef17e1-613b-40b6-83d8-b93e8b5556bf/resourceGroups/rg-hub-dev-uks-hub-networking/providers/Microsoft.Network/applicationGatewayWebApplicationFirewallPolicies/waf-hub-nonlive-uks-agw-parman-www"
-#     }
-#   }
-#   request_routing_rule = {
-#     parman_www_dev_public = {
-#       backend_address_pool_key  = "parman_www_dev"
-#       backend_http_settings_key = "parman_www_dev"
-#       http_listener_key         = "parman_www_dev_public"
-#       priority                  = 950
-#       rule_type                 = "Basic"
-#     }
-#   }
-# }
+application_gateway_additional = {
+  probe = {
+    migration_test = {
+      interval                                  = 30
+      path                                      = "/"
+      pick_host_name_from_backend_http_settings = true
+      protocol                                  = "Https"
+      timeout                                   = 30
+      unhealthy_threshold                       = 3
+      match = {
+        status_code = ["200-399"] # not strictly needed, but this stops Terraform detecting a change every time
+      }
+    }
+  }
+  backend_http_settings = {
+    migration_test = {
+      cookie_based_affinity               = "Disabled"
+      pick_host_name_from_backend_address = true
+      port                                = 443
+      probe_key                           = "migration_test"
+      protocol                            = "Https"
+      request_timeout                     = 20
+    }
+  }
+  http_listener = {
+    migration_test_public = {
+      frontend_ip_configuration_key = "public"
+      frontend_port_key             = "https"
+      host_name                     = "migration-test.non-live.nationalscreening.nhs.uk"
+      protocol                      = "Https"
+      require_sni                   = true
+      ssl_certificate_key           = "nationalscreening_wildcard"
+      # firewall_policy_id            = null
+    }
+  }
+  request_routing_rule = {
+    migration_test_public = {
+      backend_address_pool_key  = "migration_test"
+      backend_http_settings_key = "migration_test"
+      http_listener_key         = "migration_test_public"
+      priority                  = 950
+      rewrite_rule_set_key      = "migration_test"
+      rule_type                 = "Basic"
+    }
+  }
+}
 
-# application_gateway_additional_backend_address_pool_by_region = {
-#   uksouth = {
-#     parman_www_dev = {
-#       fqdns = ["dev-uks-nextjs-frontend.azurewebsites.net"]
-#     }
-#   }
-# }
+application_gateway_additional_backend_address_pool_by_region = {
+  uksouth = {
+    migration_test = {
+      fqdns = ["apim-pamo16test.developer.azure-api.net"]
+    }
+  }
+}
 
 apim_config = {
   sku_name                    = "Developer"
@@ -287,6 +289,17 @@ network_security_group_rules = {
       source_address_prefix      = "ApiManagement"
       destination_address_prefix = "VirtualNetwork"
     },
+    # {
+    #   name                       = "AllowAzureFrontDoor"
+    #   priority                   = 1500
+    #   direction                  = "Inbound"
+    #   access                     = "Allow"
+    #   protocol                   = "Tcp"
+    #   source_port_range          = "*"
+    #   destination_port_range     = "443"
+    #   source_address_prefix      = "AzureFrontDoor.Backend"
+    #   destination_address_prefix = "VirtualNetwork"
+    # },
     {
       name                       = "AzureInfrastructureLoadBalancer"
       priority                   = 1400

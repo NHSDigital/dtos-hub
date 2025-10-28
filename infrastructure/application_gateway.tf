@@ -104,6 +104,22 @@ locals {
         },
         try(var.application_gateway_additional.request_routing_rule, {})
       )
+
+      # Insert an identifying header so APIM policy can use it to filter incoming requests
+      # This is analogous to the "X-Azure-FDID" header added by Azure Front Door
+      rewrite_rule_set = {
+        migration_test = {
+          rewrite_rule = {
+            add_custom_header = {
+              rule_sequence = 100
+              request_header_configuration = {
+                # We cannot use any real resource ID here since it would become a circular dependency
+                ("X-Azure-AGID") = random_uuid.appgw_header_id[region].result
+              }
+            }
+          }
+        }
+      }
     }
   }
 }
@@ -125,6 +141,10 @@ module "application-gateway-pip" {
   tags = var.tags
 }
 
+resource "random_uuid" "appgw_header_id" {
+  for_each = var.regions
+}
+
 module "application-gateway" {
   for_each = local.appgw_config
 
@@ -144,6 +164,7 @@ module "application-gateway" {
   gateway_subnet            = module.subnets_hub["${module.config[each.key].names.subnet}-app-gateway"]
   probe                     = each.value.probe
   request_routing_rule      = each.value.request_routing_rule
+  rewrite_rule_set          = each.value.rewrite_rule_set
   sku                       = "WAF_v2"
   ssl_certificate           = each.value.ssl_certificate
   zones                     = var.regions[each.key].is_primary_region ? ["1", "2", "3"] : null

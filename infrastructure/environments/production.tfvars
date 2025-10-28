@@ -305,6 +305,17 @@ network_security_group_rules = {
       source_address_prefix      = "ApiManagement"
       destination_address_prefix = "VirtualNetwork"
     },
+    # {
+    #   name                       = "AllowAzureFrontDoor"
+    #   priority                   = 1500
+    #   direction                  = "Inbound"
+    #   access                     = "Allow"
+    #   protocol                   = "Tcp"
+    #   source_port_range          = "*"
+    #   destination_port_range     = "443"
+    #   source_address_prefix      = "AzureFrontDoor.Backend"
+    #   destination_address_prefix = "VirtualNetwork"
+    # },
     {
       name                       = "AzureInfrastructureLoadBalancer"
       priority                   = 1400

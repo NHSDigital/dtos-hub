@@ -154,7 +154,7 @@ application_gateway_additional = {
 application_gateway_additional_backend_address_pool_by_region = {
   uksouth = {
     migration_test = {
-      fqdns = ["apim-dev-hub-uks.developer.azure-api.net"]
+      fqdns = ["apim-pamo16test.developer.azure-api.net"]
     }
   }
 }

@@ -12,7 +12,7 @@ resources:
     - repository: dtos-devops-templates
       type: github
       name: NHSDigital/dtos-devops-templates
-      ref: b7a19150add5bc4945958c180cc4cb7eca72696f
+      ref: fix/apim-module-validation-rule
       endpoint: NHSDigital
 
 variables:

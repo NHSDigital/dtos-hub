@@ -40,14 +40,14 @@ module "api-management" {
     {
       host_name                = "gateway.${var.dns_zone_name_private.nationalscreening}"
       key_vault_certificate_id = module.acme_certificate["nationalscreening_wildcard_private"].key_vault_certificate[each.key].versionless_secret_id
-      default_ssl_binding      = true
+      # default_ssl_binding      = true
     },
     {
       host_name                = "api.${var.dns_zone_name_private.nationalscreening}"
       key_vault_certificate_id = module.acme_certificate["nationalscreening_wildcard_private"].key_vault_certificate[each.key].versionless_secret_id
       # Technically there should only be a single default binding, however the 'gateway' and private 'api' bindings share the same wildcard certificate.
       # Configure both as defaults to match how Azure Portal will always report it, preventing Terraform reporting a change on every plan.
-      default_ssl_binding = true
+      # default_ssl_binding = true
     },
     {
       host_name                = "api.${var.dns_zone_name_public.nationalscreening}"
@@ -82,7 +82,8 @@ module "api-management" {
 
 
 module "apim-public-ip" {
-  for_each = length(var.apim_config.zones) > 0 ? var.regions : {}
+  for_each = var.regions
+#  for_each = (length(var.apim_config.zones) > 0 || var.apim_config.virtual_network_type == "External") ? var.regions : {}
 
   source = "../../dtos-devops-templates/infrastructure/modules/public-ip"
 

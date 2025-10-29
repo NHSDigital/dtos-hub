@@ -8,7 +8,7 @@ module "api-management" {
   location                      = each.key
   certificate_details           = []
   gateway_disabled              = var.apim_config.gateway_disabled
-  public_ip_address_id          = length(var.apim_config.zones) > 0 ? module.apim-public-ip[each.key].id : null
+  public_ip_address_id          = (length(var.apim_config.zones) > 0 || var.apim_config.virtual_network_type == "External") ? module.apim-public-ip[each.key].id : null
   publisher_email               = var.apim_config.publisher_email
   publisher_name                = var.apim_config.publisher_name
   sku_capacity                  = var.apim_config.sku_capacity

@@ -108,11 +108,11 @@ application_gateway_additional = {
   probe = {
     migration_test = {
       interval                                  = 30
-      path                                      = "/"
+      path                                      = "/status-0123456789abcdef"
       pick_host_name_from_backend_http_settings = true
       protocol                                  = "Https"
-      timeout                                   = 30
-      unhealthy_threshold                       = 3
+      timeout                                   = 120
+      unhealthy_threshold                       = 8
       match = {
         status_code = ["200-399"] # not strictly needed, but this stops Terraform detecting a change every time
       }
@@ -154,7 +154,7 @@ application_gateway_additional = {
 application_gateway_additional_backend_address_pool_by_region = {
   uksouth = {
     migration_test = {
-      fqdns = ["apim-pamo16test.developer.azure-api.net"]
+      fqdns = ["apim-dev-hub-uks.developer.azure-api.net"]
     }
   }
 }
@@ -162,7 +162,7 @@ application_gateway_additional_backend_address_pool_by_region = {
 apim_config = {
   sku_name                    = "Developer"
   sku_capacity                = 1
-  virtual_network_type        = "Internal"
+  virtual_network_type        = "External"
   publisher_email             = "apim.dtos@hscic.gov.uk"
   publisher_name              = "DToS - NHS Digital"
   gateway_disabled            = false

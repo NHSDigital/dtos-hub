@@ -82,8 +82,7 @@ module "api-management" {
 
 
 module "apim-public-ip" {
-  for_each = var.regions
-#  for_each = (length(var.apim_config.zones) > 0 || var.apim_config.virtual_network_type == "External") ? var.regions : {}
+  for_each = (length(var.apim_config.zones) > 0 || var.apim_config.virtual_network_type == "External") ? var.regions : {}
 
   source = "../../dtos-devops-templates/infrastructure/modules/public-ip"
 

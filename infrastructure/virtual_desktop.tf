@@ -48,7 +48,7 @@ module "virtual-desktop-v2" {
   source = "../../dtos-devops-templates/infrastructure/modules/virtual-desktop"
 
   custom_rdp_properties     = "drivestoredirect:s:*;audiomode:i:0;videoplaybackmode:i:1;redirectclipboard:i:1;redirectprinters:i:1;devicestoredirect:s:*;redirectcomports:i:1;redirectsmartcards:i:1;usbdevicestoredirect:s:*;enablecredsspsupport:i:1;redirectwebauthn:i:1;use multimon:i:1;enablerdsaadauth:i:1;"
-  computer_name_prefix      = "avd${var.env_type}v2"
+  computer_name_prefix      = "av2${var.env_type}"
   dag_name                  = module.config[each.key].names.avd-dag
   host_pool_name            = "${module.config[each.key].names.avd-host-pool}-v2"
   location                  = each.key

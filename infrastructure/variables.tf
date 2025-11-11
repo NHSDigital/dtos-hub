@@ -406,3 +406,20 @@ variable "tags" {
   type        = map(string)
   default     = {}
 }
+
+variable "virtual_desktop_group_active" {
+  description = <<-EOT
+    This can either be 'one', 'two', 'both-one-primary' or 'both-two-primary'.
+    one means only virtual desktop one is deploy whilst virtual desktop two is removed.
+    two means only virtual desktop two is deploy whilst virtual desktop one is removed. Users are directed to group two.
+    both-one-primary means both virtual desktop groups are deployed, but ONLY the platform users can see group two. All other users will be directed to group one.
+    both-two-primary means both virtual desktop groups are deployed, but ONLY the platform users can see group one. All other users will be directed to group two.
+  EOT
+
+  type = string
+
+  validation {
+    condition     = contains(["one", "two", "both-one-primary", "both-two-primary"], var.virtual_desktop_group_active)
+    error_message = "The virtual_desktop_group_active variable must be one of: 'one', 'two', 'both-one-primary', or 'both-two-primary'."
+  }
+}

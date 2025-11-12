@@ -22,14 +22,14 @@ module "virtual-desktop" {
 
   entra_users_group_id = (
     var.virtual_desktop_group_active == "two"
-    ? data.azuread_group.avd_platform_users.id
-    : data.azuread_group.avd_users.id
+    ? data.azuread_group.avd_users.id
+    : data.azuread_group.avd_platform_users.id
   )
 
   entra_admins_group_id = (
     var.virtual_desktop_group_active == "two"
-    ? data.azuread_group.avd_platform_users.id
-    : data.azuread_group.avd_admins.id
+    ? data.azuread_group.avd_admins.id
+    : data.azuread_group.avd_platform_users.id
   )
 
   # entra_users_group_id      = data.azuread_group.avd_users.id

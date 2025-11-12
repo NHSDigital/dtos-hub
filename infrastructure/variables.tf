@@ -406,3 +406,13 @@ variable "tags" {
   type        = map(string)
   default     = {}
 }
+
+variable "virtual_desktop_group_active" {
+  description = "The virtual desktop group to deploy; it can either be 'one', 'two', or 'both' when testing."
+  type        = string
+
+  validation {
+    condition     = contains(["one", "two", "both"], var.virtual_desktop_group_active)
+    error_message = "The virtual_desktop_group_active variable must be one of: 'one', 'two', or 'both'."
+  }
+}

@@ -6,7 +6,11 @@ resource "azurerm_resource_group" "avd" {
 }
 
 module "virtual-desktop" {
-  for_each = var.regions
+  for_each = (
+    var.virtual_desktop_group_active == "one" || var.virtual_desktop_group_active == "both"
+    ? var.regions
+    : {}
+  )
 
   source = "../../dtos-devops-templates/infrastructure/modules/virtual-desktop"
 
@@ -43,7 +47,11 @@ resource "azurerm_resource_group" "avd-v2" {
 }
 
 module "virtual-desktop-v2" {
-  for_each = var.regions
+  for_each = (
+    var.virtual_desktop_group_active == "two" || var.virtual_desktop_group_active == "both"
+    ? var.regions
+    : {}
+  )
 
   source = "../../dtos-devops-templates/infrastructure/modules/virtual-desktop"
 

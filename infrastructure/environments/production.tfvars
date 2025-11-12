@@ -2,6 +2,9 @@ application = "hub"
 environment = "PROD"
 env_type    = "live"
 
+# This can either be "one", "two" or "both"
+virtual_desktop_group_active = "one"
+
 attached_environments = ["pre", "prd"]
 
 projects = {

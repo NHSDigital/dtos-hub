@@ -22,14 +22,14 @@ module "virtual-desktop" {
 
   entra_users_group_id = (
     var.virtual_desktop_group_active == "two"
-    ? data.azuread_group.avd_users.id
-    : data.azuread_group.avd_platform_users.id
+    ? data.azuread_group.avd_platform_users.id
+    : data.azuread_group.avd_users.id
   )
 
   entra_admins_group_id = (
     var.virtual_desktop_group_active == "two"
-    ? data.azuread_group.avd_admins.id
-    : data.azuread_group.avd_platform_users.id
+    ? data.azuread_group.avd_platform_users.id
+    : data.azuread_group.avd_admins.id
   )
 
   # entra_users_group_id      = data.azuread_group.avd_users.id
@@ -78,14 +78,14 @@ module "virtual-desktop-v2" {
 
   entra_users_group_id = (
     var.virtual_desktop_group_active == "two"
-    ? data.azuread_group.avd_platform_users.id
-    : data.azuread_group.avd_users.id
+    ? data.azuread_group.avd_users.id
+    : data.azuread_group.avd_platform_users.id
   )
 
   entra_admins_group_id = (
     var.virtual_desktop_group_active == "two"
-    ? data.azuread_group.avd_platform_users.id
-    : data.azuread_group.avd_admins.id
+    ? data.azuread_group.avd_admins.id
+    : data.azuread_group.avd_platform_users.id
   )
   maximum_sessions_allowed  = var.avd_maximum_sessions_allowed
   resource_group_name       = azurerm_resource_group.avd-v2[each.key].name

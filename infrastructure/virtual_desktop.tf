@@ -19,8 +19,21 @@ module "virtual-desktop" {
   dag_name                  = module.config[each.key].names.avd-dag
   host_pool_name            = module.config[each.key].names.avd-host-pool
   location                  = each.key
-  entra_users_group_id      = data.azuread_group.avd_users.id
-  entra_admins_group_id     = data.azuread_group.avd_admins.id
+
+  entra_users_group_id = (
+    var.virtual_desktop_group_active == "two"
+    ? data.azuread_group.avd_platform_users.id
+    : data.azuread_group.avd_users.id
+  )
+
+  entra_admins_group_id = (
+    var.virtual_desktop_group_active == "two"
+    ? data.azuread_group.avd_platform_admins.id
+    : data.azuread_group.avd_admins.id
+  )
+
+  # entra_users_group_id      = data.azuread_group.avd_users.id
+  # entra_admins_group_id     = data.azuread_group.avd_admins.id
   maximum_sessions_allowed  = var.avd_maximum_sessions_allowed
   resource_group_name       = azurerm_resource_group.avd[each.key].name
   resource_group_id         = azurerm_resource_group.avd[each.key].id
@@ -60,8 +73,20 @@ module "virtual-desktop-v2" {
   dag_name                  = module.config[each.key].names.avd-dag
   host_pool_name            = "${module.config[each.key].names.avd-host-pool}-v2"
   location                  = each.key
-  entra_users_group_id      = data.azuread_group.avd_platform_users.id
-  entra_admins_group_id     = data.azuread_group.avd_platform_users.id
+  # entra_users_group_id      = data.azuread_group.avd_platform_users.id
+  # entra_admins_group_id     = data.azuread_group.avd_platform_users.id
+
+  entra_users_group_id = (
+    var.virtual_desktop_group_active == "two"
+    ? data.azuread_group.avd_platform_users.id
+    : data.azuread_group.avd_users.id
+  )
+
+  entra_admins_group_id = (
+    var.virtual_desktop_group_active == "two"
+    ? data.azuread_group.avd_platform_users.id
+    : data.azuread_group.avd_admins.id
+  )
   maximum_sessions_allowed  = var.avd_maximum_sessions_allowed
   resource_group_name       = azurerm_resource_group.avd-v2[each.key].name
   resource_group_id         = azurerm_resource_group.avd-v2[each.key].id

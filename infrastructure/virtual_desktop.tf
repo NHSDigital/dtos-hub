@@ -1,3 +1,21 @@
+locals {
+  deploy_blue_avd = (
+    var.virtual_desktop_group_active == "blue" || var.virtual_desktop_group_active == "both-with-blue-primary" || var.virtual_desktop_group_active == "both-with-green-primary"
+  )
+
+  green_avd_primary = (
+    var.virtual_desktop_group_active == "green" || var.virtual_desktop_group_active == "both-with-green-primary"
+  )
+
+  blue_avd_primary = (
+    var.virtual_desktop_group_active == "blue" || var.virtual_desktop_group_active == "both-with-blue-primary"
+  )
+
+  deploy_green_avd = (
+    var.virtual_desktop_group_active == "green" || var.virtual_desktop_group_active == "both-with-blue-primary" || var.virtual_desktop_group_active == "both-with-green-primary"
+  )
+}
+
 resource "azurerm_resource_group" "avd" {
   for_each = var.regions
 
@@ -6,11 +24,7 @@ resource "azurerm_resource_group" "avd" {
 }
 
 module "virtual-desktop" {
-  for_each = (
-    var.virtual_desktop_group_active == "one" || var.virtual_desktop_group_active == "both-one-primary" || var.virtual_desktop_group_active == "both-two-primary"
-    ? var.regions
-    : {}
-  )
+  for_each = (local.deploy_blue_avd ? var.regions : {})
 
   source = "../../dtos-devops-templates/infrastructure/modules/virtual-desktop"
 
@@ -21,15 +35,15 @@ module "virtual-desktop" {
   location              = each.key
 
   entra_users_group_id = (
-    var.virtual_desktop_group_active == "two" || var.virtual_desktop_group_active == "both-two-primary"
-    ? data.azuread_group.avd_platform_users.id
-    : data.azuread_group.avd_users.id
+    local.blue_avd_primary
+    ? data.azuread_group.avd_users.id
+    : data.azuread_group.avd_platform_users.id
   )
 
   entra_admins_group_id = (
-    var.virtual_desktop_group_active == "two" || var.virtual_desktop_group_active == "both-two-primary"
-    ? data.azuread_group.avd_platform_users.id
-    : data.azuread_group.avd_admins.id
+    local.blue_avd_primary
+    ? data.azuread_group.avd_admins.id
+    : data.azuread_group.avd_platform_users.id
   )
 
   maximum_sessions_allowed  = var.avd_maximum_sessions_allowed
@@ -40,7 +54,7 @@ module "virtual-desktop" {
   source_image_reference    = var.avd_source_image_reference
   source_image_from_gallery = var.avd_source_image_from_gallery
   subnet_id                 = module.subnets_hub["${module.config[each.key].names.subnet}-virtual-desktop"].id
-  vm_count                  = var.virtual_desktop_group_active == "one" || var.virtual_desktop_group_active == "both-one-primary" ? var.avd_vm_count : 1
+  vm_count                  = local.blue_avd_primary ? var.avd_vm_count : 1
   vm_name_prefix            = module.config[each.key].names.avd-host
   vm_storage_account_type   = "StandardSSD_LRS"
   vm_size                   = var.avd_vm_size
@@ -57,12 +71,9 @@ resource "azurerm_resource_group" "avd-v2" {
   location = each.key
 }
 
+# Green AVD deployment
 module "virtual-desktop-v2" {
-  for_each = (
-    var.virtual_desktop_group_active == "two" || var.virtual_desktop_group_active == "both-one-primary" || var.virtual_desktop_group_active == "both-two-primary"
-    ? var.regions
-    : {}
-  )
+  for_each = (local.deploy_green_avd ? var.regions : {})
 
   source = "../../dtos-devops-templates/infrastructure/modules/virtual-desktop"
 
@@ -73,13 +84,13 @@ module "virtual-desktop-v2" {
   location              = each.key
 
   entra_users_group_id = (
-    var.virtual_desktop_group_active == "two" || var.virtual_desktop_group_active == "both-two-primary"
+    local.green_avd_primary
     ? data.azuread_group.avd_users.id
     : data.azuread_group.avd_platform_users.id
   )
 
   entra_admins_group_id = (
-    var.virtual_desktop_group_active == "two" || var.virtual_desktop_group_active == "both-two-primary"
+    local.green_avd_primary
     ? data.azuread_group.avd_admins.id
     : data.azuread_group.avd_platform_users.id
   )
@@ -91,7 +102,7 @@ module "virtual-desktop-v2" {
   source_image_reference    = null
   source_image_from_gallery = var.avd_source_image_from_gallery
   subnet_id                 = module.subnets_hub["${module.config[each.key].names.subnet}-virtual-desktop"].id
-  vm_count                  = var.virtual_desktop_group_active == "two" || var.virtual_desktop_group_active == "both-two-primary" ? var.avd_vm_count : 1
+  vm_count                  = local.green_avd_primary ? var.avd_vm_count : 1
   vm_name_prefix            = "${module.config[each.key].names.avd-host}-v2"
   vm_storage_account_type   = "StandardSSD_LRS"
   vm_size                   = var.avd_vm_size

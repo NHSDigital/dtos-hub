@@ -2,12 +2,8 @@ application = "hub"
 environment = "PROD"
 env_type    = "live"
 
-# This can either be "one", "two", "both-one-primary" or "both-two-primary"
-# One means only virtual desktop one is deploy whilst virtual desktop two is removed
-# Two means only virtual desktop two is deploy whilst virtual desktop one is removed. Users are directed to group two.
-# Both-one-primary means both virtual desktop groups are deployed, but ONLY the platform users can see group two. All other users will be directed to group one.
-# Both-two-primary means both virtual desktop groups are deployed, but ONLY the platform users can see group one. All other users will be directed to group two.
-virtual_desktop_group_active = "one"
+# See variable description
+virtual_desktop_group_active = "blue"
 
 attached_environments = ["pre", "prd"]
 

@@ -409,17 +409,17 @@ variable "tags" {
 
 variable "virtual_desktop_group_active" {
   description = <<-EOT
-    This can either be 'one', 'two', 'both-one-primary' or 'both-two-primary'.
-    one means only virtual desktop one is deploy whilst virtual desktop two is removed.
-    two means only virtual desktop two is deploy whilst virtual desktop one is removed. Users are directed to group two.
-    both-one-primary means both virtual desktop groups are deployed, but ONLY the platform users can see group two. All other users will be directed to group one.
-    both-two-primary means both virtual desktop groups are deployed, but ONLY the platform users can see group one. All other users will be directed to group two.
+    This can either be 'blue', 'green', 'both-with-blue-primary' or 'both-with-green-primary'.
+    blue means only virtual desktop blue is deployed whilst virtual desktop green is removed.
+    green means only virtual desktop green is deployed whilst virtual desktop blue is removed. Users are directed to group green.
+    both-blue-primary means both virtual desktop groups are deployed, but ONLY the platform users can see group green. All other users will be directed to group blue.
+    both-green-primary means both virtual desktop groups are deployed, but ONLY the platform users can see group blue. All other users will be directed to group green.
   EOT
 
   type = string
 
   validation {
-    condition     = contains(["one", "two", "both-one-primary", "both-two-primary"], var.virtual_desktop_group_active)
-    error_message = "The virtual_desktop_group_active variable must be one of: 'one', 'two', 'both-one-primary', or 'both-two-primary'."
+    condition     = contains(["blue", "green", "both-with-blue-primary", "both-with-green-primary"], var.virtual_desktop_group_active)
+    error_message = "The virtual_desktop_group_active variable must be blue of: 'blue', 'green', 'both-with-blue-primary', or 'both-with-green-primary'."
   }
 }

@@ -8,6 +8,10 @@ data "azuread_group" "avd_admins" {
   display_name = var.avd_admins_group_name
 }
 
+data "azuread_group" "avd_platform_users" {
+  display_name = "DToS-platform-team-Dev"
+}
+
 # This client id is the same for all Azure customers - it is not a secret.
 # https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/app_service_certificate
 data "azuread_service_principal" "MicrosoftAzureAppService" {

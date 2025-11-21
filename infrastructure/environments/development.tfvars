@@ -4,6 +4,9 @@ env_type    = "nonlive"
 
 attached_environments = ["dev", "nft", "int"]
 
+# See variable description
+virtual_desktop_group_active = "both-with-blue-primary"
+
 projects = {
   dtos-cohort-manager = {
     full_name  = "cohort-manager"

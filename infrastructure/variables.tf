@@ -409,17 +409,20 @@ variable "tags" {
 
 variable "virtual_desktop_group_active" {
   description = <<-EOT
-    This can either be 'blue', 'green', 'both-with-blue-primary' or 'both-with-green-primary'.
+    This can either be 'blue', 'green', 'both-with-blue-primary',  'both-with-green-primary', 'both-with-blue-primary-but-equal-vms', 'both-with-green-primary-but-equal-vms'.
     blue means only virtual desktop blue is deployed whilst virtual desktop green is removed.
     green means only virtual desktop green is deployed whilst virtual desktop blue is removed. Users are directed to group green.
     both-blue-primary means both virtual desktop groups are deployed, but ONLY the platform users can see group green. All other users will be directed to group blue.
     both-green-primary means both virtual desktop groups are deployed, but ONLY the platform users can see group blue. All other users will be directed to group green.
+    both-with-blue-primary-but-equal-vms means both virtual desktop groups are deployed with equal VM counts, but ONLY the platform users can see group green. All other users will be directed to group blue.
+    both-with-green-primary-but-equal-vms means both virtual desktop groups are deployed with equal VM counts, but ONLY the platform users can see group blue. All other users will be directed to group green.
+
   EOT
 
   type = string
 
   validation {
-    condition     = contains(["blue", "green", "both-with-blue-primary", "both-with-green-primary"], var.virtual_desktop_group_active)
-    error_message = "The virtual_desktop_group_active variable must be blue of: 'blue', 'green', 'both-with-blue-primary', or 'both-with-green-primary'."
+    condition     = contains(["blue", "green", "both-with-blue-primary", "both-with-green-primary", "both-with-blue-primary-but-equal-vms", "both-with-green-primary-but-equal-vms"], var.virtual_desktop_group_active)
+    error_message = "The virtual_desktop_group_active variable must be blue of: 'blue', 'green', 'both-with-blue-primary', 'both-with-green-primary', 'both-with-blue-primary-but-equal-vms', 'both-with-green-primary-but-equal-vms'."
   }
 }

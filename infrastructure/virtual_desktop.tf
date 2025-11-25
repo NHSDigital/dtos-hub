@@ -1,19 +1,24 @@
 locals {
   deploy_blue_avd = (
-    var.virtual_desktop_group_active == "blue" || var.virtual_desktop_group_active == "both-with-blue-primary" || var.virtual_desktop_group_active == "both-with-green-primary"
-  )
-
-  green_avd_primary = (
-    var.virtual_desktop_group_active == "green" || var.virtual_desktop_group_active == "both-with-green-primary"
-  )
-
-  blue_avd_primary = (
-    var.virtual_desktop_group_active == "blue" || var.virtual_desktop_group_active == "both-with-blue-primary"
+    var.virtual_desktop_group_active == "blue" || var.virtual_desktop_group_active == "both-with-blue-primary" || var.virtual_desktop_group_active == "both-with-green-primary" || var.virtual_desktop_group_active == "both-with-blue-primary-but-equal-vms" || var.virtual_desktop_group_active == "both-with-green-primary-but-equal-vms"
   )
 
   deploy_green_avd = (
-    var.virtual_desktop_group_active == "green" || var.virtual_desktop_group_active == "both-with-blue-primary" || var.virtual_desktop_group_active == "both-with-green-primary"
+    var.virtual_desktop_group_active == "green" || var.virtual_desktop_group_active == "both-with-blue-primary" || var.virtual_desktop_group_active == "both-with-green-primary" || var.virtual_desktop_group_active == "both-with-blue-primary-but-equal-vms" || var.virtual_desktop_group_active == "both-with-green-primary-but-equal-vms"
   )
+
+  green_avd_primary = (
+    var.virtual_desktop_group_active == "green" || var.virtual_desktop_group_active == "both-with-green-primary" || var.virtual_desktop_group_active == "both-with-green-primary-but-equal-vms"
+  )
+
+  blue_avd_primary = (
+    var.virtual_desktop_group_active == "blue" || var.virtual_desktop_group_active == "both-with-blue-primary" || var.virtual_desktop_group_active == "both-with-blue-primary-but-equal-vms"
+  )
+
+  equal_vm_counts = (
+    var.virtual_desktop_group_active == "both-with-blue-primary-but-equal-vms" || var.virtual_desktop_group_active == "both-with-green-primary-but-equal-vms"
+  )
+
 }
 
 resource "azurerm_resource_group" "avd" {
@@ -54,7 +59,7 @@ module "virtual-desktop" {
   source_image_reference    = var.avd_source_image_reference
   source_image_from_gallery = var.avd_source_image_from_gallery
   subnet_id                 = module.subnets_hub["${module.config[each.key].names.subnet}-virtual-desktop"].id
-  vm_count                  = local.blue_avd_primary ? var.avd_vm_count : 1
+  vm_count                  = local.blue_avd_primary || local.equal_vm_counts ? var.avd_vm_count : 1
   vm_name_prefix            = module.config[each.key].names.avd-host
   vm_storage_account_type   = "StandardSSD_LRS"
   vm_size                   = var.avd_vm_size
@@ -102,12 +107,12 @@ module "virtual-desktop-v2" {
   source_image_reference    = null
   source_image_from_gallery = var.avd_source_image_from_gallery
   subnet_id                 = module.subnets_hub["${module.config[each.key].names.subnet}-virtual-desktop"].id
-  vm_count                  = local.green_avd_primary ? var.avd_vm_count : 1
-  vm_name_prefix            = "${module.config[each.key].names.avd-host}-v2"
+  vm_count                  = local.green_avd_primary || local.equal_vm_counts ? var.avd_vm_count : 1
+  vm_name_prefix            = "${module.config[each.key].names.avd-host}"
   vm_storage_account_type   = "StandardSSD_LRS"
   vm_size                   = var.avd_vm_size
   vm_license_type           = "Windows_Client"
-  workspace_name            = "${module.config[each.key].names.avd-workspace}-v2"
+  workspace_name            = "${module.config[each.key].names.avd-workspace}"
 
   tags = var.tags
 }

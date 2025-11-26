@@ -409,7 +409,7 @@ variable "tags" {
 
 variable "virtual_desktop_group_active" {
   description = <<-EOT
-    This can either be 'blue', 'green', 'both-with-blue-primary',  'both-with-green-primary', 'both-with-blue-primary-but-equal-vms', 'both-with-green-primary-but-equal-vms'.
+    This can either be 'blue', 'green', 'both-with-blue-primary',  'both-with-green-primary', 'both-with-blue-primary-but-equal-vms' or 'both-with-green-primary-but-equal-vms'.
     blue means only virtual desktop blue is deployed whilst virtual desktop green is removed.
     green means only virtual desktop green is deployed whilst virtual desktop blue is removed. Users are directed to group green.
     both-blue-primary means both virtual desktop groups are deployed, but ONLY the platform users can see group green. All other users will be directed to group blue.

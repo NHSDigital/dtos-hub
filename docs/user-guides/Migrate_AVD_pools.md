@@ -6,8 +6,8 @@ Here are a list of the virtual_desktop_group_active status:
 
 - blue means only virtual desktop blue is deployed whilst virtual desktop green is removed.
 - green means only virtual desktop green is deployed whilst virtual desktop blue is removed. Users are directed to group green.
-- both-blue-primary means both virtual desktop groups are deployed, but ONLY the platform users can see group green. All other users will be directed to group blue.
-- both-green-primary means both virtual desktop groups are deployed, but ONLY the platform users can see group blue. All other users will be directed to group green.
+- both-with-blue-primary means both virtual desktop groups are deployed, but ONLY the platform users can see group green. All other users will be directed to group blue.
+- both-with-green-primary means both virtual desktop groups are deployed, but ONLY the platform users can see group blue. All other users will be directed to group green.
 - both-with-blue-primary-but-equal-vms means both virtual desktop groups are deployed with equal VM counts, but ONLY the platform users can see group green. All other users will be directed to group blue.
 - both-with-green-primary-but-equal-vms means both virtual desktop groups are deployed with equal VM counts, but ONLY the platform users can see group blue. All other users will be directed to group green.
 

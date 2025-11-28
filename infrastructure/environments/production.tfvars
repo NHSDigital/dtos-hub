@@ -3,7 +3,7 @@ environment = "PROD"
 env_type    = "live"
 
 # See variable description
-virtual_desktop_group_active = "both-blue-primary"
+virtual_desktop_group_active = "both-with-blue-primary"
 
 attached_environments = ["pre", "prd"]
 

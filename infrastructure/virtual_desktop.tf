@@ -103,9 +103,9 @@ module "virtual-desktop-v2" {
   resource_group_name       = azurerm_resource_group.avd-v2[each.key].name
   resource_group_id         = azurerm_resource_group.avd-v2[each.key].id
   scaling_plan_name         = module.config[each.key].names.avd-scaling-plan
-  source_image_id           = null
+  source_image_id           = var.AVD_SOURCE_IMAGE_ID
   source_image_reference    = null
-  source_image_from_gallery = var.avd_source_image_from_gallery
+  source_image_from_gallery = null
   subnet_id                 = module.subnets_hub["${module.config[each.key].names.subnet}-virtual-desktop"].id
   vm_count                  = local.green_avd_primary || local.equal_vm_counts ? var.avd_vm_count : 1
   vm_name_prefix            = "${module.config[each.key].names.avd-host}"

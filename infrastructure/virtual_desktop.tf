@@ -112,7 +112,7 @@ module "virtual-desktop-v2" {
   vm_storage_account_type   = "StandardSSD_LRS"
   vm_size                   = var.avd_vm_size
   vm_license_type           = "Windows_Client"
-  workspace_name            = "${module.config[each.key].names.avd-workspace}"
+  workspace_name            = "${module.config[each.key].names.avd-workspace}-PenTest"
 
   tags = var.tags
 }

@@ -12,6 +12,10 @@ data "azuread_group" "avd_platform_users" {
   display_name = "DToS-platform-team-Dev"
 }
 
+data "azuread_group" "avd_pentest_users" {
+  display_name = "DToS-Penetration-Testers"
+}
+
 # This client id is the same for all Azure customers - it is not a secret.
 # https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/app_service_certificate
 data "azuread_service_principal" "MicrosoftAzureAppService" {

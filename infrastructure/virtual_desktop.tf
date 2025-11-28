@@ -91,7 +91,7 @@ module "virtual-desktop-v2" {
   entra_users_group_id = (
     local.green_avd_primary
     ? data.azuread_group.avd_users.id
-    : data.azuread_group.avd_platform_users.id
+    : data.azuread_group.avd_pentest_users.id
   )
 
   entra_admins_group_id = (

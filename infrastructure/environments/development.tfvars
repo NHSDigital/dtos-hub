@@ -5,7 +5,7 @@ env_type    = "nonlive"
 attached_environments = ["dev", "nft", "int"]
 
 # See variable description
-virtual_desktop_group_active = "both-with-green-primary-but-equal-vms"
+virtual_desktop_group_active = "green"
 
 projects = {
   dtos-cohort-manager = {
